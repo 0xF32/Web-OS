@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<!-- Web graphical os with windows -->
+<html class="dark">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web OS Demo</title>
+    <link rel="stylesheet" href="assets/style.css" />
+    <script src="assets/script.js"></script>
+  </head>
+  <body>
+    <window
+      id="mainWindow"
+      style="--x: 400px; --y: 250px; --width: 300px; --height: 250px"
+      onclick="makeMain(this)"
+    >
+      <header class="window-header">Hello World!</header>
+      <div class="window-area">
+        <p>
+          This is cool, that i can write text here and it auto wraps. Here is
+          some more text. And some more. Listing text is easy.
+        </p>
+      </div>
+      <footer class="window-footer">Footer</footer>
+    </window>
+    <window
+      style="--x: 0px; --y: 0px; --width: 350px; --height: 390px"
+      onclick="makeMain(this)"
+    >
+      <header class="window-header">Settings</header>
+      <div class="window-area">
+        <table>
+          <tr>
+            <th>Settings</th>
+            <th>Value</th>
+          </tr>
+          <tr>
+            <td><code>--theme-main</code></td>
+            <td>
+              <input
+                id="setting--theme-main"
+                value="#2233ff"
+                style="background-color: var(--theme-main);"
+                onchange="setSetting('--theme-main', this.value)"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td><code>--theme-main-mono</code></td>
+            <td>
+              <input
+                id="setting--theme-main-mono"
+                value="#dadada"
+                style="background-color: var(--theme-main-mono);"
+                onchange="setSetting('--theme-main-mono', this.value)"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td><code>--theme-bg</code></td>
+            <td>
+              <input
+                id="setting--theme-bg"
+                value="#161624"
+                style="background-color: var(--theme-bg);"
+                onchange="setSetting('--theme-bg', this.value)"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td><code>--theme-bg-alt</code></td>
+            <td>
+              <input
+                id="setting--theme-bg-alt"
+                value="#161624"
+                style="background-color: var(--theme-bg-alt);"
+                onchange="setSetting('--theme-bg-alt', this.value)"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td><code>--theme-bg-alt2</code></td>
+            <td>
+              <input
+                id="setting--theme-bg-alt2"
+                value="#202028"
+                style="background-color: var(--theme-bg-alt2);"
+                onchange="setSetting('--theme-bg-alt2', this.value)"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td><code>--border</code></td>
+            <td>
+              <input
+                id="setting--border"
+                value="#2233ff"
+                style="background-color: var(--border); mix-blend-mode: difference;"
+                onchange="setSetting('--border', this.value)"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td><code>--shadow</code></td>
+            <td>
+              <input
+                id="setting--shadow"
+                value="#000000cc"
+                style="background-color: var(--shadow); color: var(--shadow); filter: invert(1);"
+                onchange="setSetting('--shadow', this.value)"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td><code>--shadow-distance</code></td>
+            <td>
+              <input
+                id="setting--shadow-distance"
+                value="8"
+                type="number"
+                onchange="setSetting('--shadow-distance', this.value + 'px')"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td><code>--rounding</code></td>
+            <td>
+              <input
+                id="setting--rounding"
+                value="8"
+                type="number"
+                onchange="setSetting('--rounding', this.value + 'px')"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td><code>--padding</code></td>
+            <td>
+              <input
+                id="setting--padding"
+                value="8"
+                type="number"
+                onchange="setSetting('--padding', this.value + 'px')"
+              />
+            </td>
+          </tr>
+        </table>
+      </div>
+      <footer class="window-footer">Footer</footer>
+    </window>
+    <script>
+      init();
+    </script>
+  </body>
+</html>

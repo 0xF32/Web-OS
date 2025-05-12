@@ -1,0 +1,78 @@
+/* Define global variables */
+:root {
+  --theme-main: #88bbff;
+  --theme-main-mono: #dadada;
+  --theme-bg: #202020;
+  --theme-bg-alt: #202020;
+  --theme-bg-alt2: #303030;
+  --border: #88bbff;
+  --shadow: #000000cc;
+  --shadow-distance: 8px;
+  --rounding: 8px;
+  --padding: 8px;
+}
+/* Global background and main color */
+:root {
+  background-color: var(--theme-bg);
+  color: var(--theme-main-mono);
+  transition-duration: 200ms;
+}
+
+/* Scroll Bar Modification */
+/* width */
+::-webkit-scrollbar {
+  width: var(--padding);
+}
+/* Track */
+::-webkit-scrollbar-track {
+  border-radius: var(--rounding);
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: var(--rounding);
+}
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #666;
+  border-radius: var(--rounding);
+}
+
+/* Window Definition */
+window {
+  --x: 300px;
+  --y: 200px;
+  --width: 300px;
+  --height: 200px;
+  translate: var(--x) var(--y);
+  width: var(--width);
+  height: var(--height);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: 0;
+  border-radius: var(--rounding);
+  color: var(--theme-main-mono);
+  background-color: var(--theme-bg-alt);
+  border: 2px solid var(--border);
+  box-shadow: var(--shadow-distance) var(--shadow-distance) 0 var(--shadow);
+  position: relative;
+}
+
+.window-header {
+  font-size: 24px;
+  color: var(--theme-main);
+  padding-top: var(--padding);
+  text-align: center;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.window-area {
+  padding: var(--padding);
+  overflow-y: scroll;
+}
+
+.window-footer {
+  padding-bottom: var(--padding);
+  text-align: center;
+}
