@@ -18,6 +18,12 @@
   transition-duration: 200ms;
 }
 
+/* Colors for form items (input) */
+input {
+  background-color: var(--theme-bg-alt2);
+  color: var(--theme-main-mono);
+}
+
 /* Scroll Bar Modification */
 /* width */
 ::-webkit-scrollbar {

@@ -23,7 +23,7 @@
       <footer class="window-footer">Footer</footer>
     </window>
     <window
-      style="--x: 0px; --y: 0px; --width: 350px; --height: 390px"
+      style="--x: 20px; --y: -230px; --width: 410px; --height: 390px"
       onclick="makeMain(this)"
     >
       <header class="window-header">Settings</header>
@@ -32,6 +32,7 @@
           <tr>
             <th>Settings</th>
             <th>Value</th>
+            <th>Preview</th>
           </tr>
           <tr>
             <td><code>--theme-main</code></td>
@@ -39,10 +40,10 @@
               <input
                 id="setting--theme-main"
                 value="#2233ff"
-                style="background-color: var(--theme-main);"
                 onchange="setSetting('--theme-main', this.value)"
               />
             </td>
+            <td style="background-color: var(--theme-main);"></td>
           </tr>
           <tr>
             <td><code>--theme-main-mono</code></td>
@@ -50,10 +51,10 @@
               <input
                 id="setting--theme-main-mono"
                 value="#dadada"
-                style="background-color: var(--theme-main-mono);"
                 onchange="setSetting('--theme-main-mono', this.value)"
               />
             </td>
+            <td style="background-color: var(--theme-main-mono);"></td>
           </tr>
           <tr>
             <td><code>--theme-bg</code></td>
@@ -61,10 +62,10 @@
               <input
                 id="setting--theme-bg"
                 value="#161624"
-                style="background-color: var(--theme-bg);"
                 onchange="setSetting('--theme-bg', this.value)"
               />
             </td>
+            <td style="background-color: var(--theme-bg);"></td>
           </tr>
           <tr>
             <td><code>--theme-bg-alt</code></td>
@@ -72,10 +73,10 @@
               <input
                 id="setting--theme-bg-alt"
                 value="#161624"
-                style="background-color: var(--theme-bg-alt);"
                 onchange="setSetting('--theme-bg-alt', this.value)"
               />
             </td>
+            <td style="background-color: var(--theme-bg-alt);"></td>
           </tr>
           <tr>
             <td><code>--theme-bg-alt2</code></td>
@@ -83,10 +84,10 @@
               <input
                 id="setting--theme-bg-alt2"
                 value="#202028"
-                style="background-color: var(--theme-bg-alt2);"
                 onchange="setSetting('--theme-bg-alt2', this.value)"
               />
             </td>
+            <td style="background-color: var(--theme-bg-alt2);"></td>
           </tr>
           <tr>
             <td><code>--border</code></td>
@@ -94,10 +95,10 @@
               <input
                 id="setting--border"
                 value="#2233ff"
-                style="background-color: var(--border); mix-blend-mode: difference;"
                 onchange="setSetting('--border', this.value)"
               />
             </td>
+            <td style="background-color: var(--border);"></td>
           </tr>
           <tr>
             <td><code>--shadow</code></td>
@@ -105,10 +106,10 @@
               <input
                 id="setting--shadow"
                 value="#000000cc"
-                style="background-color: var(--shadow); color: var(--shadow); filter: invert(1);"
                 onchange="setSetting('--shadow', this.value)"
               />
             </td>
+            <td style="background-color: var(--shadow);"></td>
           </tr>
           <tr>
             <td><code>--shadow-distance</code></td>
