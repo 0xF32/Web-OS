@@ -1,16 +1,22 @@
 <!DOCTYPE html>
 <!-- Web graphical os with windows -->
-<html class="dark">
+<html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Web OS Demo</title>
     <link rel="stylesheet" href="assets/style.css" />
     <script src="assets/script.js"></script>
   </head>
-  <body>
+  <body style="background-image: url(assets/Mountainous\ Sunset.jpg)">
     <window
       id="mainWindow"
-      style="--x: 400px; --y: 250px; --width: 300px; --height: 250px"
+      style="
+        --x: 0px;
+        --y: 440px;
+        --width: 780px;
+        --height: -10px;
+        --z-index: 3;
+      "
       onclick="makeMain(this)"
     >
       <header class="window-header">Hello World!</header>
@@ -23,14 +29,14 @@
       <footer class="window-footer">Footer</footer>
     </window>
     <window
-      style="--x: 20px; --y: -230px; --width: 410px; --height: 390px"
+      style="--x: 0px; --y: 0px; --width: 400px; --height: -10px; --z-index: 1"
       onclick="makeMain(this)"
     >
-      <header class="window-header">Settings</header>
+      <header class="window-header">CSS Settings</header>
       <div class="window-area">
         <table>
           <tr>
-            <th>Settings</th>
+            <th>Setting</th>
             <th>Value</th>
             <th>Preview</th>
           </tr>
@@ -39,11 +45,11 @@
             <td>
               <input
                 id="setting--theme-main"
-                value="#2233ff"
-                onchange="setSetting('--theme-main', this.value)"
+                value="#88bbff"
+                onchange="setCSSSetting('--theme-main', this.value)"
               />
             </td>
-            <td style="background-color: var(--theme-main);"></td>
+            <td style="background-color: var(--theme-main)"></td>
           </tr>
           <tr>
             <td><code>--theme-main-mono</code></td>
@@ -51,65 +57,65 @@
               <input
                 id="setting--theme-main-mono"
                 value="#dadada"
-                onchange="setSetting('--theme-main-mono', this.value)"
+                onchange="setCSSSetting('--theme-main-mono', this.value)"
               />
             </td>
-            <td style="background-color: var(--theme-main-mono);"></td>
+            <td style="background-color: var(--theme-main-mono)"></td>
           </tr>
           <tr>
             <td><code>--theme-bg</code></td>
             <td>
               <input
                 id="setting--theme-bg"
-                value="#161624"
-                onchange="setSetting('--theme-bg', this.value)"
+                value="#202020"
+                onchange="setCSSSetting('--theme-bg', this.value)"
               />
             </td>
-            <td style="background-color: var(--theme-bg);"></td>
+            <td style="background-color: var(--theme-bg)"></td>
           </tr>
           <tr>
             <td><code>--theme-bg-alt</code></td>
             <td>
               <input
                 id="setting--theme-bg-alt"
-                value="#161624"
-                onchange="setSetting('--theme-bg-alt', this.value)"
+                value="#202020"
+                onchange="setCSSSetting('--theme-bg-alt', this.value)"
               />
             </td>
-            <td style="background-color: var(--theme-bg-alt);"></td>
+            <td style="background-color: var(--theme-bg-alt)"></td>
           </tr>
           <tr>
             <td><code>--theme-bg-alt2</code></td>
             <td>
               <input
                 id="setting--theme-bg-alt2"
-                value="#202028"
-                onchange="setSetting('--theme-bg-alt2', this.value)"
+                value="#303030"
+                onchange="setCSSSetting('--theme-bg-alt2', this.value)"
               />
             </td>
-            <td style="background-color: var(--theme-bg-alt2);"></td>
+            <td style="background-color: var(--theme-bg-alt2)"></td>
           </tr>
           <tr>
             <td><code>--border</code></td>
             <td>
               <input
                 id="setting--border"
-                value="#2233ff"
-                onchange="setSetting('--border', this.value)"
+                value="#88bbff"
+                onchange="setCSSSetting('--border', this.value)"
               />
             </td>
-            <td style="background-color: var(--border);"></td>
+            <td style="background-color: var(--border)"></td>
           </tr>
           <tr>
             <td><code>--shadow</code></td>
             <td>
               <input
                 id="setting--shadow"
-                value="#000000cc"
-                onchange="setSetting('--shadow', this.value)"
+                value="#000000aa"
+                onchange="setCSSSetting('--shadow', this.value)"
               />
             </td>
-            <td style="background-color: var(--shadow);"></td>
+            <td style="background-color: var(--shadow)"></td>
           </tr>
           <tr>
             <td><code>--shadow-distance</code></td>
@@ -118,7 +124,18 @@
                 id="setting--shadow-distance"
                 value="8"
                 type="number"
-                onchange="setSetting('--shadow-distance', this.value + 'px')"
+                onchange="setCSSSetting('--shadow-distance', this.value + 'px')"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td><code>--shadow-blur</code></td>
+            <td>
+              <input
+                id="setting--shadow-blue"
+                value="8"
+                type="number"
+                onchange="setCSSSetting('--shadow-blur', this.value + 'px')"
               />
             </td>
           </tr>
@@ -129,7 +146,7 @@
                 id="setting--rounding"
                 value="8"
                 type="number"
-                onchange="setSetting('--rounding', this.value + 'px')"
+                onchange="setCSSSetting('--rounding', this.value + 'px')"
               />
             </td>
           </tr>
@@ -140,7 +157,48 @@
                 id="setting--padding"
                 value="8"
                 type="number"
-                onchange="setSetting('--padding', this.value + 'px')"
+                onchange="setCSSSetting('--padding', this.value + 'px')"
+              />
+            </td>
+          </tr>
+        </table>
+      </div>
+      <footer class="window-footer">Footer</footer>
+    </window>
+    <window
+      style="
+        --x: 430px;
+        --y: 0px;
+        --width: 350px;
+        --height: -10px;
+        --z-index: 2;
+      "
+      onclick="makeMain(this)"
+    >
+      <header class="window-header">JS Settings</header>
+      <div class="window-area">
+        <table>
+          <tr>
+            <th>Setting</th>
+            <th>Value</th>
+          </tr>
+          <tr>
+            <td><code>windowMoveAmount</code></td>
+            <td>
+              <input
+                id="setting_windowMoveAmount"
+                value="100"
+                onchange="setJSSetting('windowMoveAmount', this.value)"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td><code>windowResizeAmount</code></td>
+            <td>
+              <input
+                id="setting_windowResizeAmount"
+                value="10"
+                onchange="setJSSetting('windowResizeAmount', this.value)"
               />
             </td>
           </tr>

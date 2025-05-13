@@ -6,16 +6,22 @@
   --theme-bg-alt: #202020;
   --theme-bg-alt2: #303030;
   --border: #88bbff;
-  --shadow: #000000cc;
+  --shadow: #000000aa;
   --shadow-distance: 8px;
+  --shadow-blur: 8px;
   --rounding: 8px;
   --padding: 8px;
 }
 /* Global background and main color */
 :root {
+  background-image: url(Mountainous\ Sunset.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
   background-color: var(--theme-bg);
   color: var(--theme-main-mono);
-  transition-duration: 200ms;
+  transition-duration: 2000ms;
 }
 
 /* Colors for form items (input) */
@@ -46,13 +52,15 @@ input {
 
 /* Window Definition */
 window {
-  --x: 300px;
-  --y: 200px;
-  --width: 300px;
-  --height: 200px;
+  --x: 0px;
+  --y: 0px;
+  --width: -10px;
+  --height: -10px;
+  --z-index: 1;
   translate: var(--x) var(--y);
   width: var(--width);
   height: var(--height);
+  z-index: var(--z-index);
   display: grid;
   grid-template-rows: auto 1fr auto;
   padding: 0;
@@ -60,8 +68,8 @@ window {
   color: var(--theme-main-mono);
   background-color: var(--theme-bg-alt);
   border: 2px solid var(--border);
-  box-shadow: var(--shadow-distance) var(--shadow-distance) 0 var(--shadow);
-  position: relative;
+  box-shadow: var(--shadow-distance) var(--shadow-distance) var(--shadow-blur) var(--shadow);
+  position: absolute;
 }
 
 .window-header {
@@ -76,6 +84,7 @@ window {
 .window-area {
   padding: var(--padding);
   overflow-y: scroll;
+  margin: 0 auto;
 }
 
 .window-footer {
