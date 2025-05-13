@@ -13,7 +13,7 @@ function makeMain(element) {
     el.style.setProperty("--z-index", parseInt(getComputedStyle(el).getPropertyValue("--z-index")) - 1)
   });
   element.id = "mainWindow";
-  element.style.setProperty("--z-index", 3) // Set to the number of windows when adding a new window #TODO
+  element.style.setProperty("--z-index", 4) // Set to the number of windows when adding a new window #TODO
 }
 
 function keydown(e) {

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Web graphical os with windows -->
+<!-- Web graphical OS with lots of options and some demo programs -->
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,32 +7,60 @@
     <link rel="stylesheet" href="assets/style.css" />
     <script src="assets/script.js"></script>
   </head>
-  <body style="background-image: url(assets/Mountainous\ Sunset.jpg)">
+  <body>
+    <!-- Hello World window -->
     <window
       id="mainWindow"
-      style="
-        --x: 0px;
-        --y: 440px;
-        --width: 780px;
-        --height: -10px;
-        --z-index: 3;
-      "
+      name="window_helloWorld"
+      style="--x: 0px; --y: 0px; --width: 350px; --height: 450px; --z-index: 3"
       onclick="makeMain(this)"
     >
       <header class="window-header">Hello World!</header>
       <div class="window-area">
-        <p>
-          This is cool, that i can write text here and it auto wraps. Here is
-          some more text. And some more. Listing text is easy.
-        </p>
+        Welcome to this website, which aims to be a fully functional graphical
+        OS. This website will demonstrate how Web-OS works, and how you can
+        setup your own distro of Web-OS.
+        <p></p>
+        It is planned that all customisations made, and files saved, are stored
+        in local-storage, so that upon reloading the page, or closing the
+        browser, OS state can be restored.
+        <p></p>
+        All data can be imported and exported if you want to mess around with
+        the setup of the OS without being in the OS.
       </div>
       <footer class="window-footer">Footer</footer>
     </window>
+    <!-- Terminal window -->
     <window
-      style="--x: 0px; --y: 0px; --width: 400px; --height: -10px; --z-index: 1"
+      name="window_terminal"
+      style="
+        --x: 380px;
+        --y: 200px;
+        --width: 350px;
+        --height: 250px;
+        --z-index: 4;
+      "
+    >
+      <div class="window-area">
+        <code class="terminal">
+          ~ ||> ls<br />
+          . .. .config Desktop Documents Downloads Music Pictures Videos .bashrc
+        </code>
+      </div>
+    </window>
+    <!-- CSS Settings window -->
+    <window
+      name="window_CSSSettings"
+      style="
+        --x: 760px;
+        --y: 0px;
+        --width: 400px;
+        --height: 450px;
+        --z-index: 1;
+      "
       onclick="makeMain(this)"
     >
-      <header class="window-header">CSS Settings</header>
+      <header class="window-header">Global CSS Settings</header>
       <div class="window-area">
         <table>
           <tr>
@@ -165,17 +193,19 @@
       </div>
       <footer class="window-footer">Footer</footer>
     </window>
+    <!-- JS Settings window -->
     <window
+      name="window_JSSettings"
       style="
-        --x: 430px;
+        --x: 380px;
         --y: 0px;
         --width: 350px;
-        --height: -10px;
+        --height: 170px;
         --z-index: 2;
       "
       onclick="makeMain(this)"
     >
-      <header class="window-header">JS Settings</header>
+      <header class="window-header">Global JS Settings</header>
       <div class="window-area">
         <table>
           <tr>
