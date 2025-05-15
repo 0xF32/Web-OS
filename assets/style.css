@@ -104,7 +104,7 @@ input {
   margin: 0;
 }
 .terminal input {
-  background-color: var(--theme-bg-alt);
+  background-color: #00000000;
   color: var(--theme-main-mono);
   border: 0;
   padding-inline: 0;

@@ -122,21 +122,46 @@ function setJSSetting(setting, value) {
 }
 
 // Terminal implementation
+let prompt =
+  "~ ||> <input id='terminal_input' type='text' onchange='runCommand(this.value)'/>";
 // Run Command
 function runCommand(value) {
-  console.log("Running", value + "()");
-  (1, eval)(value + "()");
-  document.getElementById("terminal_input").focus()
+  value = value.split(" ");
+  let command = value[0];
+  value.shift();
+  let args = value.join(" ");
+  console.log("Running", command + "('" + args + "')");
+  (1, eval)(command + "('" + args + "')");
+  document.getElementById("terminal_input").focus();
 }
 
 // Make a function for each command implemented.
 
 // LS function (lists directories in current directory)
-function ls() {
-  document.getElementById("active_terminal").innerHTML = "~ ||> ls<br />" + document.getElementById("active_terminal").innerHTML;
+function ls(args) {
+  document.getElementById("terminal_input").remove();
+  document.getElementById("active_terminal").innerHTML =
+    document.getElementById("active_terminal").innerHTML +
+    "ls " +
+    args +
+    "<br />" +
+    prompt;
 }
 
-function clear() {
+// CLEAR function (removes all text in the terminal)
+function clear(args) {
+  document.getElementById("active_terminal").innerHTML = prompt;
+}
+
+// ECHO function (prints input text)
+function echo(args) {
+  document.getElementById("terminal_input").remove();
   document.getElementById("active_terminal").innerHTML =
-    "~ ||> <input id='terminal_input' type='text' onchange='runCommand(this.value)'/>";
+    document.getElementById("active_terminal").innerHTML +
+    "echo " +
+    args +
+    "<br /><br />" +
+    args +
+    "<br /><br />" +
+    prompt;
 }
