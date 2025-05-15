@@ -7,13 +7,16 @@ function init() {
 }
 
 function makeMain(element) {
-  console.log("making main: ", element);
   document.querySelectorAll("window").forEach((el) => {
     el.id = "subWindow";
-    el.style.setProperty("--z-index", parseInt(getComputedStyle(el).getPropertyValue("--z-index")) - 1)
+    el.style.setProperty(
+      "--z-index",
+      parseInt(getComputedStyle(el).getPropertyValue("--z-index")) - 1
+    );
   });
   element.id = "mainWindow";
-  element.style.setProperty("--z-index", 4) // Set to the number of windows when adding a new window #TODO
+  element.style.setProperty("--z-index", 4); // Set to the number of windows when adding a new window #TODO make automatic
+  console.log(element.getAttribute("name"), "is main");
 }
 
 function keydown(e) {
@@ -28,7 +31,7 @@ function keydown(e) {
       width -= windowResizeAmount;
       width += "px";
       mainWindow.style.setProperty("--width", width);
-      console.log("Shift + left arrow down: width =", width);
+      console.log(mainWindow.getAttribute("name"), "width =", width);
     }
     // Up Arrow
     if (e.keyCode == 38) {
@@ -36,7 +39,7 @@ function keydown(e) {
       height -= windowResizeAmount;
       height += "px";
       mainWindow.style.setProperty("--height", height);
-      console.log("Shift + up arrow down: height =", height);
+      console.log(mainWindow.getAttribute("name"), "height =", height);
     }
     // Right Arrow
     if (e.keyCode == 39) {
@@ -44,7 +47,7 @@ function keydown(e) {
       width += windowResizeAmount;
       width += "px";
       mainWindow.style.setProperty("--width", width);
-      console.log("Shift + right arrow down: width =", width);
+      console.log(mainWindow.getAttribute("name"), "width =", width);
     }
     // Down Arrow
     if (e.keyCode == 40) {
@@ -52,7 +55,7 @@ function keydown(e) {
       height += windowResizeAmount;
       height += "px";
       mainWindow.style.setProperty("--height", height);
-      console.log("Shift + down arrow down: height =", height);
+      console.log(mainWindow.getAttribute("name"), "height =", height);
     }
   } else {
     // Manage moving the window
@@ -62,7 +65,7 @@ function keydown(e) {
       x -= windowMoveAmount;
       x += "px";
       mainWindow.style.setProperty("--x", x);
-      console.log("left arrow down: x =", x);
+      console.log(mainWindow.getAttribute("name"), "x =", x);
     }
     // Up Arrow
     if (e.keyCode == 38) {
@@ -70,7 +73,7 @@ function keydown(e) {
       y -= windowMoveAmount;
       y += "px";
       mainWindow.style.setProperty("--y", y);
-      console.log("up arrow down: y =", y);
+      console.log(mainWindow.getAttribute("name"), "y =", y);
     }
     // Right Arrow
     if (e.keyCode == 39) {
@@ -78,7 +81,7 @@ function keydown(e) {
       x += windowMoveAmount;
       x += "px";
       mainWindow.style.setProperty("--x", x);
-      console.log("right arrow down: x =", x);
+      console.log(mainWindow.getAttribute("name"), "x =", x);
     }
     // Down Arrow
     if (e.keyCode == 40) {
@@ -86,7 +89,7 @@ function keydown(e) {
       y += windowMoveAmount;
       y += "px";
       mainWindow.style.setProperty("--y", y);
-      console.log("down arrow down: y =", y);
+      console.log(mainWindow.getAttribute("name"), "y =", y);
     }
   }
 }
@@ -103,9 +106,8 @@ function getCSSSetting(setting) {
 function setCSSSetting(setting, value) {
   let root = document.querySelector(":root");
   root.style.setProperty(setting, value);
-  console.log(setting, "=", getSetting(setting));
+  console.log(setting, "=", getCSSSetting(setting));
 }
-
 
 // For JavaScript:
 // Get the value of a variable
@@ -115,6 +117,26 @@ function getJSSetting(setting) {
 
 // Set the value of a variable
 function setJSSetting(setting, value) {
-  (1, eval)(setting + '=' + value);
+  (1, eval)(setting + "=" + value);
   console.log(setting, "=", getJSSetting(setting));
+}
+
+// Terminal implementation
+// Run Command
+function runCommand(value) {
+  console.log("Running", value + "()");
+  (1, eval)(value + "()");
+  document.getElementById("terminal_input").focus()
+}
+
+// Make a function for each command implemented.
+
+// LS function (lists directories in current directory)
+function ls() {
+  document.getElementById("active_terminal").innerHTML = "~ ||> ls<br />" + document.getElementById("active_terminal").innerHTML;
+}
+
+function clear() {
+  document.getElementById("active_terminal").innerHTML =
+    "~ ||> <input id='terminal_input' type='text' onchange='runCommand(this.value)'/>";
 }

@@ -12,7 +12,7 @@
     <window
       id="mainWindow"
       name="window_helloWorld"
-      style="--x: 0px; --y: 0px; --width: 350px; --height: 450px; --z-index: 3"
+      style="--x: 0px; --y: 0px; --width: 440px; --height: 540px; --z-index: 3"
       onclick="makeMain(this)"
     >
       <header class="window-header">Hello World!</header>
@@ -27,6 +27,18 @@
         <p></p>
         All data can be imported and exported if you want to mess around with
         the setup of the OS without being in the OS.
+        <p></p>
+        List of things to implement:
+        <ul>
+          <li>Drag windows with mouse cursor</li>
+          <li>Tiling mode, where each window moves to make space for others</li>
+          <li>
+            Remove all text fields, replacing with custom key events, that keep
+            focus (specifically in the terminal)
+          </li>
+          <li>Window Title bars (min, max, close)</li>
+          <li>Multiple of the same window</li>
+        </ul>
       </div>
       <footer class="window-footer">Footer</footer>
     </window>
@@ -34,29 +46,27 @@
     <window
       name="window_terminal"
       style="
-        --x: 380px;
-        --y: 200px;
+        --x: 470px;
+        --y: 230px;
         --width: 350px;
-        --height: 250px;
+        --height: 310px;
         --z-index: 4;
       "
       onclick="makeMain(this)"
     >
-      <div class="window-area">
-        <code class="terminal">
-          ~ ||> ls<br />
-          . .. .config Desktop Documents Downloads Music Pictures Videos .bashrc
-        </code>
-      </div>
+      <div class="window-header">Terminal</div>
+      <code class="window-area terminal" id="active_terminal">
+        ~ ||> <input id="terminal_input" type="text" onchange="runCommand(this.value)">
+      </code>
     </window>
     <!-- CSS Settings window -->
     <window
       name="window_CSSSettings"
       style="
-        --x: 760px;
+        --x: 850px;
         --y: 0px;
-        --width: 400px;
-        --height: 450px;
+        --width: 420px;
+        --height: 540px;
         --z-index: 1;
       "
       onclick="makeMain(this)"
@@ -74,7 +84,7 @@
             <td>
               <input
                 id="setting--theme-main"
-                value="#88bbff"
+                value="#89b4fa"
                 onchange="setCSSSetting('--theme-main', this.value)"
               />
             </td>
@@ -129,7 +139,7 @@
             <td>
               <input
                 id="setting--border"
-                value="#88bbff"
+                value="#89b4fa"
                 onchange="setCSSSetting('--border', this.value)"
               />
             </td>
@@ -198,10 +208,10 @@
     <window
       name="window_JSSettings"
       style="
-        --x: 380px;
+        --x: 470px;
         --y: 0px;
         --width: 350px;
-        --height: 170px;
+        --height: 200px;
         --z-index: 2;
       "
       onclick="makeMain(this)"

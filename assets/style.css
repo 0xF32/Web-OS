@@ -1,11 +1,11 @@
 /* Define global variables */
 :root {
-  --theme-main: #88bbff;
+  --theme-main: #89b4fa;
   --theme-main-mono: #dadada;
   --theme-bg: #202020;
   --theme-bg-alt: #202020;
   --theme-bg-alt2: #303030;
-  --border: #88bbff;
+  --border: #89b4fa;
   --shadow: #000000aa;
   --shadow-distance: 8px;
   --shadow-blur: 8px;
@@ -22,12 +22,6 @@
   background-color: var(--theme-bg);
   color: var(--theme-main-mono);
   transition-duration: 2000ms;
-}
-
-/* Colors for form items (input) */
-input {
-  background-color: var(--theme-bg-alt2);
-  color: var(--theme-main-mono);
 }
 
 /* Scroll Bar Modification */
@@ -49,6 +43,10 @@ input {
   background: #666;
   border-radius: var(--rounding);
 }
+/* The all important corner */
+::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
 
 /* Window Definition */
 window {
@@ -68,7 +66,8 @@ window {
   color: var(--theme-main-mono);
   background-color: var(--theme-bg-alt);
   border: 2px solid var(--border);
-  box-shadow: var(--shadow-distance) var(--shadow-distance) var(--shadow-blur) var(--shadow);
+  box-shadow: var(--shadow-distance) var(--shadow-distance) var(--shadow-blur)
+    var(--shadow);
   position: absolute;
 }
 
@@ -83,11 +82,24 @@ window {
 
 .window-area {
   padding: var(--padding);
-  overflow-y: scroll;
+  overflow: scroll;
   margin: 0 auto;
 }
 
 .window-footer {
   padding-bottom: var(--padding);
   text-align: center;
+}
+
+/* Inputs */
+input {
+  background-color: var(--theme-bg-alt2);
+  color: var(--theme-main-mono);
+  border: 0;
+  padding-inline: 8px;
+}
+
+/* Terminal */
+.terminal {
+  margin: 0;
 }
