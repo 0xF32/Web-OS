@@ -2,13 +2,13 @@
 :root {
   --theme-main: #89b4fa;
   --theme-main-mono: #dadada;
-  --theme-bg: #202020;
-  --theme-bg-alt: #202020;
-  --theme-bg-alt2: #303030;
+  --theme-bg: #202020dd;
+  --theme-bg-alt: #202020cc;
+  --theme-bg-alt2: #303030cc;
   --border: #89b4fa;
-  --shadow: #000000aa;
-  --shadow-distance: 8px;
-  --shadow-blur: 8px;
+  --shadow: #89b4fa;
+  --shadow-distance: 0px;
+  --shadow-blur: 256px;
   --rounding: 8px;
   --padding: 8px;
 }
