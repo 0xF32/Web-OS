@@ -103,3 +103,10 @@ input {
 .terminal {
   margin: 0;
 }
+.terminal input {
+  background-color: var(--theme-bg-alt);
+  color: var(--theme-main-mono);
+  border: 0;
+  padding-inline: 0;
+  font-family: monospace;
+}
