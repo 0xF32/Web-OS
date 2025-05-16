@@ -126,7 +126,16 @@ function setJSSetting(setting, value) {
 // Terminal implementation
 const prompt =
   "~ ||> <input id='terminal_input' type='text' onchange='runCommand(this.value)'/>";
-let available_commands = ["help", "ls", "clear", "echo", "loop", "neofetch"];
+let available_commands = [
+  "help",
+  "ls",
+  "clear",
+  "echo",
+  "loop",
+  "neofetch",
+  "image",
+  "cat",
+];
 // Run Command
 function runCommand(value) {
   // Handle enter
@@ -207,7 +216,49 @@ function loop(input_args) {
 // NEO FETCH function (fancy system info display and shows distro)
 function neofetch(_args) {
   document.getElementById("active_terminal").innerHTML =
-    document.getElementById("active_terminal").innerHTML + "Your Browser: " + window.navigator.userAgent + "<br />";
+    document.getElementById("active_terminal").innerHTML +
+    "Your Browser: " +
+    window.navigator.userAgent +
+    "<br />";
+}
+
+// IMAGE function (shows an image in the terminal)
+function image(args) {
+  if (args == "") {
+    document.getElementById("active_terminal").innerHTML =
+      document.getElementById("active_terminal").innerHTML +
+      "No Image Path specified.";
+  } else {
+    document.getElementById("active_terminal").innerHTML =
+      document.getElementById("active_terminal").innerHTML +
+      "<img src='" +
+      args +
+      "' style='max-width: 100%;'/><br />";
+  }
+}
+
+// CAT function (shows the text in a file)
+function cat(args) {
+  if (args == "") {
+    document.getElementById("active_terminal").innerHTML =
+      document.getElementById("active_terminal").innerHTML +
+      "Select a file<br /><<input type='file' id='cat_file_input' />";
+    document
+      .getElementById("cat_file_input")
+      .addEventListener("change", catFileEvent());
+  } else {
+    document.getElementById("active_terminal").innerHTML =
+      document.getElementById("active_terminal").innerHTML +
+      "<pre>" +
+      args +
+      "</pre><br />";
+  }
+}
+function catFileEvent(event) {
+  const input = event.target;
+  if ("files" in input && input.files.length > 0) {
+    cat(input.files[0]);
+  }
 }
 
 // RESET TERMINAL function (debug to reset the terminal from the browser console)
