@@ -109,4 +109,5 @@ input {
   border: 0;
   padding-inline: 0;
   font-family: monospace;
+  outline: none;
 }

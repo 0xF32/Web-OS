@@ -30,6 +30,7 @@
         <p></p>
         List of things to implement:
         <ul>
+          <li>App Launcher</li>
           <li>Drag windows with mouse cursor</li>
           <li>Tiling mode, where each window moves to make space for others</li>
           <li>
@@ -38,6 +39,11 @@
           </li>
           <li>Window Title bars (min, max, close)</li>
           <li>Multiple of the same window</li>
+          <li>Ability to write programs</li>
+          <li>
+            Mock package manager and/or ability to make packages and pull
+            request on github
+          </li>
         </ul>
       </div>
       <footer class="window-footer">Footer</footer>
@@ -55,8 +61,18 @@
       onclick="makeMain(this)"
     >
       <div class="window-header">Terminal</div>
-      <code class="window-area terminal" id="active_terminal">
-        ~ ||> <input id="terminal_input" type="text" onchange="runCommand(this.value)">
+      <code
+        class="window-area terminal"
+        id="active_terminal"
+        onclick="document.getElementById('terminal_input').focus()"
+      >
+        ~ ||>
+        <input
+          id="terminal_input"
+          type="text"
+          onchange="runCommand(this.value)"
+          autocomplete="new-password"
+        />
       </code>
     </window>
     <!-- CSS Settings window -->
@@ -228,7 +244,7 @@
             <td>
               <input
                 id="setting_windowMoveAmount"
-                value="100"
+                value="10"
                 onchange="setJSSetting('windowMoveAmount', this.value)"
               />
             </td>
