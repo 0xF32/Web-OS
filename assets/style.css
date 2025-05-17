@@ -4,11 +4,15 @@
   --theme-main-mono: #dadada;
   --theme-bg: #202020dd;
   --theme-bg-alt: #202020cc;
-  --theme-bg-alt2: #303030cc;
+  --theme-bg-alt2: #202020cc;
   --border: #89b4fa;
-  --shadow: #89b4fa;
-  --shadow-distance: 0px;
-  --shadow-blur: 256px;
+  --border-width: 2px;
+  --shadow: #202020;
+  --shadow-distance: 0;
+  --shadow-blur: 16px;
+  --inner-shadow: #202020;
+  --inner-shadow-distance: 0;
+  --inner-shadow-blur: 32px;
   --rounding: 8px;
   --padding: 8px;
 }
@@ -66,7 +70,7 @@ window {
   color: var(--theme-main-mono);
   background-color: var(--theme-bg-alt);
   border: 2px solid var(--border);
-  box-shadow: var(--shadow-distance) var(--shadow-distance) var(--shadow-blur)
+  box-shadow: inset var(--inner-shadow-distance) var(--inner-shadow-distance) var(--inner-shadow-blur) var(--inner-shadow), var(--shadow-distance) var(--shadow-distance) var(--shadow-blur)
     var(--shadow);
   position: absolute;
 }
@@ -101,13 +105,38 @@ input {
 
 /* Terminal */
 .terminal {
+  /* Terminal Colours */
+  --t-foreground: #dadada;
+  --t-background: #202020;
+  --t-cursor: #89b4fa;
+  --t-selection: #585b70;
+  --t-black: #45475a;
+  --t-red: #F38BA8;
+  --t-green: #A6E3A1;
+  --t-yellow: #F9E2AF;
+  --t-blue: #89B4FA;
+  --t-purple: #F5C2E7;
+  --t-cyan: #94E2D5;
+  --t-white: #BAC2DE;
+  --t-l-black: #585b70;
+  --t-l-red: #F38BA8;
+  --t-l-green: #A6E3A1;
+  --t-l-yellow: #F9E2AF;
+  --t-l-blue: #89B4FA;
+  --t-l-purple: #F5C2E7;
+  --t-l-cyan: #94E2D5;
+  --t-l-white: #A6ADC8;
+  /* Terminal Properties */
+  color: var(--t-foreground);
   margin: 0;
 }
 .terminal input {
   background-color: #00000000;
-  color: var(--theme-main-mono);
+  width: 90%;
+  color: var(--t-foreground);
   border: 0;
   padding-inline: 0;
+  padding: 0;
   font-family: monospace;
   outline: none;
 }

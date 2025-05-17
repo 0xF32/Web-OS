@@ -12,7 +12,7 @@
     <window
       id="mainWindow"
       name="window_helloWorld"
-      style="--x: 0px; --y: 0px; --width: 440px; --height: 540px; --z-index: 3"
+      style="--x: 0px; --y: 0px; --width: 440px; --height: 1050px; --z-index: 3"
       onclick="makeMain(this)"
     >
       <header class="window-header">Hello World!</header>
@@ -52,10 +52,10 @@
     <window
       name="window_terminal"
       style="
-        --x: 470px;
-        --y: 230px;
-        --width: 350px;
-        --height: 310px;
+        --x: 970px;
+        --y: 0px;
+        --width: 930px;
+        --height: 1050px;
         --z-index: 4;
       "
       onclick="makeMain(this)"
@@ -66,22 +66,15 @@
         id="active_terminal"
         onclick="document.getElementById('terminal_input').focus()"
       >
-        ~ ||>
-        <input
-          id="terminal_input"
-          type="text"
-          onchange="runCommand(this.value)"
-          autocomplete="off"
-        /><br />
       </code>
     </window>
     <!-- CSS Settings window -->
     <window
       name="window_CSSSettings"
       style="
-        --x: 850px;
+        --x: 470px;
         --y: 0px;
-        --width: 420px;
+        --width: 470px;
         --height: 540px;
         --z-index: 1;
       "
@@ -100,7 +93,6 @@
             <td>
               <input
                 id="setting--theme-main"
-                value="#89b4fa"
                 onchange="setCSSSetting('--theme-main', this.value)"
               />
             </td>
@@ -111,7 +103,6 @@
             <td>
               <input
                 id="setting--theme-main-mono"
-                value="#dadada"
                 onchange="setCSSSetting('--theme-main-mono', this.value)"
               />
             </td>
@@ -122,7 +113,6 @@
             <td>
               <input
                 id="setting--theme-bg"
-                value="#202020dd"
                 onchange="setCSSSetting('--theme-bg', this.value)"
               />
             </td>
@@ -133,7 +123,6 @@
             <td>
               <input
                 id="setting--theme-bg-alt"
-                value="#202020cc"
                 onchange="setCSSSetting('--theme-bg-alt', this.value)"
               />
             </td>
@@ -144,7 +133,6 @@
             <td>
               <input
                 id="setting--theme-bg-alt2"
-                value="#303030cc"
                 onchange="setCSSSetting('--theme-bg-alt2', this.value)"
               />
             </td>
@@ -155,18 +143,26 @@
             <td>
               <input
                 id="setting--border"
-                value="#89b4fa"
                 onchange="setCSSSetting('--border', this.value)"
               />
             </td>
             <td style="background-color: var(--border)"></td>
           </tr>
           <tr>
+            <td><code>--border-width</code></td>
+            <td>
+              <input
+                id="setting--border-width"
+                type="number"
+                onchange="setCSSSetting('--border-width', this.value + 'px')"
+              />
+            </td>
+          </tr>
+          <tr>
             <td><code>--shadow</code></td>
             <td>
               <input
                 id="setting--shadow"
-                value="#89b4fa"
                 onchange="setCSSSetting('--shadow', this.value)"
               />
             </td>
@@ -177,7 +173,6 @@
             <td>
               <input
                 id="setting--shadow-distance"
-                value="0"
                 type="number"
                 onchange="setCSSSetting('--shadow-distance', this.value + 'px')"
               />
@@ -188,9 +183,38 @@
             <td>
               <input
                 id="setting--shadow-blur"
-                value="256"
                 type="number"
                 onchange="setCSSSetting('--shadow-blur', this.value + 'px')"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td><code>--inner-shadow</code></td>
+            <td>
+              <input
+                id="setting--inner-shadow"
+                onchange="setCSSSetting('--inner-shadow', this.value)"
+              />
+            </td>
+            <td style="background-color: var(--shadow)"></td>
+          </tr>
+          <tr>
+            <td><code>--inner-shadow-distance</code></td>
+            <td>
+              <input
+                id="setting--inner-shadow-distance"
+                type="number"
+                onchange="setCSSSetting('--inner-shadow-distance', this.value + 'px')"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td><code>--inner-shadow-blur</code></td>
+            <td>
+              <input
+                id="setting--inner-shadow-blur"
+                type="number"
+                onchange="setCSSSetting('--inner-shadow-blur', this.value + 'px')"
               />
             </td>
           </tr>
@@ -199,7 +223,6 @@
             <td>
               <input
                 id="setting--rounding"
-                value="8"
                 type="number"
                 onchange="setCSSSetting('--rounding', this.value + 'px')"
               />
@@ -210,7 +233,6 @@
             <td>
               <input
                 id="setting--padding"
-                value="8"
                 type="number"
                 onchange="setCSSSetting('--padding', this.value + 'px')"
               />
@@ -225,9 +247,9 @@
       name="window_JSSettings"
       style="
         --x: 470px;
-        --y: 0px;
-        --width: 350px;
-        --height: 200px;
+        --y: 570px;
+        --width: 470px;
+        --height: 480px;
         --z-index: 2;
       "
       onclick="makeMain(this)"

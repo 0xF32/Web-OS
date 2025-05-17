@@ -2,7 +2,27 @@ let windowMoveAmount = 10;
 let windowResizeAmount = 10;
 
 function init() {
+  // Resets the terminal using the necessary JS vars
+  reset_terminal();
+  // Global key listener
   document.addEventListener("keydown", keydown, false);
+  // Sync all the css settings to the settings panel
+  syncCSSSetting("--theme-main");
+  syncCSSSetting("--theme-main-mono");
+  syncCSSSetting("--theme-bg");
+  syncCSSSetting("--theme-bg-alt");
+  syncCSSSetting("--theme-bg-alt2");
+  syncCSSSetting("--border");
+  syncCSSSetting("--border-width");
+  syncCSSSetting("--shadow");
+  syncCSSSetting("--shadow-distance");
+  syncCSSSetting("--shadow-blur");
+  syncCSSSetting("--inner-shadow");
+  syncCSSSetting("--inner-shadow-distance");
+  syncCSSSetting("--inner-shadow-blur");
+  syncCSSSetting("--rounding");
+  syncCSSSetting("--padding");
+  // Done
   console.log("Init done!");
 }
 
@@ -99,8 +119,9 @@ function keydown(e) {
 // Get the value of a global css variable
 // Nicknamed settings, so that it can be configured
 function getCSSSetting(setting) {
-  let rootStyle = getComputedStyle(document.querySelector(":root"));
-  let value = rootStyle.getPropertyValue(setting);
+  let value = getComputedStyle(
+    document.querySelector(":root")
+  ).getPropertyValue(setting);
   return value;
 }
 
@@ -109,6 +130,20 @@ function setCSSSetting(setting, value) {
   let root = document.querySelector(":root");
   root.style.setProperty(setting, value);
   console.log(setting, "=", getCSSSetting(setting));
+}
+
+// Sync the value of the css to the settings panel
+function syncCSSSetting(setting) {
+  let value = getComputedStyle(
+    document.querySelector(":root")
+  ).getPropertyValue(setting);
+  // Set the value
+  let el = document.getElementById("setting" + setting);
+  if (el.type == "number") {
+    el.value = parseInt(value);
+  } else {
+    el.value = value;
+  }
 }
 
 // For JavaScript:
@@ -125,7 +160,7 @@ function setJSSetting(setting, value) {
 
 // Terminal implementation
 const prompt =
-  "~ ||> <input id='terminal_input' type='text' onchange='runCommand(this.value)'/>";
+  "<span style='color: var(--t-blue)' >~</span><br /><span style='color: var(--t-green)' >❯</span> <input id='terminal_input' type='text' onchange='runCommand(this.value)'/>";
 let available_commands = [
   "help",
   "ls",
@@ -135,6 +170,7 @@ let available_commands = [
   "neofetch",
   "image",
   "cat",
+  "pwd",
 ];
 // Run Command
 function runCommand(value) {
@@ -150,9 +186,9 @@ function runCommand(value) {
   // Check if the command exists
   if (available_commands.includes(command)) {
     // Log
-    console.log("Running", command + "('" + args + "')");
+    console.log("Running", command + "(`" + args + "`)");
     // Run with eval
-    (1, eval)(command + "('" + args + "')");
+    (1, eval)(command + "(`" + args + "`)");
   } else {
     // The command isn't available
     document.getElementById("active_terminal").innerHTML =
@@ -207,9 +243,9 @@ function loop(input_args) {
   // Run the command the specified number of times
   for (let i = 0; i < number; i++) {
     // Log
-    console.log("Running", command + "('" + args + "')");
+    console.log("Running", command + "(`" + args + "`)");
     // Run with eval
-    (1, eval)(command + "('" + args + "')");
+    (1, eval)(command + "(`" + args + "`)");
   }
 }
 
@@ -242,10 +278,7 @@ function cat(args) {
   if (args == "") {
     document.getElementById("active_terminal").innerHTML =
       document.getElementById("active_terminal").innerHTML +
-      "Select a file<br /><<input type='file' id='cat_file_input' />";
-    document
-      .getElementById("cat_file_input")
-      .addEventListener("change", catFileEvent());
+      "No file selected<br />";
   } else {
     document.getElementById("active_terminal").innerHTML =
       document.getElementById("active_terminal").innerHTML +
@@ -254,11 +287,11 @@ function cat(args) {
       "</pre><br />";
   }
 }
-function catFileEvent(event) {
-  const input = event.target;
-  if ("files" in input && input.files.length > 0) {
-    cat(input.files[0]);
-  }
+
+// PWD function (shows the current path)
+function pwd(_args) {
+  document.getElementById("active_terminal").innerHTML =
+    document.getElementById("active_terminal").innerHTML + "~<br />";
 }
 
 // RESET TERMINAL function (debug to reset the terminal from the browser console)
