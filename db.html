@@ -4,10 +4,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Indexed DB Test</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            padding: 8px;
+        }
+        h1 {
+            color: var(--theme-main);
+        }
+        pre {
+            padding: 8px;
+            border: 2px solid #89b4da;
+            background-color: var(--theme-bg-alt);
+        }
+    </style>
   </head>
   <body>
     <h1>Indexed DB Test</h1>
     <button id="openDatabase">Open Database</button>
+    <p></p>
     <pre id="results"></pre>
     <script>
       // Open or create the IndexedDB database
