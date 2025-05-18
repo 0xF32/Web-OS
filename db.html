@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Indexed DB Test</title>
+  </head>
+  <body>
+    <h1>Indexed DB Test</h1>
+    <button id="openDatabase">Open Database</button>
+    <pre id="results"></pre>
+    <script>
+      // Open or create the IndexedDB database
+      function openDatabase() {
+        let request = indexedDB.open("fileSystem");
+
+        request.onsuccess = function (event) {
+          let db = event.target.result;
+          console.log("Database opened successfully");
+
+          // Get all records form the object store
+          let transaction = db.transaction(["root"], "readonly");
+          let objectStore = transaction.objectStore("root");
+          let getAllRequest = objectStore.getAll();
+
+          getAllRequest.onsuccess = function (event) {
+            let records = event.target.result;
+            displayResults(records); // Displays the results on page
+          };
+
+          getAllRequest.onerror = function (event) {
+            console.error("Error retrieving records:", event.target.error);
+          };
+        };
+
+        request.onerror = function (event) {
+          console.error("Error opening the database:", event.target.error);
+        };
+      }
+
+      // Display the records in the browser
+      function displayResults(records) {
+        const resultsDiv = document.getElementById("results");
+        resultsDiv.innerHTML = "";
+        if (records.length > 0) {
+          records.forEach((record, index) => {
+            resultsDiv.innerHTML += `<p>Record ${index + 1}: ${JSON.stringify(
+              record
+            )}</p>`;
+          });
+        } else {
+          resultsDiv.innerHTML = "<p>No records found.</p>";
+        }
+      }
+
+      // Open database when button is clicked
+      document
+        .getElementById("openDatabase")
+        .addEventListener("click", openDatabase);
+
+      // Set up the data base with initial data
+      window.onload = function () {
+        let request = indexedDB.open("fileSystem");
+
+        request.onupgradeneeded = function (event) {
+          let db = event.target.result;
+          if (!db.objectStoreNames.contains("root")) {
+            let objectStore = db.createObjectStore("root", {
+              keyPath: "file",
+            });
+            objectStore.add({
+              file: "/file1.txt",
+              contents: "Hello World!",
+            });
+            objectStore.add({
+              file: "/dir/file.txt",
+              contents: "In directory!",
+            });
+          }
+        };
+
+        console.log("created initial db");
+      };
+    </script>
+  </body>
+</html>

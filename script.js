@@ -146,6 +146,23 @@ function syncCSSSetting(setting) {
   }
 }
 
+// #########################
+// #                       #
+// #    File Management    #
+// #                       #
+// #########################
+// File system is stored in "IndexedDB"
+// Functions to: Read, Write, Create, Delete
+
+// Read:
+// Reads an object from the IndexedDB.
+// Returns as an object variable
+function fsRead(path) {
+  // Path points to the object being read, relative to root.
+  
+}
+
+
 // For JavaScript:
 // Get the value of a variable
 function getJSSetting(setting) {
@@ -263,7 +280,7 @@ function image(args) {
   if (args == "") {
     document.getElementById("active_terminal").innerHTML =
       document.getElementById("active_terminal").innerHTML +
-      "No Image Path specified.";
+      "No Image Path specified.<br />";
   } else {
     document.getElementById("active_terminal").innerHTML =
       document.getElementById("active_terminal").innerHTML +
