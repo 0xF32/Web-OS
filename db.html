@@ -4,27 +4,59 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Indexed DB Test</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
     <style>
-        :root {
-            padding: 8px;
-        }
-        h1 {
-            color: var(--theme-main);
-        }
-        pre {
-            padding: 8px;
-            border: 2px solid #89b4da;
-            background-color: var(--theme-bg-alt);
-        }
+      :root {
+        padding: var(--padding);
+      }
+      h1 {
+        color: var(--theme-main);
+      }
+      code p {
+        padding: var(--padding);
+        width: calc(100% - calc(var(--padding) + var(--padding)));
+        border: var(--border-width) solid var(--border);
+        border-radius: var(--rounding);
+        background-color: var(--theme-bg-alt);
+      }
     </style>
   </head>
   <body>
     <h1>Indexed DB Test</h1>
     <button id="openDatabase">Open Database</button>
+    <button id="getSpecific">Get Specific: ("file1.txt")</button>
     <p></p>
-    <pre id="results"></pre>
+    <code id="results"></code>
     <script>
+      // Get a specific item from the IndexedDB database
+      function getSpecific() {
+        let path = "file1.txt";
+        // request the database
+        let request = indexedDB.open("fileSystem");
+        // if it succeeds, use the event in the closure
+        request.onsuccess = function (event) {
+          let db = event.target.result;
+          console.log("Database opened successfully");
+
+          // Get all records form the object store
+          let transaction = db.transaction(["root"], "readonly");
+          let objectStore = transaction.objectStore("root");
+          let getRequest = objectStore.get(path);
+
+          getRequest.onsuccess = function (event) {
+            let record = event.target.result;
+            displayResult(record); // Displays the result on page
+          };
+
+          getRequest.onerror = function (event) {
+            console.error("Error retrieving records:", event.target.error);
+          };
+        };
+
+        request.onerror = function (event) {
+          console.error("Error opening the database:", event.target.error);
+        };
+      }
       // Open or create the IndexedDB database
       function openDatabase() {
         let request = indexedDB.open("fileSystem");
@@ -53,13 +85,19 @@
         };
       }
 
+      // Display a record in the browser
+      function displayResult(record) {
+        const resultsDiv = document.getElementById("results");
+        resultsDiv.innerHTML = `<p>Record: ${JSON.stringify(record)}</p>`;
+      }
+
       // Display the records in the browser
       function displayResults(records) {
         const resultsDiv = document.getElementById("results");
         resultsDiv.innerHTML = "";
         if (records.length > 0) {
           records.forEach((record, index) => {
-            resultsDiv.innerHTML += `<p>Record ${index + 1}: ${JSON.stringify(
+            resultsDiv.innerHTML += `<p>Record ${index}: ${JSON.stringify(
               record
             )}</p>`;
           });
@@ -72,6 +110,10 @@
       document
         .getElementById("openDatabase")
         .addEventListener("click", openDatabase);
+      // Get a specific element when the button is clicked
+      document
+        .getElementById("getSpecific")
+        .addEventListener("click", getSpecific);
 
       // Set up the data base with initial data
       window.onload = function () {
@@ -84,12 +126,41 @@
               keyPath: "file",
             });
             objectStore.add({
-              file: "/file1.txt",
+              file: "file1.txt",
+              type: "file",
               contents: "Hello World!",
             });
             objectStore.add({
-              file: "/dir/file.txt",
-              contents: "In directory!",
+              file: "paragraph.html",
+              type: "file",
+              contents: new Blob(["<p>Paragraph</p>"], { type: "text/html" }),
+            });
+            objectStore.add({
+              file: "dir",
+              type: "directory",
+              contents: [
+                {
+                  file: "file1.txt",
+                  type: "file",
+                  contents: "In a directory",
+                },
+                {
+                  file: "file2.txt",
+                  type: "file",
+                  contents: "file",
+                },
+                {
+                  file: "dir",
+                  type: "directory",
+                  contents: [
+                    {
+                      file: "text.java",
+                      type: "file",
+                      contents: "nested directories",
+                    },
+                  ],
+                },
+              ],
             });
           }
         };

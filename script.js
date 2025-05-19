@@ -160,8 +160,32 @@ function syncCSSSetting(setting) {
 function fsRead(path) {
   // Path points to the object being read, relative to root.
   
-}
+  // request the database
+  let request = indexedDB.open("fileSystem");
+  // if it succeeds, use the event in the closure
+  request.onsuccess = function (event) {
+    let db = event.target.result;
+    console.log("Database opened successfully");
 
+    // Get all records form the object store
+    let transaction = db.transaction(["root"], "readonly");
+    let objectStore = transaction.objectStore("root");
+    let getRequest = objectStore.get(path);
+
+    getRequest.onsuccess = function (event) {
+      let record = event.target.result;
+      return record; // Return the result
+    };
+
+    getAllRequest.onerror = function (event) {
+      console.error("Error retrieving records:", event.target.error);
+    };
+  };
+
+  request.onerror = function (event) {
+    console.error("Error opening the database:", event.target.error);
+  };
+}
 
 // For JavaScript:
 // Get the value of a variable
@@ -176,6 +200,7 @@ function setJSSetting(setting, value) {
 }
 
 // Terminal implementation
+// TODO: make async, so as to not cause massive lag
 const prompt =
   "<span style='color: var(--t-blue)' >~</span><br /><span style='color: var(--t-green)' >❯</span> <input id='terminal_input' type='text' onchange='runCommand(this.value)'/>";
 let available_commands = [
@@ -257,12 +282,24 @@ function loop(input_args) {
   let command = input_args[0];
   input_args.shift();
   let args = input_args.join(" ");
-  // Run the command the specified number of times
-  for (let i = 0; i < number; i++) {
+  // Check if the command exists
+  if (available_commands.includes(command)) {
     // Log
     console.log("Running", command + "(`" + args + "`)");
-    // Run with eval
-    (1, eval)(command + "(`" + args + "`)");
+    // Run the command the specified number of times
+    for (let i = 0; i < number; i++) {
+      // Log
+      console.log("Running", command + "(`" + args + "`)");
+      // Run with eval
+      (1, eval)(command + "(`" + args + "`)");
+    }
+  } else {
+    // The command isn't available
+    document.getElementById("active_terminal").innerHTML =
+      document.getElementById("active_terminal").innerHTML +
+      "`" +
+      command +
+      "` is not available, use `help` to see a list of commands.<br />";
   }
 }
 
