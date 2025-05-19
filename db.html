@@ -29,28 +29,56 @@
     <code id="results"></code>
     <script>
       // Get a specific item from the IndexedDB database
-      function getSpecific() {
-        let path = "file1.txt";
-        // request the database
+      function getSpecific(store, path, file) {
+        // Store is the top level "folder" to look in.
+        // File points to the key pair in the path being read path.
+        // Path is an array of the folders to navigate into.
+
+        // Request the database
         let request = indexedDB.open("fileSystem");
-        // if it succeeds, use the event in the closure
+        // On success, do the necessary actions in the closure
         request.onsuccess = function (event) {
           let db = event.target.result;
           console.log("Database opened successfully");
 
           // Get all records form the object store
-          let transaction = db.transaction(["root"], "readonly");
-          let objectStore = transaction.objectStore("root");
-          let getRequest = objectStore.get(path);
+          let transaction = db.transaction([store], "readonly");
+          let objectStore = transaction.objectStore(store);
+          console.log("Store: `" + store + "` Opened successfully");
 
-          getRequest.onsuccess = function (event) {
-            let record = event.target.result;
-            displayResult(record); // Displays the result on page
-          };
+          // Go to the top path
+          console.log(path);
+          if (path.length != 0) {
+            // Get the key pair at top level
+            let getRequest = objectStore.get(path[0]);
+            getRequest.onsuccess = function (event) {
+              let record = event.target.result;
 
-          getRequest.onerror = function (event) {
-            console.error("Error retrieving records:", event.target.error);
-          };
+              // Loop through every other dir in the path
+              path.shift();
+              for (let index = 0; index < path.length; index++) {
+                const dir = path[index];
+                console.log(record.dir);
+              }
+            };
+            // Handle errors
+            getRequest.onerror = function (event) {
+              console.error("Error retrieving records:", event.target.error);
+            };
+          } else {
+            // Getting
+            let getRequest = objectStore.get(file);
+
+            getRequest.onsuccess = function (event) {
+              let record = event.target.result;
+              console.log("Record is: " + record);
+              return record; // Return the result
+            };
+
+            getRequest.onerror = function (event) {
+              console.error("Error retrieving records:", event.target.error);
+            };
+          }
         };
 
         request.onerror = function (event) {

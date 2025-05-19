@@ -116,6 +116,12 @@ function keydown(e) {
   }
 }
 
+// ###########################
+// #                         #
+// #   Settings management   #
+// #                         #
+// ###########################
+
 // Get the value of a global css variable
 // Nicknamed settings, so that it can be configured
 function getCSSSetting(setting) {
@@ -146,47 +152,6 @@ function syncCSSSetting(setting) {
   }
 }
 
-// #########################
-// #                       #
-// #    File Management    #
-// #                       #
-// #########################
-// File system is stored in "IndexedDB"
-// Functions to: Read, Write, Create, Delete
-
-// Read:
-// Reads an object from the IndexedDB.
-// Returns as an object variable
-function fsRead(path) {
-  // Path points to the object being read, relative to root.
-  
-  // request the database
-  let request = indexedDB.open("fileSystem");
-  // if it succeeds, use the event in the closure
-  request.onsuccess = function (event) {
-    let db = event.target.result;
-    console.log("Database opened successfully");
-
-    // Get all records form the object store
-    let transaction = db.transaction(["root"], "readonly");
-    let objectStore = transaction.objectStore("root");
-    let getRequest = objectStore.get(path);
-
-    getRequest.onsuccess = function (event) {
-      let record = event.target.result;
-      return record; // Return the result
-    };
-
-    getAllRequest.onerror = function (event) {
-      console.error("Error retrieving records:", event.target.error);
-    };
-  };
-
-  request.onerror = function (event) {
-    console.error("Error opening the database:", event.target.error);
-  };
-}
-
 // For JavaScript:
 // Get the value of a variable
 function getJSSetting(setting) {
@@ -199,7 +164,112 @@ function setJSSetting(setting, value) {
   console.log(setting, "=", getJSSetting(setting));
 }
 
-// Terminal implementation
+// #########################
+// #                       #
+// #    File Management    #
+// #                       #
+// #########################
+// File system is stored in "IndexedDB"
+// Functions to: Read, Write, Create, Delete
+
+// ##########################################################################
+// #                                                                        #
+// #  Top level rough folder structure:                                     #
+// #   Theses are the objectStores under:                                   #
+// #    fileSystem: // The actual database                                  #
+// #      |- bin    // Programs that can be run by the Web OS               #
+// #      |- dev    // Devices, virtual and network                         #
+// #      |- etc    // Configuration files                                  #
+// #      |- {usr}  // User {usr} home folder                               #
+// #      |- lib    // program libraries                                    #
+// #      |- run    // Running app state files, and inter app communication #
+// #      |- tmp    // Files that can be deleted at any time                #
+// #      |- var    // Variable storage for between boot app/game data      #
+// #                                                                        #
+// ##########################################################################
+
+// ######################
+// #                    #
+// #   File Functions   #
+// #                    #
+// ######################
+// Read:
+// Reads an object from the IndexedDB.
+// Returns as an object variable
+function fsRead(store, file, path) {
+  // Store is the top level "folder" to look in.
+  // File points to the key pair in the path being read path.
+  // Path is an array of the folders to navigate into.
+
+  // Request the database
+  let request = indexedDB.open("fileSystem");
+  // On success, do the necessary actions in the closure
+  request.onsuccess = function (event) {
+    let db = event.target.result;
+    console.log("Database opened successfully");
+
+    // Get all records form the object store
+    let transaction = db.transaction([store], "readonly");
+    let objectStore = transaction.objectStore(store);
+    console.log("Store: `" + store + "` Opened successfully");
+
+    // Go to the top path
+    console.log(path);
+    if (path.length != 0) {
+      // Get the key pair at top level
+      let getRequest = objectStore.get(path[0]);
+      getRequest.onsuccess = function (event) {
+        let record = event.target.result;
+
+        // Loop through every other dir in the path
+        path.shift();
+        for (let index = 0; index < path.length; index++) {
+          const dir = path[index];
+          console.log(record.dir);
+        }
+      };
+      // Handle errors
+      getRequest.onerror = function (event) {
+        console.error("Error retrieving records:", event.target.error);
+      };
+    } else {
+      // Getting
+      let getRequest = objectStore.get(file);
+
+      getRequest.onsuccess = function (event) {
+        let record = event.target.result;
+        console.log("Record is: " + record);
+        return record; // Return the result
+      };
+
+      getRequest.onerror = function (event) {
+        console.error("Error retrieving records:", event.target.error);
+      };
+    }
+  };
+
+  request.onerror = function (event) {
+    console.error("Error opening the database:", event.target.error);
+  };
+}
+function fsr(args) {
+  args = args.split(" ");
+  console.log("Running fsRead with args: " + args);
+  if (args[2] == undefined) {
+    args[2] = new Array();
+  }
+  let result = fsRead(args[0], args[1], args[2]);
+  document.getElementById("active_terminal").innerHTML =
+    document.getElementById("active_terminal").innerHTML +
+    JSON.stringify(result) +
+    "<br />";
+}
+
+// ###############################
+// #                             #
+// #   Terminal implementation   #
+// #                             #
+// ###############################
 // TODO: make async, so as to not cause massive lag
 const prompt =
   "<span style='color: var(--t-blue)' >~</span><br /><span style='color: var(--t-green)' >❯</span> <input id='terminal_input' type='text' onchange='runCommand(this.value)'/>";
@@ -213,6 +283,7 @@ let available_commands = [
   "image",
   "cat",
   "pwd",
+  "fsr",
 ];
 // Run Command
 function runCommand(value) {
