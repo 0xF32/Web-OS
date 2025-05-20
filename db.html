@@ -29,10 +29,13 @@
     <code id="results"></code>
     <script>
       // Get a specific item from the IndexedDB database
-      function getSpecific(store, path, file) {
+      function getSpecific(store, file, path) {
         // Store is the top level "folder" to look in.
+        store = "root";
         // File points to the key pair in the path being read path.
+        file = "file1.txt";
         // Path is an array of the folders to navigate into.
+        path = Array();
 
         // Request the database
         let request = indexedDB.open("fileSystem");
@@ -71,8 +74,8 @@
 
             getRequest.onsuccess = function (event) {
               let record = event.target.result;
-              console.log("Record is: " + record);
-              return record; // Return the result
+              console.log("Record is: " + JSON.stringify(record));
+              displayResult(record); // Display the result
             };
 
             getRequest.onerror = function (event) {

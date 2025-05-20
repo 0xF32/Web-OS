@@ -170,7 +170,7 @@ function setJSSetting(setting, value) {
 // #                       #
 // #########################
 // File system is stored in "IndexedDB"
-// Functions to: Read, Write, Create, Delete
+// Functions to: Get Index, Read, Write, Create, Delete
 
 // ##########################################################################
 // #                                                                        #
@@ -193,32 +193,55 @@ function setJSSetting(setting, value) {
 // #   File Functions   #
 // #                    #
 // ######################
+// Raw:
+// Open data base fileSystem
+async function openDB() {
+  let request = indexedDB.open("fileSystem");
+
+  let result = await Promise.resolve(
+    (request.onsuccess = async function openDBSuccess(event) {
+      console.log("Database opened successfully");
+      return (db = event.target.result);
+    }),
+    (request.onerror = async function openDBError(event) {
+      console.error("Error opening the database:", event.target.error);
+      return undefined;
+    })
+  );
+  console.log("openDB() result = " + await result);
+  return await result;
+}
+// Open store from passed in database
+async function openStore(db, store) {
+  let transaction = db.transaction([store], "readonly");
+  let objectStore = transaction.objectStore(store);
+  console.log("Store: `" + store + "` Opened successfully");
+}
+
+
 // Read:
 // Reads an object from the IndexedDB.
 // Returns as an object variable
-function fsRead(store, file, path) {
+async function fsRead(store, file, path) {
   // Store is the top level "folder" to look in.
   // File points to the key pair in the path being read path.
   // Path is an array of the folders to navigate into.
 
-  // Request the database
-  let request = indexedDB.open("fileSystem");
+  // Open the database
+  let db = await openDB();
+  if (db == undefined) return undefined;
   // On success, do the necessary actions in the closure
-  request.onsuccess = function (event) {
-    let db = event.target.result;
-    console.log("Database opened successfully");
 
-    // Get all records form the object store
-    let transaction = db.transaction([store], "readonly");
-    let objectStore = transaction.objectStore(store);
-    console.log("Store: `" + store + "` Opened successfully");
+  // Get all records form the object store
+  let store = await openStore(db, store);
 
-    // Go to the top path
-    console.log(path);
-    if (path.length != 0) {
-      // Get the key pair at top level
-      let getRequest = objectStore.get(path[0]);
-      getRequest.onsuccess = function (event) {
+  // Go to the top path
+  console.log("Path is: " + path);
+  if (path.length != 0) {
+    // Get the key pair at top level
+    let getRequest = objectStore.get(path[0]);
+    await Promise.resolve(
+      (getRequest.onsuccess = async function (event) {
         let record = event.target.result;
 
         // Loop through every other dir in the path
@@ -227,42 +250,48 @@ function fsRead(store, file, path) {
           const dir = path[index];
           console.log(record.dir);
         }
-      };
-      // Handle errors
-      getRequest.onerror = function (event) {
+      })
+    );
+    // Handle errors
+    await Promise.resolve(
+      (getRequest.onerror = async function (event) {
         console.error("Error retrieving records:", event.target.error);
-      };
-    } else {
-      // Getting
-      let getRequest = objectStore.get(file);
+      })
+    );
+  } else {
+    // Getting
+    let getRequest = objectStore.get(file);
 
-      getRequest.onsuccess = function (event) {
+    await Promise.resolve(
+      (getRequest.onsuccess = async function (event) {
         let record = event.target.result;
-        console.log("Record is: " + record);
-        return record; // Return the result
-      };
-
-      getRequest.onerror = function (event) {
+        console.log("Record is: " + JSON.stringify(record));
+        result = JSON.stringify(record); // Return the result
+      })
+    );
+    await Promise.resolve(
+      (getRequest.onerror = async function (event) {
         console.error("Error retrieving records:", event.target.error);
-      };
-    }
-  };
-
-  request.onerror = function (event) {
-    console.error("Error opening the database:", event.target.error);
-  };
-}
-function fsr(args) {
-  args = args.split(" ");
-  console.log("Running fsRead with args: " + args);
-  if (args[2] == undefined) {
-    args[2] = new Array();
+      })
+    );
   }
-  let result = fsRead(args[0], args[1], args[2]);
+
+  return result;
+}
+async function fsr(args) {
+  args = args.split(" ");
+
+  if (args[2] == undefined) {
+    args[2] = Array();
+  }
+
+  console.log("Running fsRead with args: " + args);
+
+  let result = await Promise.resolve(fsRead(args[0], args[1], args[2]));
+  console.log("Result is: " + result);
+  // Output to terminal
   document.getElementById("active_terminal").innerHTML =
-    document.getElementById("active_terminal").innerHTML +
-    JSON.stringify(result) +
-    "<br />";
+    document.getElementById("active_terminal").innerHTML + result + "<br />";
 }
 
 // ###############################
@@ -286,7 +315,7 @@ let available_commands = [
   "fsr",
 ];
 // Run Command
-function runCommand(value) {
+async function runCommand(value) {
   // Handle enter
   document.getElementById("terminal_input").remove();
   document.getElementById("active_terminal").innerHTML =
@@ -301,7 +330,7 @@ function runCommand(value) {
     // Log
     console.log("Running", command + "(`" + args + "`)");
     // Run with eval
-    (1, eval)(command + "(`" + args + "`)");
+    await (1, eval)(command + "(`" + args + "`)");
   } else {
     // The command isn't available
     document.getElementById("active_terminal").innerHTML =
@@ -320,7 +349,7 @@ function runCommand(value) {
 // Make a function for each command implemented.
 
 // HELP function (lists all available commands)
-function help(_args) {
+async function help(_args) {
   document.getElementById("active_terminal").innerHTML =
     document.getElementById("active_terminal").innerHTML +
     available_commands.join("<br />") +
@@ -328,24 +357,24 @@ function help(_args) {
 }
 
 // LS function (lists directories in current directory)
-function ls(_args) {
+async function ls(_args) {
   document.getElementById("active_terminal").innerHTML =
     document.getElementById("active_terminal").innerHTML;
 }
 
 // CLEAR function (removes all text in the terminal)
-function clear(_args) {
+async function clear(_args) {
   document.getElementById("active_terminal").innerHTML = "";
 }
 
 // ECHO function (prints input text)
-function echo(args) {
+async function echo(args) {
   document.getElementById("active_terminal").innerHTML =
     document.getElementById("active_terminal").innerHTML + args + "<br />";
 }
 
 // LOOP function (repeats the function contained for the specified number of times)
-function loop(input_args) {
+async function loop(input_args) {
   input_args = input_args.split(" ");
   let number = input_args[0];
   input_args.shift();
@@ -362,7 +391,7 @@ function loop(input_args) {
       // Log
       console.log("Running", command + "(`" + args + "`)");
       // Run with eval
-      (1, eval)(command + "(`" + args + "`)");
+      await (1, eval)(command + "(`" + args + "`)");
     }
   } else {
     // The command isn't available
@@ -375,7 +404,7 @@ function loop(input_args) {
 }
 
 // NEO FETCH function (fancy system info display and shows distro)
-function neofetch(_args) {
+async function neofetch(_args) {
   document.getElementById("active_terminal").innerHTML =
     document.getElementById("active_terminal").innerHTML +
     "Your Browser: " +
@@ -384,7 +413,7 @@ function neofetch(_args) {
 }
 
 // IMAGE function (shows an image in the terminal)
-function image(args) {
+async function image(args) {
   if (args == "") {
     document.getElementById("active_terminal").innerHTML =
       document.getElementById("active_terminal").innerHTML +
@@ -399,7 +428,7 @@ function image(args) {
 }
 
 // CAT function (shows the text in a file)
-function cat(args) {
+async function cat(args) {
   if (args == "") {
     document.getElementById("active_terminal").innerHTML =
       document.getElementById("active_terminal").innerHTML +
@@ -414,7 +443,7 @@ function cat(args) {
 }
 
 // PWD function (shows the current path)
-function pwd(_args) {
+async function pwd(_args) {
   document.getElementById("active_terminal").innerHTML =
     document.getElementById("active_terminal").innerHTML + "~<br />";
 }
