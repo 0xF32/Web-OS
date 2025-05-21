@@ -170,7 +170,17 @@ function setJSSetting(setting, value) {
 // #                       #
 // #########################
 // File system is stored in "IndexedDB"
-// Functions to: Get Index, Read, Write, Create, Delete
+// Functions to:
+//  |- (checking/listing) => Get DBs, Get Stores, Get Objects, Get Complete Index
+//  |- (access/modify files) => Read, Write, Create, Delete
+//  |- (access/modify stores) => Create Store, Delete Store, Rename Store?
+//  |- (access/modify db) => Create DB, Delete DB, Rename DB?
+//
+// only access/modify db when adding/maintaining extra filesystems, because why not
+// access/modify stores as part of the filesystem
+//
+// Each of these functions will depend on some lower-level raw functions,
+// added when there is too much boilerplate code, or stuff gets hard to read.
 
 // ##########################################################################
 // #                                                                        #
@@ -195,9 +205,9 @@ function setJSSetting(setting, value) {
 // ######################
 // Raw:
 // Open data base fileSystem
-async function openDB() {
+async function openDB(dbName) {
   return new Promise(function (resolve) {
-    let request = indexedDB.open("fileSystem");
+    let request = indexedDB.open(dbName);
 
     request.onsuccess = function openDBSuccess(event) {
       // Success, return the resolve or it won't work
@@ -220,16 +230,16 @@ async function openStore(db, store, mode) {
   return objectStore;
 }
 // Get an object from the object store
-async function dbGetRequest(objectStore, object) {
-  return new Promise(function (resolve) {
+async function dbGetObject(objectStore, object) {
+  return new Promise(function dbGetObjectPromise(resolve) {
     let getRequest = objectStore.get(object);
 
-    getRequest.onsuccess = function dbGetRequestSuccess(event) {
+    getRequest.onsuccess = function dbGetObjectSuccess(event) {
       // Success, return the object
       return resolve(event.target.result);
     };
 
-    getRequest.onerror = function dbGetRequestError(event) {
+    getRequest.onerror = function dbGetObjectError(event) {
       console.error(
         "Error getting object",
         object,
@@ -242,38 +252,113 @@ async function dbGetRequest(objectStore, object) {
     };
   });
 }
+// Put an object into the objectStore
+async function dbPutObject(objectStore, object) {
+  return new Promise(function dbPutObjectPromise(resolve) {
+    let putRequest = objectStore.put(object);
+
+    putRequest.onsuccess = function dbPutObjectSuccess(event) {
+      // Success
+      console.log("Put succeeded:", event.target.result);
+      return resolve(event.target.result);
+    };
+
+    putRequest.onerror = function dbPutObjectError(event) {
+      console.error(
+        "Error putting object",
+        object,
+        "to objectStore",
+        objectStore,
+        "\nError:",
+        event.target.error
+      );
+      return reject(event.target.error);
+    };
+  });
+}
 
 // Read:
 // Reads an object from the IndexedDB.
 // Returns as an object variable
-async function fsRead(store, file) {
+async function fsRead(dbName, store, file) {
   // Store is the top level "folder" to look in.
   // File is the key which points to the object.
 
   // Open the database
-  let db = await openDB();
+  let db = await openDB(dbName);
 
   // Get the object store for easy access
   // db, store to open, and mode to open with
   let objectStore = await openStore(db, store, "readonly");
 
   // Get the object at file, ignoring path for now
-  let object = await dbGetRequest(objectStore, file);
+  let object = await dbGetObject(objectStore, file);
 
   // Return the object
   return object;
 }
 // Terminal wrapper
 async function fsr(args) {
+  // Handle args
   args = args.split(" ");
-
-  if (args[2] == undefined) {
-    args[2] = Array();
-  }
-
   console.log("Running fsRead with args:", args);
+  // execute
+  let result = await fsRead("fileSystem", args[0], args[1]);
+  console.log("Result is:", result);
+  // Output to terminal
+  document.getElementById("active_terminal").innerHTML =
+    document.getElementById("active_terminal").innerHTML +
+    JSON.stringify(result) +
+    "<br />";
+}
 
-  let result = await fsRead(args[0], args[1], args[2]);
+// Write:
+// Modifies the object in the IndexedDB
+async function fsWrite(dbName, store, file, type, contents) {
+  // dbName is the database to use as the fileSystem
+  // Store is the top level "folder" to look in
+  // File is the key which points to the object
+  // Type is either directory or file
+  // Contents is the new contents of the file
+
+  // Open the database
+  let db = await openDB(dbName);
+
+  // Get the object store for easy access
+  // db, store to open, and mode to open with
+  let objectStore = await openStore(db, store, "readwrite");
+
+  // Will overwrite the file if it exists
+  let object = await dbPutObject(objectStore, {
+    file: file,
+    type: type,
+    contents: contents,
+  });
+
+  // Do stuff with the returned object
+  return object;
+}
+// Terminal wrapper
+async function fsw(args) {
+  // Handle args
+  args = args.split(" ");
+  let store = args[0];
+  let file = args[1];
+  let type = args[2];
+  args.shift();
+  args.shift();
+  args.shift();
+  let contents = args.join(" ");
+  console.log(
+    "Running fsWrite with args:",
+    "fileSystem",
+    store,
+    file,
+    type,
+    contents
+  );
+  // execute
+  let result = await fsWrite("fileSystem", store, file, type, contents);
   console.log("Result is:", result);
   // Output to terminal
   document.getElementById("active_terminal").innerHTML =
@@ -301,6 +386,7 @@ let available_commands = [
   "cat",
   "pwd",
   "fsr",
+  "fsw",
 ];
 // Run Command
 async function runCommand(value) {
