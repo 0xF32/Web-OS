@@ -203,6 +203,47 @@ function setJSSetting(setting, value) {
 // #   File Functions   #
 // #                    #
 // ######################
+// Reset everything:
+async function resetFileSystem(dbName) {
+  // Resets the database to the default state:
+
+  // Delete the entire database
+  indexedDB.deleteDatabase(dbName);
+
+  // Recreate
+  // Open the database
+  let db = await openDB(dbName);
+
+  // Create Stores
+  // "bin"
+  let binStore = db.createObjectStore("bin", {
+    keyPath: "file",
+  });
+  // "dev"
+  let devStore = db.createObjectStore("dev", {
+    keyPath: "file",
+  });
+  // "etc"
+  let etcStore = db.createObjectStore("etc", {
+    keyPath: "file",
+  });
+  // "lib"
+  let libStore = db.createObjectStore("lib", {
+    keyPath: "file",
+  });
+  // "run"
+  let runStore = db.createObjectStore("run", {
+    keyPath: "file",
+  });
+  // "tmp"
+  let tmpStore = db.createObjectStore("tmp", {
+    keyPath: "file",
+  });
+  // "var"
+  let varStore = db.createObjectStore("var", {
+    keyPath: "file",
+  });
+}
 // Raw:
 // Open data base fileSystem
 async function openDB(dbName) {
