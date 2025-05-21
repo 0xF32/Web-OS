@@ -196,28 +196,29 @@ function setJSSetting(setting, value) {
 // Raw:
 // Open data base fileSystem
 async function openDB() {
-  let request = indexedDB.open("fileSystem");
+  return new Promise(function (resolve) {
+    let request = indexedDB.open("fileSystem");
 
-  let result = await Promise.resolve(
-    (request.onsuccess = async function openDBSuccess(event) {
-      console.log("Database opened successfully");
-      return (db = event.target.result);
-    }),
-    (request.onerror = async function openDBError(event) {
+    request.onsuccess = function openDBSuccess(event) {
+      console.log(
+        "Database opened successfully\nReturning",
+        event.target.result
+      );
+      return event.target.result;
+    };
+    request.onerror = function openDBError(event) {
       console.error("Error opening the database:", event.target.error);
       return undefined;
-    })
-  );
-  console.log("openDB() result = " + await result);
-  return await result;
+    };
+  });
 }
-// Open store from passed in database
+// Open store from passed in database and store name
 async function openStore(db, store) {
   let transaction = db.transaction([store], "readonly");
   let objectStore = transaction.objectStore(store);
-  console.log("Store: `" + store + "` Opened successfully");
+  console.log("Store:", store, "Opened successfully");
+  return objectStore;
 }
-
 
 // Read:
 // Reads an object from the IndexedDB.
@@ -228,12 +229,12 @@ async function fsRead(store, file, path) {
   // Path is an array of the folders to navigate into.
 
   // Open the database
-  let db = await openDB();
-  if (db == undefined) return undefined;
+  const db = Promise.resolve(await openDB());
+  console.log("db =", db);
   // On success, do the necessary actions in the closure
 
   // Get all records form the object store
-  let store = await openStore(db, store);
+  let objectStore = await openStore(db, store);
 
   // Go to the top path
   console.log("Path is: " + path);
@@ -278,6 +279,7 @@ async function fsRead(store, file, path) {
 
   return result;
 }
+// Terminal wrapper
 async function fsr(args) {
   args = args.split(" ");
 
@@ -287,8 +289,8 @@ async function fsr(args) {
 
   console.log("Running fsRead with args: " + args);
 
-  let result = await Promise.resolve(fsRead(args[0], args[1], args[2]));
-  console.log("Result is: " + result);
+  let result = await fsRead(args[0], args[1], args[2]);
+  console.log("Result is: " + (await result));
   // Output to terminal
   document.getElementById("active_terminal").innerHTML =
     document.getElementById("active_terminal").innerHTML + result + "<br />";
