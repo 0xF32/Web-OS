@@ -200,7 +200,7 @@ async function openDB() {
     let request = indexedDB.open("fileSystem");
 
     request.onsuccess = function openDBSuccess(event) {
-      console.log("Database opened successfully");
+      // Success, return the resolve or it won't work
       return resolve(event.target.result);
     };
     request.onerror = function openDBError(event) {
@@ -210,10 +210,13 @@ async function openDB() {
   });
 }
 // Open store from passed in database and store name
-async function openStore(db, store) {
-  let tx = db.transaction(store, "readonly");
+async function openStore(db, store, mode) {
+  // Opens the DB in mode (i.e. readonly)
+  // TODO: discover what else the mode can be
+  // TODO: check that the store exists before crashing the terminal
+  let tx = db.transaction(store, mode);
   let objectStore = tx.objectStore(store);
-  console.log("Store:", store, "Opened successfully");
+  // return the objectStore
   return objectStore;
 }
 // Get an object from the object store
@@ -243,16 +246,16 @@ async function dbGetRequest(objectStore, object) {
 // Read:
 // Reads an object from the IndexedDB.
 // Returns as an object variable
-async function fsRead(store, file, path) {
+async function fsRead(store, file) {
   // Store is the top level "folder" to look in.
-  // File points to the key pair in the path being read path.
-  // Path is an array of the folders to navigate into.
+  // File is the key which points to the object.
 
   // Open the database
   let db = await openDB();
 
-  // Get all records form the object store
-  let objectStore = await openStore(db, store);
+  // Get the object store for easy access
+  // db, store to open, and mode to open with
+  let objectStore = await openStore(db, store, "readonly");
 
   // Get the object at file, ignoring path for now
   let object = await dbGetRequest(objectStore, file);
@@ -268,7 +271,7 @@ async function fsr(args) {
     args[2] = Array();
   }
 
-  console.log("Running fsRead with args: " + args);
+  console.log("Running fsRead with args:", args);
 
   let result = await fsRead(args[0], args[1], args[2]);
   console.log("Result is:", result);
