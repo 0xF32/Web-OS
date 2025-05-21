@@ -200,24 +200,44 @@ async function openDB() {
     let request = indexedDB.open("fileSystem");
 
     request.onsuccess = function openDBSuccess(event) {
-      console.log(
-        "Database opened successfully\nReturning",
-        event.target.result
-      );
-      return event.target.result;
+      console.log("Database opened successfully");
+      return resolve(event.target.result);
     };
     request.onerror = function openDBError(event) {
       console.error("Error opening the database:", event.target.error);
-      return undefined;
+      return reject(event.target.error);
     };
   });
 }
 // Open store from passed in database and store name
 async function openStore(db, store) {
-  let transaction = db.transaction([store], "readonly");
-  let objectStore = transaction.objectStore(store);
+  let tx = db.transaction(store, "readonly");
+  let objectStore = tx.objectStore(store);
   console.log("Store:", store, "Opened successfully");
   return objectStore;
+}
+// Get an object from the object store
+async function dbGetRequest(objectStore, object) {
+  return new Promise(function (resolve) {
+    let getRequest = objectStore.get(object);
+
+    getRequest.onsuccess = function dbGetRequestSuccess(event) {
+      // Success, return the object
+      return resolve(event.target.result);
+    };
+
+    getRequest.onerror = function dbGetRequestError(event) {
+      console.error(
+        "Error getting object",
+        object,
+        "from objectStore",
+        objectStore,
+        "\nError:",
+        event.target.error
+      );
+      return reject(event.target.error);
+    };
+  });
 }
 
 // Read:
@@ -229,55 +249,16 @@ async function fsRead(store, file, path) {
   // Path is an array of the folders to navigate into.
 
   // Open the database
-  const db = Promise.resolve(await openDB());
-  console.log("db =", db);
-  // On success, do the necessary actions in the closure
+  let db = await openDB();
 
   // Get all records form the object store
   let objectStore = await openStore(db, store);
 
-  // Go to the top path
-  console.log("Path is: " + path);
-  if (path.length != 0) {
-    // Get the key pair at top level
-    let getRequest = objectStore.get(path[0]);
-    await Promise.resolve(
-      (getRequest.onsuccess = async function (event) {
-        let record = event.target.result;
+  // Get the object at file, ignoring path for now
+  let object = await dbGetRequest(objectStore, file);
 
-        // Loop through every other dir in the path
-        path.shift();
-        for (let index = 0; index < path.length; index++) {
-          const dir = path[index];
-          console.log(record.dir);
-        }
-      })
-    );
-    // Handle errors
-    await Promise.resolve(
-      (getRequest.onerror = async function (event) {
-        console.error("Error retrieving records:", event.target.error);
-      })
-    );
-  } else {
-    // Getting
-    let getRequest = objectStore.get(file);
-
-    await Promise.resolve(
-      (getRequest.onsuccess = async function (event) {
-        let record = event.target.result;
-        console.log("Record is: " + JSON.stringify(record));
-        result = JSON.stringify(record); // Return the result
-      })
-    );
-    await Promise.resolve(
-      (getRequest.onerror = async function (event) {
-        console.error("Error retrieving records:", event.target.error);
-      })
-    );
-  }
-
-  return result;
+  // Return the object
+  return object;
 }
 // Terminal wrapper
 async function fsr(args) {
@@ -290,10 +271,12 @@ async function fsr(args) {
   console.log("Running fsRead with args: " + args);
 
   let result = await fsRead(args[0], args[1], args[2]);
-  console.log("Result is: " + (await result));
+  console.log("Result is:", result);
   // Output to terminal
   document.getElementById("active_terminal").innerHTML =
-    document.getElementById("active_terminal").innerHTML + result + "<br />";
+    document.getElementById("active_terminal").innerHTML +
+    JSON.stringify(result) +
+    "<br />";
 }
 
 // ###############################
