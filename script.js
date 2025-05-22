@@ -22,6 +22,7 @@ function init() {
   syncCSSSetting("--inner-shadow-blur");
   syncCSSSetting("--rounding");
   syncCSSSetting("--padding");
+  syncCSSSetting("--bg-blur");
   // Done
   console.log("Init done!");
 }
@@ -209,45 +210,54 @@ async function resetFileSystem(dbName) {
 
   // Delete the entire database
   indexedDB.deleteDatabase(dbName);
+  console.log("Deleted DB", dbName);
 
-  // Recreate
-  // Open the database
-  let db = await openDB(dbName);
+  // Recreate default stores
+  return new Promise(function recreateDBPromise(resolve) {
+    // Open the database
+    let openDB = indexedDB.open(dbName);
+    console.log("Reopened DB", dbName);
 
-  // Create Stores
-  // "bin"
-  let binStore = db.createObjectStore("bin", {
-    keyPath: "file",
-  });
-  // "dev"
-  let devStore = db.createObjectStore("dev", {
-    keyPath: "file",
-  });
-  // "etc"
-  let etcStore = db.createObjectStore("etc", {
-    keyPath: "file",
-  });
-  // "lib"
-  let libStore = db.createObjectStore("lib", {
-    keyPath: "file",
-  });
-  // "run"
-  let runStore = db.createObjectStore("run", {
-    keyPath: "file",
-  });
-  // "tmp"
-  let tmpStore = db.createObjectStore("tmp", {
-    keyPath: "file",
-  });
-  // "var"
-  let varStore = db.createObjectStore("var", {
-    keyPath: "file",
+    openDB.onupgradeneeded = function upgradeDB(event) {
+      let db = event.target.result;
+      // Create Stores
+      // "bin"
+      let binStore = db.createObjectStore("bin", {
+        keyPath: "file",
+      });
+      // "dev"
+      let devStore = db.createObjectStore("dev", {
+        keyPath: "file",
+      });
+      // "etc"
+      let etcStore = db.createObjectStore("etc", {
+        keyPath: "file",
+      });
+      // "lib"
+      let libStore = db.createObjectStore("lib", {
+        keyPath: "file",
+      });
+      // "run"
+      let runStore = db.createObjectStore("run", {
+        keyPath: "file",
+      });
+      // "tmp"
+      let tmpStore = db.createObjectStore("tmp", {
+        keyPath: "file",
+      });
+      // "var"
+      let varStore = db.createObjectStore("var", {
+        keyPath: "file",
+      });
+
+      console.log(db);
+    };
   });
 }
-// Raw:
+// Common/Raw functions:
 // Open data base fileSystem
 async function openDB(dbName) {
-  return new Promise(function (resolve) {
+  return new Promise(function openDBPromise(resolve) {
     let request = indexedDB.open(dbName);
 
     request.onsuccess = function openDBSuccess(event) {
@@ -265,59 +275,16 @@ async function openStore(db, store, mode) {
   // Opens the DB in mode (i.e. readonly)
   // TODO: discover what else the mode can be
   // TODO: check that the store exists before crashing the terminal
-  let tx = db.transaction(store, mode);
-  let objectStore = tx.objectStore(store);
-  // return the objectStore
-  return objectStore;
-}
-// Get an object from the object store
-async function dbGetObject(objectStore, object) {
-  return new Promise(function dbGetObjectPromise(resolve) {
-    let getRequest = objectStore.get(object);
-
-    getRequest.onsuccess = function dbGetObjectSuccess(event) {
-      // Success, return the object
-      return resolve(event.target.result);
-    };
-
-    getRequest.onerror = function dbGetObjectError(event) {
-      console.error(
-        "Error getting object",
-        object,
-        "from objectStore",
-        objectStore,
-        "\nError:",
-        event.target.error
-      );
-      return reject(event.target.error);
-    };
-  });
-}
-// Put an object into the objectStore
-async function dbPutObject(objectStore, object) {
-  return new Promise(function dbPutObjectPromise(resolve) {
-    let putRequest = objectStore.put(object);
-
-    putRequest.onsuccess = function dbPutObjectSuccess(event) {
-      // Success
-      console.log("Put succeeded:", event.target.result);
-      return resolve(event.target.result);
-    };
-
-    putRequest.onerror = function dbPutObjectError(event) {
-      console.error(
-        "Error putting object",
-        object,
-        "to objectStore",
-        objectStore,
-        "\nError:",
-        event.target.error
-      );
-      return reject(event.target.error);
-    };
-  });
+  if (db.objectStoreNames.contains(store)) {
+    let tx = db.transaction(store, mode);
+    let objectStore = tx.objectStore(store);
+    // return the objectStore
+    return objectStore;
+  } else {
+  }
 }
 
+// Key Pair operations:
 // Read:
 // Reads an object from the IndexedDB.
 // Returns as an object variable
@@ -333,12 +300,32 @@ async function fsRead(dbName, store, file) {
   let objectStore = await openStore(db, store, "readonly");
 
   // Get the object at file, ignoring path for now
-  let object = await dbGetObject(objectStore, file);
+  let object = await new Promise(function dbGetObjectPromise(resolve) {
+    // Get an object from the object store
+    let getRequest = objectStore.get(file);
+
+    getRequest.onsuccess = function dbGetObjectSuccess(event) {
+      // Success, return the object
+      return resolve(event.target.result);
+    };
+
+    getRequest.onerror = function dbGetObjectError(event) {
+      console.error(
+        "Error getting file",
+        file,
+        "from objectStore",
+        objectStore,
+        "\nError:",
+        event.target.error
+      );
+      return reject(event.target.error);
+    };
+  });
 
   // Return the object
   return object;
 }
-// Terminal wrapper
+// Temporary Terminal wrapper
 async function fsr(args) {
   // Handle args
   args = args.split(" ");
@@ -370,16 +357,36 @@ async function fsWrite(dbName, store, file, type, contents) {
   let objectStore = await openStore(db, store, "readwrite");
 
   // Will overwrite the file if it exists
-  let object = await dbPutObject(objectStore, {
-    file: file,
-    type: type,
-    contents: contents,
+  let object = await new Promise(function dbPutObjectPromise(resolve) {
+    // Put an object into the objectStore
+    let putRequest = objectStore.put({
+      file: file,
+      type: type,
+      contents: contents,
+    });
+
+    putRequest.onsuccess = function dbPutObjectSuccess(event) {
+      // Success
+      return resolve(event.target.result);
+    };
+
+    putRequest.onerror = function dbPutObjectError(event) {
+      console.error(
+        "Error putting file",
+        file,
+        "to objectStore",
+        objectStore,
+        "\nError:",
+        event.target.error
+      );
+      return reject(event.target.error);
+    };
   });
 
   // Do stuff with the returned object
   return object;
 }
-// Terminal wrapper
+// Temporary Terminal wrapper
 async function fsw(args) {
   // Handle args
   args = args.split(" ");
@@ -399,13 +406,83 @@ async function fsw(args) {
     contents
   );
   // execute
-  let result = await fsWrite("fileSystem", store, file, type, contents);
-  console.log("Result is:", result);
+  let object = await fsWrite("fileSystem", store, file, type, contents);
+  console.log("Put object", object);
+  let result = await fsRead("fileSystem", store, file);
   // Output to terminal
   document.getElementById("active_terminal").innerHTML =
     document.getElementById("active_terminal").innerHTML +
     JSON.stringify(result) +
     "<br />";
+}
+
+// Delete:
+// Deletes an object from the IndexedDB
+async function fsDelete(dbName, store, file) {
+  // dbName is the database to use as the fileSystem
+  // Store is the top level "folder" to look in
+  // File is the key which points to the object
+
+  // Open the database
+  let db = await openDB(dbName);
+
+  // Get the object store for easy access
+  // db, store to open, and mode to open with
+  let objectStore = await openStore(db, store, "readwrite");
+
+  // Delete the file
+  let object = await new Promise(function deleteObjectPromise(resolve) {
+    let deleteRequest = objectStore.delete(file);
+
+    deleteRequest.onsuccess = function deleteObjectSuccess(event) {
+      // Successfully deleted
+      return resolve(event.target.result);
+    };
+
+    deleteRequest.onerror = function deleteObjectError(event) {
+      console.error(
+        "Error deleting file",
+        file,
+        "from objectStore",
+        objectStore,
+        "\nError:",
+        event.target.error
+      );
+      return reject(event.target.error);
+    };
+  });
+
+  // Return
+  return object;
+}
+// Terminal wrapper
+async function rm(args) {
+  // Handle args
+  args = args.split(" ");
+  console.log("Running fsDelete with args:", args);
+  // execute
+  let result = await fsDelete("fileSystem", args[0], args[1]);
+  if (result == undefined) {
+    // Output to terminal
+    document.getElementById("active_terminal").innerHTML =
+      document.getElementById("active_terminal").innerHTML +
+      "Deleted `" +
+      args[0] +
+      "/" +
+      args[1] +
+      "` from fileSystem" +
+      "<br />";
+  } else {
+    // Output to terminal
+    document.getElementById("active_terminal").innerHTML =
+      document.getElementById("active_terminal").innerHTML +
+      "Failed to delete `" +
+      args[0] +
+      "/" +
+      args[1] +
+      "` from fileSystem" +
+      "<br />";
+  }
 }
 
 // ###############################
@@ -428,6 +505,7 @@ let available_commands = [
   "pwd",
   "fsr",
   "fsw",
+  "rm",
 ];
 // Run Command
 async function runCommand(value) {
