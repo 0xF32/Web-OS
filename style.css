@@ -1,20 +1,21 @@
 /* Define global variables */
 :root {
-  --theme-main: #89b4fa;
-  --theme-main-mono: #dadada;
-  --theme-bg: #202020dd;
-  --theme-bg-alt: #202020cc;
-  --theme-bg-alt2: #202020cc;
-  --border: #89b4fa;
+  --theme-main: #cba6f7;
+  --theme-main-mono: #cdd6f4;
+  --theme-bg: #11111bdd;
+  --theme-bg-alt: #11111bdd;
+  --theme-bg-alt2: #11111bdd;
+  --border: #cba6f7;
   --border-width: 2px;
-  --shadow: #202020;
+  --shadow: #11111b;
   --shadow-distance: 0;
   --shadow-blur: 16px;
-  --inner-shadow: #202020;
+  --inner-shadow: #11111b;
   --inner-shadow-distance: 0;
   --inner-shadow-blur: 32px;
   --rounding: 8px;
   --padding: 8px;
+  --bg-blur: 24px;
 }
 /* Global background and main color */
 :root {
@@ -69,9 +70,12 @@ window {
   border-radius: var(--rounding);
   color: var(--theme-main-mono);
   background-color: var(--theme-bg-alt);
+  backdrop-filter: blur(var(--bg-blur));
   border: var(--border-width) solid var(--border);
-  box-shadow: inset var(--inner-shadow-distance) var(--inner-shadow-distance) var(--inner-shadow-blur) var(--inner-shadow), var(--shadow-distance) var(--shadow-distance) var(--shadow-blur)
-    var(--shadow);
+  box-shadow: inset var(--inner-shadow-distance) var(--inner-shadow-distance)
+      var(--inner-shadow-blur) var(--inner-shadow),
+    var(--shadow-distance) var(--shadow-distance) var(--shadow-blur)
+      var(--shadow);
   position: absolute;
 }
 
@@ -111,21 +115,21 @@ input {
   --t-cursor: #89b4fa;
   --t-selection: #585b70;
   --t-black: #45475a;
-  --t-red: #F38BA8;
-  --t-green: #A6E3A1;
-  --t-yellow: #F9E2AF;
-  --t-blue: #89B4FA;
-  --t-purple: #F5C2E7;
-  --t-cyan: #94E2D5;
-  --t-white: #BAC2DE;
+  --t-red: #f38ba8;
+  --t-green: #a6e3a1;
+  --t-yellow: #f9e2af;
+  --t-blue: #89b4fa;
+  --t-purple: #f5c2e7;
+  --t-cyan: #94e2d5;
+  --t-white: #bac2de;
   --t-l-black: #585b70;
-  --t-l-red: #F38BA8;
-  --t-l-green: #A6E3A1;
-  --t-l-yellow: #F9E2AF;
-  --t-l-blue: #89B4FA;
-  --t-l-purple: #F5C2E7;
-  --t-l-cyan: #94E2D5;
-  --t-l-white: #A6ADC8;
+  --t-l-red: #f38ba8;
+  --t-l-green: #a6e3a1;
+  --t-l-yellow: #f9e2af;
+  --t-l-blue: #89b4fa;
+  --t-l-purple: #f5c2e7;
+  --t-l-cyan: #94e2d5;
+  --t-l-white: #a6adc8;
   /* Terminal Properties */
   color: var(--t-foreground);
   margin: 0;
