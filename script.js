@@ -44,7 +44,7 @@ function init() {
 // #                      #
 // ########################
 
-// Called when a window is clicked 
+// Called when a window is clicked
 function makeMain(element) {
   document.querySelectorAll("window").forEach((el) => {
     el.id = "subWindow";
@@ -59,82 +59,94 @@ function makeMain(element) {
   console.log(element.getAttribute("name"), "is main");
 }
 
+// Move window
+function moveWindow(element, deltaX, deltaY) {
+  // Move in X:
+  // Calculate position
+  let x = parseInt(getElementCSSSetting(element, "--x")) + deltaX + "px";
+  setElementCSSSetting(element, "--x", x);
+
+  // Move in Y:
+  // Calculate position
+  let y = parseInt(getElementCSSSetting(element, "--y")) + deltaY + "px";
+  setElementCSSSetting(element, "--y", y);
+
+  // Log
+  console.log(element.getAttribute("name"), "x =", x);
+  console.log(element.getAttribute("name"), "y =", y);
+}
+
+// Resize window
+function resizeWindow(element, deltaWidth, deltaHeight) {
+  // Resize width:
+  // Calculate size
+  let width =
+    parseInt(getElementCSSSetting(element, "--width")) + deltaWidth + "px";
+  setElementCSSSetting(element, "--width", width);
+
+  // Resize height:
+  // Calculate size
+  let height =
+    parseInt(getElementCSSSetting(element, "--height")) + deltaHeight + "px";
+  setElementCSSSetting(element, "--height", height);
+
+  // Log
+  console.log(element.getAttribute("name"), "width =", width);
+  console.log(element.getAttribute("name"), "height =", height);
+}
+
 // Key down handler
 function keydown(e) {
   // Ignore when inputting text
   if (document.activeElement.matches("input")) return;
-  
+
   // Get the window and its style for easy access
   let mainWindow = document.getElementById("mainWindow");
-  let mainWindowStyle = getComputedStyle(mainWindow);
+  // If shifting, resize the window
   if (e.shiftKey) {
     // Manage resizing the window
+    let deltaWidth = 0;
+    let deltaHeight = 0;
     // Left arrow
     if (e.keyCode == 37) {
-      let width = parseInt(mainWindowStyle.getPropertyValue("--width"));
-      width -= windowResizeAmount;
-      width += "px";
-      mainWindow.style.setProperty("--width", width);
-      console.log(mainWindow.getAttribute("name"), "width =", width);
+      deltaWidth -= windowResizeAmount;
     }
     // Up Arrow
     if (e.keyCode == 38) {
-      let height = parseInt(mainWindowStyle.getPropertyValue("--height"));
-      height -= windowResizeAmount;
-      height += "px";
-      mainWindow.style.setProperty("--height", height);
-      console.log(mainWindow.getAttribute("name"), "height =", height);
+      deltaHeight -= windowResizeAmount;
     }
     // Right Arrow
     if (e.keyCode == 39) {
-      let width = parseInt(mainWindowStyle.getPropertyValue("--width"));
-      width += windowResizeAmount;
-      width += "px";
-      mainWindow.style.setProperty("--width", width);
-      console.log(mainWindow.getAttribute("name"), "width =", width);
+      deltaWidth += windowResizeAmount;
     }
     // Down Arrow
     if (e.keyCode == 40) {
-      let height = parseInt(mainWindowStyle.getPropertyValue("--height"));
-      height += windowResizeAmount;
-      height += "px";
-      mainWindow.style.setProperty("--height", height);
-      console.log(mainWindow.getAttribute("name"), "height =", height);
+      deltaHeight += windowResizeAmount;
     }
+    // Enact resize
+    resizeWindow(mainWindow, deltaWidth, deltaHeight);
   } else {
     // Manage moving the window
+    let deltaX = 0;
+    let deltaY = 0;
     // Left arrow
     if (e.keyCode == 37) {
-      let x = parseInt(mainWindowStyle.getPropertyValue("--x"));
-      x -= windowMoveAmount;
-      x += "px";
-      mainWindow.style.setProperty("--x", x);
-      console.log(mainWindow.getAttribute("name"), "x =", x);
+      deltaX -= windowMoveAmount;
     }
     // Up Arrow
     if (e.keyCode == 38) {
-      let y = parseInt(mainWindowStyle.getPropertyValue("--y"));
-      y -= windowMoveAmount;
-      y += "px";
-      mainWindow.style.setProperty("--y", y);
-      console.log(mainWindow.getAttribute("name"), "y =", y);
+      deltaY -= windowMoveAmount;
     }
     // Right Arrow
     if (e.keyCode == 39) {
-      let x = parseInt(mainWindowStyle.getPropertyValue("--x"));
-      x += windowMoveAmount;
-      x += "px";
-      mainWindow.style.setProperty("--x", x);
-      console.log(mainWindow.getAttribute("name"), "x =", x);
+      deltaX += windowMoveAmount;
     }
     // Down Arrow
     if (e.keyCode == 40) {
-      let y = parseInt(mainWindowStyle.getPropertyValue("--y"));
-      y += windowMoveAmount;
-      y += "px";
-      mainWindow.style.setProperty("--y", y);
-      console.log(mainWindow.getAttribute("name"), "y =", y);
+      deltaY += windowMoveAmount;
     }
+    // Enact move
+    moveWindow(mainWindow, deltaX, deltaY);
   }
 }
 
@@ -226,20 +238,24 @@ function getElementCSSSetting(element, setting) {
   if (localStorage.getItem(element.getAttribute("name") + setting) == null) {
     // if not, set to the current value as declared in the css
     localStorage.setItem(
-      setting,
+      element.getAttribute("name") + setting,
       getComputedStyle(element).getPropertyValue(setting)
     );
   }
   // Get the value from local storage
-  let value = localStorage.getItem(setting);
+  let value = localStorage.getItem(element.getAttribute("name") + setting);
   return value;
 }
 
 // Set the value of an element's css variable
 function setElementCSSSetting(element, setting, value) {
   element.style.setProperty(setting, value);
-  localStorage.setItem(setting, value);
-  console.log(setting, "=", getCSSSetting(setting));
+  localStorage.setItem(element.getAttribute("name") + setting, value);
+  console.log(
+    element.getAttribute("name") + setting,
+    "=",
+    getElementCSSSetting(element, setting)
+  );
 }
 
 // Sync the value of an element's css variable to and from local storage
