@@ -28,6 +28,28 @@
   color: var(--theme-main-mono);
   transition-duration: 2000ms;
 }
+/* Links */
+a:link {
+  color: var(--theme-main);
+  background-color: transparent;
+  text-decoration: none;
+}
+a:visited {
+  color: var(--theme-main);
+  background-color: transparent;
+  text-decoration: none;
+}
+a:hover {
+  color: var(--theme-main);
+  background-color: transparent;
+  text-decoration: underline;
+}
+a:active {
+  color: var(--theme-main);
+  background-color: transparent;
+  text-decoration: underline;
+}
+
 
 /* Scroll Bar Modification */
 /* width */
