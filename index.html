@@ -10,7 +10,6 @@
   <body>
     <!-- Hello World window -->
     <window
-      id="mainWindow"
       name="window_helloWorld"
       style="
         --x: 30px;
@@ -36,6 +35,7 @@
         <p></p>
         List of things to implement:
         <ul>
+          <li>Ability to change wallpaper</li>
           <li>App Launcher</li>
           <li>Drag windows with mouse cursor</li>
           <li>Tiling mode, where each window moves to make space for others</li>
@@ -282,7 +282,7 @@
             <td>
               <input
                 id="setting_windowMoveAmount"
-                value="10"
+                type="number"
                 onchange="setJSSetting('windowMoveAmount', this.value)"
               />
             </td>
@@ -292,7 +292,7 @@
             <td>
               <input
                 id="setting_windowResizeAmount"
-                value="10"
+                type="number"
                 onchange="setJSSetting('windowResizeAmount', this.value)"
               />
             </td>
