@@ -23,26 +23,47 @@ function init() {
   syncCSSSetting("--rounding");
   syncCSSSetting("--padding");
   syncCSSSetting("--bg-blur");
+  // Sync all the JS settings to the settings panel
+  syncJSSetting("windowMoveAmount");
+  syncJSSetting("windowResizeAmount");
+  // Sync Window states:
+  document.querySelectorAll("window").forEach((el) => {
+    syncElementCSSSetting(el, "--x");
+    syncElementCSSSetting(el, "--y");
+    syncElementCSSSetting(el, "--width");
+    syncElementCSSSetting(el, "--height");
+    syncElementCSSSetting(el, "--z-index");
+  });
   // Done
   console.log("Init done!");
 }
 
+// ########################
+// #                      #
+// #   Helper Functions   #
+// #                      #
+// ########################
+
+// Called when a window is clicked 
 function makeMain(element) {
   document.querySelectorAll("window").forEach((el) => {
     el.id = "subWindow";
-    el.style.setProperty(
+    setElementCSSSetting(
+      el,
       "--z-index",
-      parseInt(getComputedStyle(el).getPropertyValue("--z-index")) - 1
+      parseInt(getElementCSSSetting(el, "--z-index")) - 1 + "px"
     );
   });
   element.id = "mainWindow";
-  element.style.setProperty("--z-index", 4); // Set to the number of windows when adding a new window #TODO make automatic
+  setElementCSSSetting(element, "--z-index", 4); // Set to the number of windows when adding a new window #TODO make automatic
   console.log(element.getAttribute("name"), "is main");
 }
 
+// Key down handler
 function keydown(e) {
-  if (document.getElementById("terminal_input") == document.activeElement)
-    return;
+  // Ignore when inputting text
+  if (document.activeElement.matches("input")) return;
+  
   // Get the window and its style for easy access
   let mainWindow = document.getElementById("mainWindow");
   let mainWindowStyle = getComputedStyle(mainWindow);
@@ -122,13 +143,23 @@ function keydown(e) {
 // #   Settings management   #
 // #                         #
 // ###########################
+// Nicknamed settings, because it can be configured
 
+// For CSS:
 // Get the value of a global css variable
-// Nicknamed settings, so that it can be configured
 function getCSSSetting(setting) {
-  let value = getComputedStyle(
-    document.querySelector(":root")
-  ).getPropertyValue(setting);
+  // Check if the value exists
+  if (localStorage.getItem(setting) == null) {
+    // if not, set to the current value as declared in the css
+    localStorage.setItem(
+      setting,
+      getComputedStyle(document.querySelector(":root")).getPropertyValue(
+        setting
+      )
+    );
+  }
+  // Get the value from local storage
+  let value = localStorage.getItem(setting);
   return value;
 }
 
@@ -136,14 +167,15 @@ function getCSSSetting(setting) {
 function setCSSSetting(setting, value) {
   let root = document.querySelector(":root");
   root.style.setProperty(setting, value);
+  localStorage.setItem(setting, value);
   console.log(setting, "=", getCSSSetting(setting));
 }
 
 // Sync the value of the css to the settings panel
 function syncCSSSetting(setting) {
-  let value = getComputedStyle(
-    document.querySelector(":root")
-  ).getPropertyValue(setting);
+  // Get the value from local storage
+  let value = getCSSSetting(setting);
+  setCSSSetting(setting, value);
   // Set the value
   let el = document.getElementById("setting" + setting);
   if (el.type == "number") {
@@ -156,13 +188,65 @@ function syncCSSSetting(setting) {
 // For JavaScript:
 // Get the value of a variable
 function getJSSetting(setting) {
-  return (1, eval)(setting);
+  // Check if the value exists
+  if (localStorage.getItem(setting) == null) {
+    // if not, set to the current value as declared in the css
+    localStorage.setItem(setting, (1, eval)(setting));
+  }
+  // Get the value from local storage
+  let value = localStorage.getItem(setting);
+  return value;
 }
 
 // Set the value of a variable
 function setJSSetting(setting, value) {
   (1, eval)(setting + "=" + value);
+  localStorage.setItem(setting, value);
   console.log(setting, "=", getJSSetting(setting));
+}
+
+// Sync the value of the JS variable to the settings panel
+function syncJSSetting(setting) {
+  // Get the value from local storage
+  let value = getJSSetting(setting);
+  setJSSetting(setting, value);
+  // Set the value
+  let el = document.getElementById("setting_" + setting);
+  if (el.type == "number") {
+    el.value = parseInt(value);
+  } else {
+    el.value = value;
+  }
+}
+
+// For individual elements CSS
+// Get the value of an element's css variable
+function getElementCSSSetting(element, setting) {
+  // Check if the value exists
+  if (localStorage.getItem(element.getAttribute("name") + setting) == null) {
+    // if not, set to the current value as declared in the css
+    localStorage.setItem(
+      setting,
+      getComputedStyle(element).getPropertyValue(setting)
+    );
+  }
+  // Get the value from local storage
+  let value = localStorage.getItem(setting);
+  return value;
+}
+
+// Set the value of an element's css variable
+function setElementCSSSetting(element, setting, value) {
+  element.style.setProperty(setting, value);
+  localStorage.setItem(setting, value);
+  console.log(setting, "=", getCSSSetting(setting));
+}
+
+// Sync the value of an element's css variable to and from local storage
+function syncElementCSSSetting(element, setting) {
+  // Get the value from local storage
+  let value = getElementCSSSetting(element, setting);
+  setElementCSSSetting(element, setting, value);
 }
 
 // #########################
@@ -191,7 +275,7 @@ function setJSSetting(setting, value) {
 // #      |- bin    // Programs that can be run by the Web OS               #
 // #      |- dev    // Devices, virtual and network                         #
 // #      |- etc    // Configuration files                                  #
-// #      |- {usr}  // User {usr} home folder                               #
+// #      |- home   // User home folder                               #
 // #      |- lib    // program libraries                                    #
 // #      |- run    // Running app state files, and inter app communication #
 // #      |- tmp    // Files that can be deleted at any time                #
@@ -231,6 +315,10 @@ async function resetFileSystem(dbName) {
       });
       // "etc"
       let etcStore = db.createObjectStore("etc", {
+        keyPath: "file",
+      });
+      // "home"
+      let homeStore = db.createObjectStore("home", {
         keyPath: "file",
       });
       // "lib"
@@ -283,6 +371,9 @@ async function openStore(db, store, mode) {
   } else {
   }
 }
+
+// Listing and indexing operations:
+//
 
 // Key Pair operations:
 // Read:
