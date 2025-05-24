@@ -53,7 +53,7 @@
         </ul>
       </div>
       <footer class="window-footer">
-        See the <a href="https://github.com/0xF32/web-os">Source Code</a>
+        See the <a href="https://github.com/0xF32/Web-OS">Source Code</a>
       </footer>
     </window>
     <!-- Terminal window -->
@@ -253,6 +253,34 @@
                 id="setting--bg-blur"
                 type="number"
                 onchange="setCSSSetting('--bg-blur', this.value + 'px')"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td><code>--font-size</code></td>
+            <td>
+              <input
+                id="setting--font-size"
+                type="number"
+                onchange="setCSSSetting('--font-size', this.value + 'px')"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td><code>--font-ui</code></td>
+            <td>
+              <input
+                id="setting--font-ui"
+                onchange="setCSSSetting('--font-ui', this.value)"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td><code>--font-monospace</code></td>
+            <td>
+              <input
+                id="setting--font-monospace"
+                onchange="setCSSSetting('--font-monospace', this.value)"
               />
             </td>
           </tr>

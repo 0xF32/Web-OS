@@ -2,9 +2,9 @@
 :root {
   --theme-main: #cba6f7;
   --theme-main-mono: #cdd6f4;
-  --theme-bg: #11111bdd;
-  --theme-bg-alt: #11111bdd;
-  --theme-bg-alt2: #11111bdd;
+  --theme-bg: #11111b;
+  --theme-bg-alt: #11111bcc;
+  --theme-bg-alt2: #11111bbb;
   --border: #cba6f7;
   --border-width: 2px;
   --shadow: #11111b;
@@ -12,10 +12,14 @@
   --shadow-blur: 16px;
   --inner-shadow: #11111b;
   --inner-shadow-distance: 0;
-  --inner-shadow-blur: 32px;
-  --rounding: 8px;
+  --inner-shadow-blur: 48px;
+  --rounding: 24px;
   --padding: 8px;
   --bg-blur: 24px;
+  --font-size: 16px;
+  --font-ui: "Segoe UI", "Helvetica Neue", Roboto, HelveticaNeue, system-ui,
+    -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-monospace: JetBrainsMono, monospace;
 }
 /* Global background and main color */
 :root {
@@ -26,8 +30,21 @@
   background-position: center;
   background-color: var(--theme-bg);
   color: var(--theme-main-mono);
+  font-family: var(--font-ui);
+  font-size: var(--font-size);
   transition-duration: 2000ms;
 }
+
+/* Fonts */
+@font-face {
+  font-family: JetBrainsMono;
+  src: url(assets/fonts/JetBrainsMono-VariableFont_wght.ttf);
+}
+@font-face {
+  font-family: HelveticaNeue;
+  src: url(assets/fonts/HelveticaNeueRoman.otf);
+}
+
 /* Links */
 a:link {
   color: var(--theme-main);
@@ -49,7 +66,6 @@ a:active {
   background-color: transparent;
   text-decoration: underline;
 }
-
 
 /* Scroll Bar Modification */
 /* width */
@@ -125,16 +141,25 @@ window {
 input {
   background-color: var(--theme-bg-alt2);
   color: var(--theme-main-mono);
+  font-family: var(--font-ui);
+  font-size: var(--font-size);
   border: 0;
+  outline: none;
   padding-inline: 8px;
+}
+
+/* Code */
+code {
+  font-family: var(--font-monospace);
+  font-size: var(--font-size);
 }
 
 /* Terminal */
 .terminal {
   /* Terminal Colours */
-  --t-foreground: #dadada;
-  --t-background: #202020;
-  --t-cursor: #89b4fa;
+  --t-foreground: var(--theme-main-mono);
+  --t-background: var(--theme-bg);
+  --t-cursor: var(--theme-main);
   --t-selection: #585b70;
   --t-black: #45475a;
   --t-red: #f38ba8;
@@ -158,11 +183,12 @@ input {
 }
 .terminal input {
   background-color: #00000000;
-  width: 90%;
+  width: calc(100% - 2em);
   color: var(--t-foreground);
+  font-family: var(--font-monospace);
+  font-size: var(--font-size);
   border: 0;
+  outline: none;
   padding-inline: 0;
   padding: 0;
-  font-family: monospace;
-  outline: none;
 }
