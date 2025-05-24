@@ -1,7 +1,8 @@
 let windowMoveAmount = 10;
 let windowResizeAmount = 10;
+window.indexedDB;
 
-function init() {
+async function init() {
   // Resets the terminal using the necessary JS vars
   reset_terminal();
   // Global key listener
@@ -23,6 +24,9 @@ function init() {
   syncCSSSetting("--rounding");
   syncCSSSetting("--padding");
   syncCSSSetting("--bg-blur");
+  syncCSSSetting("--font-size");
+  syncCSSSetting("--font-ui");
+  syncCSSSetting("--font-monospace");
   // Sync all the JS settings to the settings panel
   syncJSSetting("windowMoveAmount");
   syncJSSetting("windowResizeAmount");
@@ -34,8 +38,70 @@ function init() {
     syncElementCSSSetting(el, "--height");
     syncElementCSSSetting(el, "--z-index");
   });
+  // Init the IndexedDB
+  await initFS("fileSystem");
   // Done
   console.log("Init done!");
+}
+
+async function initFS(dbName) {
+  // Recreate default stores
+  return new Promise(function recreateDBPromise(resolve) {
+    // Open the database
+    let openDB = indexedDB.open(dbName);
+    console.log("Opened DB", dbName);
+
+    openDB.onupgradeneeded = function upgradeDB(event) {
+      let db = event.target.result;
+      // Create Stores
+      // "bin"
+      let binStore = db.createObjectStore("bin", {
+        keyPath: "file",
+      });
+      // "dev"
+      let devStore = db.createObjectStore("dev", {
+        keyPath: "file",
+      });
+      // "etc"
+      let etcStore = db.createObjectStore("etc", {
+        keyPath: "file",
+      });
+      // "home"
+      let homeStore = db.createObjectStore("home", {
+        keyPath: "file",
+      });
+      homeStore.add({
+        file: "terminal_help.txt",
+        type: "file",
+        contents:
+          "<br />Welcome to the terminal help, a quick guide that lists the syntax of the available commands.<br /><br />help :: no args :: shows a list of commands<br />ls :: not working at the moment<br />clear :: no args :: clears the output of the terminal<br />echo :: dumbly prints all of the text following 'echo '<br />loop {amount} {command} dumbly loops the command for the amount specified, can be nested<br />neofetch :: no args :: prints browser info<br />image {path} :: displays the image at path to the terminal. will likely be removed soon<br />cat :: not working use fsr instead<br />pwd :: not working<br />fsr {store} {file} :: reads the file from the store<br />fsw {store} {file} {type} {contents} :: writes the file to the store with the type and contents provided<br />rm {store} {file} :: deletes the file from the store<br /><br />More to be added soon!<br />",
+      });
+      homeStore.add({
+        file: "welcome.txt",
+        type: "file",
+        contents:
+          "Hello World! Welcome to Web OS, read the Hello World window for more information. To learn how to use the terminal, run the command: `fsr home terminal_help.txt`",
+      });
+      // "lib"
+      let libStore = db.createObjectStore("lib", {
+        keyPath: "file",
+      });
+      // "run"
+      let runStore = db.createObjectStore("run", {
+        keyPath: "file",
+      });
+      // "tmp"
+      let tmpStore = db.createObjectStore("tmp", {
+        keyPath: "file",
+      });
+      // "var"
+      let varStore = db.createObjectStore("var", {
+        keyPath: "file",
+      });
+
+      console.log("Initialised DB", dbName, db);
+    };
+  });
 }
 
 // ########################
@@ -312,51 +378,8 @@ async function resetFileSystem(dbName) {
   indexedDB.deleteDatabase(dbName);
   console.log("Deleted DB", dbName);
 
-  // Recreate default stores
-  return new Promise(function recreateDBPromise(resolve) {
-    // Open the database
-    let openDB = indexedDB.open(dbName);
-    console.log("Reopened DB", dbName);
-
-    openDB.onupgradeneeded = function upgradeDB(event) {
-      let db = event.target.result;
-      // Create Stores
-      // "bin"
-      let binStore = db.createObjectStore("bin", {
-        keyPath: "file",
-      });
-      // "dev"
-      let devStore = db.createObjectStore("dev", {
-        keyPath: "file",
-      });
-      // "etc"
-      let etcStore = db.createObjectStore("etc", {
-        keyPath: "file",
-      });
-      // "home"
-      let homeStore = db.createObjectStore("home", {
-        keyPath: "file",
-      });
-      // "lib"
-      let libStore = db.createObjectStore("lib", {
-        keyPath: "file",
-      });
-      // "run"
-      let runStore = db.createObjectStore("run", {
-        keyPath: "file",
-      });
-      // "tmp"
-      let tmpStore = db.createObjectStore("tmp", {
-        keyPath: "file",
-      });
-      // "var"
-      let varStore = db.createObjectStore("var", {
-        keyPath: "file",
-      });
-
-      console.log(db);
-    };
-  });
+  // Re-initialise the DB
+  await initFS();
 }
 // Common/Raw functions:
 // Open data base fileSystem
