@@ -9,7 +9,6 @@ async function init() {
   document.addEventListener("keydown", keydown, false);
   // Sync all the css settings to the settings panel
   syncCSSSetting("--wallpaper");
-  setWallpaper(getCSSSetting("--wallpaper"));
   syncCSSSetting("--theme-main");
   syncCSSSetting("--theme-main-mono");
   syncCSSSetting("--theme-bg");
@@ -42,6 +41,8 @@ async function init() {
   });
   // Init the IndexedDB
   await initFS("fileSystem");
+  // Set the wallpaper
+  setWallpaper(getCSSSetting("--wallpaper"));
   // Done
   console.log("Init done!");
 }
