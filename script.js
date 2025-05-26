@@ -29,7 +29,7 @@ async function init() {
   syncCSSSetting("--inner-shadow-blur");
   syncCSSSetting("--rounding");
   syncCSSSetting("--padding");
-  syncCSSSetting("--bg-blur");
+  syncCSSSetting("--panel-bg-blur");
   syncCSSSetting("--font-size");
   syncCSSSetting("--font-ui");
   syncCSSSetting("--font-monospace");
