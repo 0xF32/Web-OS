@@ -11,13 +11,7 @@
     <!-- Hello World window -->
     <window
       name="window_helloWorld"
-      style="
-        --x: 30px;
-        --y: 30px;
-        --width: 440px;
-        --height: 1010px;
-        --z-index: 3;
-      "
+      style="--x: 0px; --y: 0px; --width: 570px; --height: 800px; --z-index: 4"
       onclick="makeMain(this)"
     >
       <header class="window-header">Hello World!</header>
@@ -30,10 +24,27 @@
         in local-storage, so that upon reloading the page, or closing the
         browser, OS state can be restored.
         <p></p>
-        TODO: All data can be imported and exported if you want to mess around with
-        the setup of the OS without being in the OS.
+        The terminal is cool:
+        <code
+          style="
+            background-color: var(--theme-bg-alt2);
+            border: var(--border-width) solid var(--border);
+          "
+          >fsr home welcome.txt</code
+        >
         <p></p>
-        Run in the terminal: `fsr home welcome.txt`
+        Web-OS is still in the very early stages of development, new features
+        may break various parts of the OS.
+        <p></p>
+        All fileSystem data is stored in the IndexedDB
+        <p></p>
+        All customisations and local changes that should be persistent between
+        refreshes of the page are stored in localStorage
+        <p></p>
+
+        <p></p>
+        TODO: All data can be imported and exported if you want to mess around
+        with the setup of the OS without being in the OS.
         <p></p>
         List of things to implement:
         <ul>
@@ -67,11 +78,11 @@
     <window
       name="window_terminal"
       style="
-        --x: 1000px;
-        --y: 30px;
-        --width: 870px;
-        --height: 1010px;
-        --z-index: 4;
+        --x: 100px;
+        --y: 100px;
+        --width: 860px;
+        --height: 600px;
+        --z-index: 1;
       "
       onclick="makeMain(this)"
     >
@@ -87,11 +98,11 @@
     <window
       name="window_CSSSettings"
       style="
-        --x: 500px;
-        --y: 30px;
+        --x: 600px;
+        --y: 200px;
         --width: 470px;
-        --height: 580px;
-        --z-index: 1;
+        --height: 600px;
+        --z-index: 2;
       "
       onclick="makeMain(this)"
     >
@@ -102,6 +113,23 @@
             <th>Setting</th>
             <th>Value</th>
             <th>Preview</th>
+          </tr>
+          <tr>
+            <td><code>--wallpaper</code></td>
+            <td>
+              <input
+                id="setting--wallpaper"
+                onchange="setWallpaper(this.value)"
+              />
+            </td>
+            <td
+              id="setting_wallpaper_preview"
+              style="
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
+              "
+            ></td>
           </tr>
           <tr>
             <td><code>--theme-main</code></td>
@@ -299,11 +327,11 @@
     <window
       name="window_JSSettings"
       style="
-        --x: 500px;
-        --y: 640px;
+        --x: 600px;
+        --y: 0px;
         --width: 470px;
-        --height: 400px;
-        --z-index: 2;
+        --height: 170px;
+        --z-index: 3;
       "
       onclick="makeMain(this)"
     >
