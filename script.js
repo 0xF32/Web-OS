@@ -9,11 +9,7 @@ async function init() {
   document.addEventListener("keydown", keydown, false);
   // Sync all the css settings to the settings panel
   syncCSSSetting("--wallpaper");
-  syncCSSSetting("background-image");
-  syncElementCSSSetting(
-    document.getElementById("setting_wallpaper_preview"),
-    "background-image"
-  );
+  setWallpaper(getCSSSetting("--wallpaper"));
   syncCSSSetting("--theme-main");
   syncCSSSetting("--theme-main-mono");
   syncCSSSetting("--theme-bg");

@@ -24,7 +24,7 @@
 }
 /* Global background and main color */
 :root {
-  background-image: url(assets/wall.jpg);
+  background-image: url();
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
