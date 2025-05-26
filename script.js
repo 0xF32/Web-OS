@@ -3,6 +3,8 @@ let windowResizeAmount = 10;
 window.indexedDB;
 
 async function init() {
+  // Init the IndexedDB
+  await initFS("fileSystem");
   // Resets the terminal using the necessary JS vars
   reset_terminal();
   // Global key listener
@@ -39,10 +41,10 @@ async function init() {
     syncElementCSSSetting(el, "--height");
     syncElementCSSSetting(el, "--z-index");
   });
-  // Init the IndexedDB
-  await initFS("fileSystem");
   // Set the wallpaper
-  setWallpaper(getCSSSetting("--wallpaper"));
+  let args = getCSSSetting("--wallpaper");
+  console.log("Setting wallpaper", args);
+  await setWallpaper(args);
   // Done
   console.log("Init done!");
 }
@@ -139,6 +141,12 @@ async function initFS(dbName) {
       });
 
       console.log("Initialised DB", dbName, db);
+      return resolve(db);
+    };
+
+    // Return success if the db is already there
+    openDB.onsuccess = function checkedDB(event) {
+      return resolve(event.target.result);
     };
   });
 }
