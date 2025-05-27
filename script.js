@@ -170,6 +170,7 @@ async function resetAll() {
     resetFileSystem("fileSystem");
     localStorage.clear();
     console.log("Cleared all data, and reset everything")
+    location.reload();
   } else {
     // Cancelled
     console.log("Cancelled the deletion of all data")
