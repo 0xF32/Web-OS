@@ -20,21 +20,24 @@
         OS. This website will demonstrate how Web-OS works, and how you can
         setup your own distro of Web-OS.
         <p></p>
-        It is planned that all customisations made, and files saved, are stored
-        in local-storage, so that upon reloading the page, or closing the
-        browser, OS state can be restored.
+        All customisations made, and files saved, are stored in local-storage,
+        so that upon reloading the page, or closing the browser, OS state can be
+        restored.
         <p></p>
         The terminal is cool:
         <code>`cat home welcome.txt`</code>
         <p></p>
         Web-OS is still in the very early stages of development, new features
-        may break various parts of the OS.
-        <p></p>
-        All fileSystem data is stored in the IndexedDB
-        <p></p>
-        All customisations and local changes that should be persistent between
-        refreshes of the page are stored in localStorage
-        <p></p>
+        may break various parts of the OS. It is highly recommended to reset all
+        your data when a newer version is released.
+        <ul>
+          <li>All fileSystem data is stored in the IndexedDB</li>
+          <li>
+            All customisations and local changes that should be persistent
+            between refreshes of the page are stored in localStorage
+          </li>
+          <li>Here is a handy reset button: <button type="reset" onclick="resetAll()">Reset Everything</button></li>
+        </ul>
         You can use a custom wallpaper by making a file in the fileSystem that
         contains a link to the image (or a base64 data uri), and then set the
         wallpaper by setting --wallpaper to the fileSystem path where you saved
@@ -45,21 +48,17 @@
         <p></p>
         List of things to implement:
         <ul>
-          <li>
-            Rework terminal to allow piping, and using commands outside of
-            terminal
-          </li>
           <li>App Launcher</li>
           <li>Implement import and export of state</li>
           <li>Drag windows with mouse cursor</li>
+          <li>Window Title bars (min, max, close)</li>
+          <li>Multiple of the same window</li>
+          <li>Ability to write programs</li>
           <li>Tiling mode, where each window moves to make space for others</li>
           <li>
             Remove all text fields, replacing with custom key events, that keep
             focus (specifically in the terminal)
           </li>
-          <li>Window Title bars (min, max, close)</li>
-          <li>Multiple of the same window</li>
-          <li>Ability to write programs</li>
           <li>
             Mock package manager and/or ability to make packages and pull
             request on github

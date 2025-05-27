@@ -138,6 +138,20 @@ window {
   text-align: center;
 }
 
+/* Buttons */
+button {
+  background-color: orange;
+  color: black;
+  font-family: var(--font-ui);
+  font-size: var(--font-size);
+  border: 0;
+  border-radius: var(--rounding);
+  outline: none;
+}
+button:hover {
+  background-color: orangered;
+}
+
 /* Inputs */
 input {
   background-color: var(--theme-bg-alt2);
@@ -145,6 +159,7 @@ input {
   font-family: var(--font-ui);
   font-size: var(--font-size);
   border: 0;
+  border-radius: var(--rounding);
   outline: none;
   padding-inline: 8px;
 }
@@ -189,6 +204,7 @@ code {
   font-family: var(--font-monospace);
   font-size: var(--font-size);
   border: 0;
+  border-radius: 0;
   outline: none;
   padding-inline: 0;
   padding: 0;

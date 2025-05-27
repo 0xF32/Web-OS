@@ -163,6 +163,19 @@ async function initFS(dbName) {
 // #                      #
 // ########################
 
+// Reset everything function
+async function resetAll() {
+  if (confirm("Are you sure you want to continue")) {
+    // Confirmed
+    resetFileSystem("fileSystem");
+    localStorage.clear();
+    console.log("Cleared all data, and reset everything")
+  } else {
+    // Cancelled
+    console.log("Cancelled the deletion of all data")
+  }
+}
+
 // Called when a window is clicked
 function makeMain(element) {
   document.querySelectorAll("window").forEach((el) => {
@@ -487,7 +500,7 @@ async function openStore(db, store, mode) {
     // return the objectStore
     return objectStore;
   } else {
-    console.log("Store", store, "doesn't exist in db", db)
+    console.log("Store", store, "doesn't exist in db", db);
   }
 }
 
