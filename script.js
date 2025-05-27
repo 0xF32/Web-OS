@@ -85,7 +85,7 @@ async function initFS(dbName) {
         file: "welcome.txt",
         type: "file",
         contents:
-          "Hello World!<br /><br />Welcome to Web OS, read the Hello World window for more information.<br />To learn how to use the terminal, run the command: <code style='background-color: var(--t-background); border: var(--border-width) solid var(--border);' >fsr home terminal_help.txt</code>",
+          "Hello World!<br /><br />Welcome to Web OS, read the Hello World window for more information.<br />To learn how to use the terminal, run the command: <code>`cat home terminal_help.txt`</code>",
       });
       homeStore.add({
         file: "wall1.jpg",
