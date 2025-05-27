@@ -459,6 +459,7 @@ async function resetFileSystem(dbName) {
   // Re-initialise the DB
   await initFS();
 }
+
 // Common/Raw functions:
 // Open data base fileSystem
 async function openDB(dbName) {
@@ -486,6 +487,7 @@ async function openStore(db, store, mode) {
     // return the objectStore
     return objectStore;
   } else {
+    console.log("Store", store, "doesn't exist in db", db)
   }
 }
 
