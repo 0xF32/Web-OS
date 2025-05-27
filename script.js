@@ -91,6 +91,11 @@ async function initFS(dbName) {
         contents: "assets/images/wall1.jpg",
       });
       homeStore.add({
+        file: "wall2.jpg",
+        type: "file",
+        contents: "https://gitlab.com/garuda-linux/themes-and-settings/artwork/garuda-wallpapers/-/raw/9982951df13614bf9aa1471adcde9e811d34ce94/src/garuda-wallpapers/Malefor.jpg",
+      });
+      homeStore.add({
         file: "wall1.svg",
         type: "file",
         contents: "assets/images/wall1.svg",
