@@ -42,9 +42,7 @@ async function init() {
     syncElementCSSSetting(el, "--z-index");
   });
   // Set the wallpaper
-  let args = getCSSSetting("--wallpaper");
-  console.log("Setting wallpaper", args);
-  await setWallpaper(args);
+  await setWallpaper(getCSSSetting("--wallpaper"));
   // Done
   console.log("Init done!");
 }
@@ -169,11 +167,11 @@ async function resetAll() {
     // Confirmed
     resetFileSystem("fileSystem");
     localStorage.clear();
-    console.log("Cleared all data, and reset everything")
+    console.log("Cleared all data, and reset everything");
     location.reload();
   } else {
     // Cancelled
-    console.log("Cancelled the deletion of all data")
+    console.log("Cancelled the deletion of all data");
   }
 }
 
@@ -221,8 +219,8 @@ function moveWindow(element, deltaX, deltaY) {
   setElementCSSSetting(element, "--y", y);
 
   // Log
-  console.log(element.getAttribute("name"), "x =", x);
-  console.log(element.getAttribute("name"), "y =", y);
+  // console.log(element.getAttribute("name"), "x =", x);
+  // console.log(element.getAttribute("name"), "y =", y);
 }
 
 // Resize window
@@ -240,8 +238,8 @@ function resizeWindow(element, deltaWidth, deltaHeight) {
   setElementCSSSetting(element, "--height", height);
 
   // Log
-  console.log(element.getAttribute("name"), "width =", width);
-  console.log(element.getAttribute("name"), "height =", height);
+  // console.log(element.getAttribute("name"), "width =", width);
+  // console.log(element.getAttribute("name"), "height =", height);
 }
 
 // Key down handler
@@ -329,7 +327,7 @@ function setCSSSetting(setting, value) {
   let root = document.querySelector(":root");
   root.style.setProperty(setting, value);
   localStorage.setItem(setting, value);
-  console.log(setting, "=", getCSSSetting(setting));
+  // console.log(setting, "=", getCSSSetting(setting));
 }
 
 // Sync the value of the css to the settings panel
@@ -365,7 +363,7 @@ function getJSSetting(setting) {
 function setJSSetting(setting, value) {
   (1, eval)(setting + "=" + value);
   localStorage.setItem(setting, value);
-  console.log(setting, "=", getJSSetting(setting));
+  // console.log(setting, "=", getJSSetting(setting));
 }
 
 // Sync the value of the JS variable to the settings panel
@@ -402,11 +400,11 @@ function getElementCSSSetting(element, setting) {
 function setElementCSSSetting(element, setting, value) {
   element.style.setProperty(setting, value);
   localStorage.setItem(element.getAttribute("name") + setting, value);
-  console.log(
-    element.getAttribute("name") + setting,
-    "=",
-    getElementCSSSetting(element, setting)
-  );
+  // console.log(
+  //   element.getAttribute("name") + setting,
+  //   "=",
+  //   getElementCSSSetting(element, setting)
+  // );
 }
 
 // Sync the value of an element's css variable to and from local storage
@@ -501,7 +499,7 @@ async function openStore(db, store, mode) {
     // return the objectStore
     return objectStore;
   } else {
-    console.log("Store", store, "doesn't exist in db", db);
+    console.error("Store", store, "doesn't exist in db", db);
   }
 }
 
@@ -545,7 +543,7 @@ async function fsListObjects(dbName, store, path) {
 
     request.onerror = function fsListObjectError(event) {
       // Log and return the error
-      console.log("Error listing objects", event.target.error);
+      console.error("Error listing objects", event.target.error);
       return reject(event.target.error);
     };
   });
@@ -660,7 +658,6 @@ async function fsw(args) {
   );
   // execute
   let object = await fsWrite("fileSystem", store, file, type, contents);
-  console.log("Put object", object);
   let result = await fsRead("fileSystem", store, file);
   // Output to terminal
   return JSON.stringify(result);
