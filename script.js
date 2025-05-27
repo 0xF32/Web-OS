@@ -79,13 +79,13 @@ async function initFS(dbName) {
         file: "terminal_help.txt",
         type: "file",
         contents:
-          "<br /><br />Welcome to the terminal help, a quick guide that lists the syntax of the available commands.<br /><br />help :: no args :: shows a list of commands<br />ls :: not working at the moment<br />clear :: no args :: clears the output of the terminal<br />echo :: dumbly prints all of the text following 'echo '<br />loop {amount} {command} :: dumbly loops the command for the amount specified, can be nested<br />neofetch :: no args :: prints browser info<br />image {path} :: displays the image at path to the terminal. will likely be removed soon<br />cat :: not working use fsr instead<br />pwd :: not working<br />fsr {store} {file} :: reads the file from the store<br />fsw {store} {file} {type} {contents} :: writes the file to the store with the type and contents provided<br />rm {store} {file} :: deletes the file from the store<br /><br />More to be added soon!<br /><br />",
+          "Welcome to the terminal help, a quick guide that lists the syntax of the available commands.<br /><br />help :: no args :: shows a list of commands<br />ls :: no args :: lists the files in the current path <br />clear :: no args :: clears the output of the terminal<br />echo :: dumbly prints all of the text following 'echo '<br />loop {amount} {command} :: dumbly loops the command for the amount specified, can be nested<br />neofetch :: no args :: prints browser info<br />cat {store} {file} :: outputs the contents of the file<br />pwd :: outputs the current path<br />fsw {store} {file} {type} {contents} :: writes the file to the store with the type and contents provided<br />rm {store} {file} :: deletes the file from the store<br /><br />More to be added soon!",
       });
       homeStore.add({
         file: "welcome.txt",
         type: "file",
         contents:
-          "<br /><br />Hello World!<br /><br />Welcome to Web OS, read the Hello World window for more information.<br />To learn how to use the terminal, run the command: <code style='background-color: var(--t-background); border: var(--border-width) solid var(--border);' >fsr home terminal_help.txt</code><br /><br />",
+          "Hello World!<br /><br />Welcome to Web OS, read the Hello World window for more information.<br />To learn how to use the terminal, run the command: <code style='background-color: var(--t-background); border: var(--border-width) solid var(--border);' >fsr home terminal_help.txt</code>",
       });
       homeStore.add({
         file: "wall1.jpg",
@@ -515,11 +515,12 @@ async function fsListObjects(dbName, store, path) {
     // Make the query based on the directory
     let request;
     if (path) {
-      request = objectStore.getAllKeys(IDBKeyRange.bound(path + "/", path + ":"));
+      request = objectStore.getAllKeys(
+        IDBKeyRange.bound(path + "/", path + ":")
+      );
     } else {
       request = objectStore.getAllKeys();
     }
-    
 
     request.onsuccess = function fsListObjectsSuccess(event) {
       // Return the success value
@@ -574,20 +575,6 @@ async function fsRead(dbName, store, file) {
 
   // Return the object
   return object;
-}
-// Temporary Terminal wrapper
-async function fsr(args) {
-  // Handle args
-  args = args.split(" ");
-  console.log("Running fsRead with args:", args);
-  // execute
-  let result = await fsRead("fileSystem", args[0], args[1]);
-  console.log("Result is:", result);
-  // Output to terminal
-  document.getElementById("active_terminal").innerHTML =
-    document.getElementById("active_terminal").innerHTML +
-    JSON.stringify(result) +
-    "<br />";
 }
 
 // Write:
@@ -705,45 +692,15 @@ async function fsDelete(dbName, store, file) {
   // Return
   return object;
 }
-// Terminal wrapper
-async function rm(args) {
-  // Handle args
-  args = args.split(" ");
-  console.log("Running fsDelete with args:", args);
-  // execute
-  let result = await fsDelete("fileSystem", args[0], args[1]);
-  if (result == undefined) {
-    // Output to terminal
-    document.getElementById("active_terminal").innerHTML =
-      document.getElementById("active_terminal").innerHTML +
-      "Deleted `" +
-      args[0] +
-      "/" +
-      args[1] +
-      "` from fileSystem" +
-      "<br />";
-  } else {
-    // Output to terminal
-    document.getElementById("active_terminal").innerHTML =
-      document.getElementById("active_terminal").innerHTML +
-      "Failed to delete `" +
-      args[0] +
-      "/" +
-      args[1] +
-      "` from fileSystem" +
-      "<br />";
-  }
-}
 
 // ###############################
 // #                             #
 // #   Terminal implementation   #
 // #                             #
 // ###############################
-// TODO: make async, so as to not cause massive lag
 const prompt =
   "<span style='color: var(--t-blue)' >~</span><br /><span style='color: var(--t-green)' >❯</span> <input id='terminal_input' type='text' onchange='runCommand(this.value)'/>";
-let available_commands = [
+let allowed_commands = [
   "help",
   "ls",
   "clear",
@@ -753,67 +710,85 @@ let available_commands = [
   "image",
   "cat",
   "pwd",
-  "fsr",
   "fsw",
   "rm",
 ];
+// Environment variables
+let env_pwd = ["home", ""];
 // Run Command
-async function runCommand(value) {
-  // Handle enter
-  document.getElementById("terminal_input").remove();
-  document.getElementById("active_terminal").innerHTML =
-    document.getElementById("active_terminal").innerHTML + value + "<br />";
+async function runCommand(input_args) {
+  // Duplicate input so that it can be used later
+  let raw_input = input_args;
+
   // Convert into command and args
-  value = value.split(" ");
-  let command = value[0];
-  value.shift();
-  let args = value.join(" ");
-  // Check if the command exists
-  if (available_commands.includes(command)) {
+  input_args = input_args.split(" ");
+  let command = input_args[0];
+  input_args.shift();
+  let args = input_args.join(" ");
+
+  // Handle special case for CLEAR function (removes all text in the terminal)
+  if (command == "clear") {
+    document.getElementById("active_terminal").innerHTML = prompt;
+    // Refocus input
+    document.getElementById("terminal_input").focus();
+    return;
+  }
+
+  // Define the output of the command for use later
+  let result;
+
+  // Run the command if it exists
+  if (allowed_commands.includes(command)) {
     // Log
     console.log("Running", command + "(`" + args + "`)");
     // Run with eval
-    await (1, eval)(command + "(`" + args + "`)");
+    result = await (1, eval)(command + "(`" + args + "`)");
   } else {
     // The command isn't available
-    document.getElementById("active_terminal").innerHTML =
-      document.getElementById("active_terminal").innerHTML +
+    result =
       "`" +
       command +
-      "` is not available, use `help` to see a list of commands.<br />";
+      "` is not available, use `help` to see a list of commands.";
   }
-  // Once the command is finished, show the prompt again
+
+  // Once output is guaranteed, remove the input field
+  document.getElementById("terminal_input").remove();
+
+  // Output the input, the result, and remake the prompt
   document.getElementById("active_terminal").innerHTML =
-    document.getElementById("active_terminal").innerHTML + prompt;
+    document.getElementById("active_terminal").innerHTML +
+    raw_input +
+    "<br />" +
+    result +
+    "<br />" +
+    prompt;
   // Refocus input
   document.getElementById("terminal_input").focus();
 }
 
-// Make a function for each command implemented.
+// #####################################################
+// #                                                   #
+// #                Terminal  Functions                #
+// #                                                   #
+// #   Make a function for each command implemented.   #
+// #                                                   #
+// #####################################################
 
 // HELP function (lists all available commands)
 async function help(_args) {
-  document.getElementById("active_terminal").innerHTML =
-    document.getElementById("active_terminal").innerHTML +
-    available_commands.join("<br />") +
-    "<br />";
+  return allowed_commands.join("<br />");
 }
 
 // LS function (lists directories in current directory)
 async function ls(_args) {
-  document.getElementById("active_terminal").innerHTML =
-    document.getElementById("active_terminal").innerHTML;
-}
-
-// CLEAR function (removes all text in the terminal)
-async function clear(_args) {
-  document.getElementById("active_terminal").innerHTML = "";
+  return (await fsListObjects("fileSystem", env_pwd[0], env_pwd[1])).join(
+    "<br />"
+  );
 }
 
 // ECHO function (prints input text)
 async function echo(args) {
-  document.getElementById("active_terminal").innerHTML =
-    document.getElementById("active_terminal").innerHTML + args + "<br />";
+  return args;
 }
 
 // LOOP function (repeats the function contained for the specified number of times)
@@ -825,70 +800,73 @@ async function loop(input_args) {
   let command = input_args[0];
   input_args.shift();
   let args = input_args.join(" ");
+
+  // Define output
+  let result;
+
   // Check if the command exists
-  if (available_commands.includes(command)) {
+  if (allowed_commands.includes(command)) {
     // Log
-    console.log("Running", command + "(`" + args + "`)");
+    console.log(
+      "Running",
+      command + "(`" + args + "`)" + " This many times: " + number
+    );
     // Run the command the specified number of times
     for (let i = 0; i < number; i++) {
       // Log
-      console.log("Running", command + "(`" + args + "`)");
+      console.log("Running", command + "(`" + args + "`)" + "Number: " + i);
       // Run with eval
-      await (1, eval)(command + "(`" + args + "`)");
+      result += await (1, eval)(command + "(`" + args + "`)");
     }
   } else {
     // The command isn't available
-    document.getElementById("active_terminal").innerHTML =
-      document.getElementById("active_terminal").innerHTML +
+    result =
       "`" +
       command +
-      "` is not available, use `help` to see a list of commands.<br />";
+      "` is not available, use `help` to see a list of commands.";
   }
+  // Return
+  return result;
 }
 
 // NEO FETCH function (fancy system info display and shows distro)
 async function neofetch(_args) {
-  document.getElementById("active_terminal").innerHTML =
-    document.getElementById("active_terminal").innerHTML +
-    "Your Browser: " +
-    window.navigator.userAgent +
-    "<br />";
+  return "Your Browser: " + window.navigator.userAgent;
 }
 
-// IMAGE function (shows an image in the terminal)
-async function image(args) {
-  if (args == "") {
-    document.getElementById("active_terminal").innerHTML =
-      document.getElementById("active_terminal").innerHTML +
-      "No Image Path specified.<br />";
+// RM function (deletes files from fileSystem)
+async function rm(args) {
+  // Handle args
+  args = args.split(" ");
+  console.log("Running fsDelete with args:", args);
+  // execute
+  let result = await fsDelete("fileSystem", args[0], args[1]);
+  if (result == undefined) {
+    // Output to terminal
+    return "Deleted `" + args[0] + " " + args[1] + "` from fileSystem";
   } else {
-    document.getElementById("active_terminal").innerHTML =
-      document.getElementById("active_terminal").innerHTML +
-      "<img src='" +
-      args +
-      "' style='max-width: 100%;'/><br />";
+    // Output to terminal
+    return "Failed to delete `" + args[0] + "/" + args[1] + "` from fileSystem";
   }
 }
 
 // CAT function (shows the text in a file)
 async function cat(args) {
-  if (args == "") {
-    document.getElementById("active_terminal").innerHTML =
-      document.getElementById("active_terminal").innerHTML +
-      "No file selected<br />";
+  if (args) {
+    // Handle args
+    args = args.split(" ");
+    console.log("Running fsRead with args:", args);
+    // execute
+    let result = await fsRead("fileSystem", args[0], args[1]);
+    return "<pre>" + result.contents + "</pre>";
   } else {
-    document.getElementById("active_terminal").innerHTML =
-      document.getElementById("active_terminal").innerHTML +
-      "<pre>" +
-      args +
-      "</pre><br />";
+    return "No file selected";
   }
 }
 
 // PWD function (shows the current path)
 async function pwd(_args) {
-  document.getElementById("active_terminal").innerHTML =
-    document.getElementById("active_terminal").innerHTML + "~<br />";
+  return env_pwd.join(" ");
 }
 
 // RESET TERMINAL function (debug to reset the terminal from the browser console)
