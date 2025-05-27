@@ -647,10 +647,7 @@ async function fsw(args) {
   console.log("Put object", object);
   let result = await fsRead("fileSystem", store, file);
   // Output to terminal
-  document.getElementById("active_terminal").innerHTML =
-    document.getElementById("active_terminal").innerHTML +
-    JSON.stringify(result) +
-    "<br />";
+  return JSON.stringify(result);
 }
 
 // Delete:
