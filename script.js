@@ -858,7 +858,7 @@ async function cat(args) {
     console.log("Running fsRead with args:", args);
     // execute
     let result = await fsRead("fileSystem", args[0], args[1]);
-    return "<pre>" + result.contents + "</pre>";
+    return "<br />" + result.contents + "<br />";
   } else {
     return "No file selected";
   }
