@@ -15,6 +15,7 @@
   --inner-shadow-distance: 0;
   --inner-shadow-blur: 48px;
   --rounding: 24px;
+  --btn-rounding: 6px;
   --padding: 8px;
   --panel-bg-blur: 24px;
   --font-size: 14px;
@@ -26,7 +27,7 @@
   /* Terminal Colours */
   --t-foreground: var(--theme-main-mono);
   --t-background: var(--theme-bg);
-  --t-cursor: var(--theme-main);
+  --t-cursor: var(--theme-main-mono);
   --t-selection: #585b70;
   --t-black: #45475a;
   --t-red: #f38ba8;
@@ -191,14 +192,11 @@ window {
 }
 
 .window-button {
-  background-color: #33333b;
-  color: var(--theme-main);
   margin: 0 2px;
   /* border: 1px solid orange; */
 }
-.window-button:hover {
-  background-color: #44444b;
-}
+/* .window-button:hover {
+} */
 
 /* Buttons */
 button {
@@ -206,7 +204,7 @@ button {
   font-size: var(--font-size);
   padding-inline: 0;
   border: 0;
-  border-radius: calc(var(--rounding) / 4);
+  border-radius: var(--btn-rounding);
   outline: none;
 }
 

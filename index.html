@@ -30,7 +30,7 @@
         </div>
         <span>Hello World!</span>
         <div class="fill-right">
-          <button class="window-button">
+          <button class="window-button" style="color: var(--theme-bg); background-color: var(--t-yellow);">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -45,7 +45,7 @@
               <path d="M5 11 19 11" />
             </svg>
           </button>
-          <button class="window-button">
+          <button class="window-button" style="color: var(--theme-bg); background-color: var(--t-green);">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -63,7 +63,7 @@
               <path d="M19 18 19 4" />
             </svg>
           </button>
-          <button class="window-button">
+          <button class="window-button" style="color: var(--theme-bg); background-color: var(--t-red);">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -339,6 +339,16 @@
                 id="setting--rounding"
                 type="number"
                 onchange="setCSSSetting('--rounding', this.value + 'px')"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td><code>--btn-rounding</code></td>
+            <td>
+              <input
+                id="setting--btn-rounding"
+                type="number"
+                onchange="setCSSSetting('--btn-rounding', this.value + 'px')"
               />
             </td>
           </tr>

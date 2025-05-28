@@ -25,6 +25,7 @@ async function init() {
   syncCSSSetting("--inner-shadow-distance");
   syncCSSSetting("--inner-shadow-blur");
   syncCSSSetting("--rounding");
+  syncCSSSetting("--btn-rounding");
   syncCSSSetting("--padding");
   syncCSSSetting("--panel-bg-blur");
   syncCSSSetting("--font-size");
