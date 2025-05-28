@@ -14,7 +14,73 @@
       style="--x: 0px; --y: 0px; --width: 350px; --height: 1000px; --z-index: 4"
       onclick="makeMain(this)"
     >
-      <header class="window-header">Hello World!</header>
+      <header class="window-header">
+        <div class="fill-left">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <path
+              d="M21.41 8.64v-.05a10 10 0 00-18.78 0s0 0 0 .05a9.86 9.86 0 000 6.72v.05a10 10 0 0018.78 0s0 0 0-.05a9.86 9.86 0 000-6.72M4.26 14a7.8 7.8 0 010-4h1.86a16.7 16.7 0 000 4Zm.82 2h1.4a12 12 0 001 2.57A8 8 0 015.08 16m1.4-8h-1.4a8 8 0 012.37-2.57A12 12 0 006.48 8M11 19.7A6.34 6.34 0 018.57 16H11Zm0-5.7H8.14a14.4 14.4 0 010-4H11Zm0-6H8.57A6.34 6.34 0 0111 4.3Zm7.92 0h-1.4a12 12 0 00-1-2.57A8 8 0 0118.92 8M13 4.3A6.34 6.34 0 0115.43 8H13Zm0 15.4V16h2.43A6.34 6.34 0 0113 19.7m2.86-5.7H13v-4h2.86a14.4 14.4 0 010 4m.69 4.57a12 12 0 001-2.57h1.4a8 8 0 01-2.4 2.57M19.74 14h-1.86a16 16 0 00.12-2 16 16 0 00-.12-2h1.86a7.8 7.8 0 010 4"
+            />
+          </svg>
+        </div>
+        <span>Hello World!</span>
+        <div class="fill-right">
+          <button class="window-button">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="22"
+              viewBox="0 0 24 22"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M5 11 19 11" />
+            </svg>
+          </button>
+          <button class="window-button">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="22"
+              viewBox="0 0 24 22"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M5 4 19 4" />
+              <path d="M5 4 5 18" />
+              <path d="M19 18 5 18" />
+              <path d="M19 18 19 4" />
+            </svg>
+          </button>
+          <button class="window-button">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="22"
+              viewBox="0 0 24 22"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M5 4 19 18"></path>
+              <path d="M19 4 5 18"></path>
+            </svg>
+          </button>
+        </div>
+      </header>
       <div class="window-area">
         Welcome to this website, which aims to be a fully functional graphical
         OS. This website will demonstrate how Web-OS works, and how you can
@@ -38,7 +104,9 @@
           </li>
           <li>
             Here is a handy reset button:
-            <button type="reset" onclick="resetAll()">Reset Everything</button>
+            <button class="warning-button" type="reset" onclick="resetAll()">
+              Reset Everything
+            </button>
           </li>
         </ul>
         You can use a custom wallpaper by making a file in the fileSystem that
@@ -71,7 +139,9 @@
         </ul>
       </div>
       <footer class="window-footer">
-        See the <a href="https://github.com/0xF32/Web-OS">Source Code</a>
+        <span>
+          See the <a href="https://github.com/0xF32/Web-OS">Source Code</a>
+        </span>
       </footer>
     </window>
     <!-- Terminal window -->
@@ -303,6 +373,16 @@
             </td>
           </tr>
           <tr>
+            <td><code>--large-font-size</code></td>
+            <td>
+              <input
+                id="setting--large-font-size"
+                type="number"
+                onchange="setCSSSetting('--large-font-size', this.value + 'px')"
+              />
+            </td>
+          </tr>
+          <tr>
             <td><code>--font-ui</code></td>
             <td>
               <input
@@ -319,6 +399,216 @@
                 onchange="setCSSSetting('--font-monospace', this.value)"
               />
             </td>
+          </tr>
+        </table>
+        <p style="font-size: var(--large-font-size); text-align: center;">
+          Terminal Colours
+        </p>
+        <table>
+          <tr>
+            <th>Setting</th>
+            <th>Value</th>
+            <th>Preview</th>
+          </tr>
+          <tr>
+            <td><code>--t-foreground</code></td>
+            <td>
+              <input
+                id="setting--t-foreground"
+                onchange="setCSSSetting('--t-foreground', this.value)"
+              />
+            </td>
+            <td style="background-color: var(--t-foreground)"></td>
+          </tr>
+          <tr>
+            <td><code>--t-background</code></td>
+            <td>
+              <input
+                id="setting--t-background"
+                onchange="setCSSSetting('--t-background', this.value)"
+              />
+            </td>
+            <td style="background-color: var(--t-background)"></td>
+          </tr>
+          <tr>
+            <td><code>--t-cursor</code></td>
+            <td>
+              <input
+                id="setting--t-cursor"
+                onchange="setCSSSetting('--t-cursor', this.value)"
+              />
+            </td>
+            <td style="background-color: var(--t-cursor)"></td>
+          </tr>
+          <tr>
+            <td><code>--t-selection</code></td>
+            <td>
+              <input
+                id="setting--t-selection"
+                onchange="setCSSSetting('--t-selection', this.value)"
+              />
+            </td>
+            <td style="background-color: var(--t-selection)"></td>
+          </tr>
+          <tr>
+            <td><code>--t-black</code></td>
+            <td>
+              <input
+                id="setting--t-black"
+                onchange="setCSSSetting('--t-black', this.value)"
+              />
+            </td>
+            <td style="background-color: var(--t-black)"></td>
+          </tr>
+          <tr>
+            <td><code>--t-red</code></td>
+            <td>
+              <input
+                id="setting--t-red"
+                onchange="setCSSSetting('--t-red', this.value)"
+              />
+            </td>
+            <td style="background-color: var(--t-red)"></td>
+          </tr>
+          <tr>
+            <td><code>--t-green</code></td>
+            <td>
+              <input
+                id="setting--t-green"
+                onchange="setCSSSetting('--t-green', this.value)"
+              />
+            </td>
+            <td style="background-color: var(--t-green)"></td>
+          </tr>
+          <tr>
+            <td><code>--t-yellow</code></td>
+            <td>
+              <input
+                id="setting--t-yellow"
+                onchange="setCSSSetting('--t-yellow', this.value)"
+              />
+            </td>
+            <td style="background-color: var(--t-yellow)"></td>
+          </tr>
+          <tr>
+            <td><code>--t-blue</code></td>
+            <td>
+              <input
+                id="setting--t-blue"
+                onchange="setCSSSetting('--t-blue', this.value)"
+              />
+            </td>
+            <td style="background-color: var(--t-blue)"></td>
+          </tr>
+          <tr>
+            <td><code>--t-purple</code></td>
+            <td>
+              <input
+                id="setting--t-purple"
+                onchange="setCSSSetting('--t-purple', this.value)"
+              />
+            </td>
+            <td style="background-color: var(--t-purple)"></td>
+          </tr>
+          <tr>
+            <td><code>--t-cyan</code></td>
+            <td>
+              <input
+                id="setting--t-cyan"
+                onchange="setCSSSetting('--t-cyan', this.value)"
+              />
+            </td>
+            <td style="background-color: var(--t-cyan)"></td>
+          </tr>
+          <tr>
+            <td><code>--t-white</code></td>
+            <td>
+              <input
+                id="setting--t-white"
+                onchange="setCSSSetting('--t-white', this.value)"
+              />
+            </td>
+            <td style="background-color: var(--t-white)"></td>
+          </tr>
+          <tr>
+            <td><code>--t-l-black</code></td>
+            <td>
+              <input
+                id="setting--t-l-black"
+                onchange="setCSSSetting('--t-l-black', this.value)"
+              />
+            </td>
+            <td style="background-color: var(--t-l-black)"></td>
+          </tr>
+          <tr>
+            <td><code>--t-l-red</code></td>
+            <td>
+              <input
+                id="setting--t-l-red"
+                onchange="setCSSSetting('--t-l-red', this.value)"
+              />
+            </td>
+            <td style="background-color: var(--t-l-red)"></td>
+          </tr>
+          <tr>
+            <td><code>--t-l-green</code></td>
+            <td>
+              <input
+                id="setting--t-l-green"
+                onchange="setCSSSetting('--t-l-green', this.value)"
+              />
+            </td>
+            <td style="background-color: var(--t-l-green)"></td>
+          </tr>
+          <tr>
+            <td><code>--t-l-yellow</code></td>
+            <td>
+              <input
+                id="setting--t-l-yellow"
+                onchange="setCSSSetting('--t-l-yellow', this.value)"
+              />
+            </td>
+            <td style="background-color: var(--t-l-yellow)"></td>
+          </tr>
+          <tr>
+            <td><code>--t-l-blue</code></td>
+            <td>
+              <input
+                id="setting--t-l-blue"
+                onchange="setCSSSetting('--t-l-blue', this.value)"
+              />
+            </td>
+            <td style="background-color: var(--t-l-blue)"></td>
+          </tr>
+          <tr>
+            <td><code>--t-l-purple</code></td>
+            <td>
+              <input
+                id="setting--t-l-purple"
+                onchange="setCSSSetting('--t-l-purple', this.value)"
+              />
+            </td>
+            <td style="background-color: var(--t-l-purple)"></td>
+          </tr>
+          <tr>
+            <td><code>--t-l-cyan</code></td>
+            <td>
+              <input
+                id="setting--t-l-cyan"
+                onchange="setCSSSetting('--t-l-cyan', this.value)"
+              />
+            </td>
+            <td style="background-color: var(--t-l-cyan)"></td>
+          </tr>
+          <tr>
+            <td><code>--t-l-white</code></td>
+            <td>
+              <input
+                id="setting--t-l-white"
+                onchange="setCSSSetting('--t-l-white', this.value)"
+              />
+            </td>
+            <td style="background-color: var(--t-l-white)"></td>
           </tr>
         </table>
       </div>

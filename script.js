@@ -28,8 +28,30 @@ async function init() {
   syncCSSSetting("--padding");
   syncCSSSetting("--panel-bg-blur");
   syncCSSSetting("--font-size");
+  syncCSSSetting("--large-font-size");
   syncCSSSetting("--font-ui");
   syncCSSSetting("--font-monospace");
+  // Terminal Colours
+  syncCSSSetting("--t-foreground");
+  syncCSSSetting("--t-background");
+  syncCSSSetting("--t-cursor");
+  syncCSSSetting("--t-selection");
+  syncCSSSetting("--t-black");
+  syncCSSSetting("--t-red");
+  syncCSSSetting("--t-green");
+  syncCSSSetting("--t-yellow");
+  syncCSSSetting("--t-blue");
+  syncCSSSetting("--t-purple");
+  syncCSSSetting("--t-cyan");
+  syncCSSSetting("--t-white");
+  syncCSSSetting("--t-l-black");
+  syncCSSSetting("--t-l-red");
+  syncCSSSetting("--t-l-green");
+  syncCSSSetting("--t-l-yellow");
+  syncCSSSetting("--t-l-blue");
+  syncCSSSetting("--t-l-purple");
+  syncCSSSetting("--t-l-cyan");
+  syncCSSSetting("--t-l-white");
   // Sync all the JS settings to the settings panel
   syncJSSetting("windowMoveAmount");
   syncJSSetting("windowResizeAmount");

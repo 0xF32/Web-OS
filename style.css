@@ -18,9 +18,32 @@
   --padding: 8px;
   --panel-bg-blur: 24px;
   --font-size: 14px;
+  --large-font-size: 24px;
   --font-ui: "Segoe UI", "Helvetica Neue", Roboto, HelveticaNeue, system-ui,
     -apple-system, BlinkMacSystemFont, sans-serif;
   --font-monospace: JetBrainsMono, monospace;
+
+  /* Terminal Colours */
+  --t-foreground: var(--theme-main-mono);
+  --t-background: var(--theme-bg);
+  --t-cursor: var(--theme-main);
+  --t-selection: #585b70;
+  --t-black: #45475a;
+  --t-red: #f38ba8;
+  --t-green: #a6e3a1;
+  --t-yellow: #f9e2af;
+  --t-blue: #89b4fa;
+  --t-purple: #f5c2e7;
+  --t-cyan: #94e2d5;
+  --t-white: #bac2de;
+  --t-l-black: #585b70;
+  --t-l-red: #f38ba8;
+  --t-l-green: #a6e3a1;
+  --t-l-yellow: #f9e2af;
+  --t-l-blue: #89b4fa;
+  --t-l-purple: #f5c2e7;
+  --t-l-cyan: #94e2d5;
+  --t-l-white: #a6adc8;
 }
 /* Global background and main color */
 :root {
@@ -119,36 +142,80 @@ window {
 }
 
 .window-header {
-  font-size: 24px;
+  font-size: var(--large-font-size);
   color: var(--theme-main);
-  padding-top: var(--padding);
-  text-align: center;
   -webkit-user-select: none;
   user-select: none;
+  border-radius: inherit;
+  display: flex;
+  justify-content: center;
+  /* Debug */
+  /* border: 1px solid orangered; */
+}
+.fill-left {
+  flex: 1;
+  display: flex;
+  min-width: -webkit-min-content; /* Workaround to Chrome bug */
+  padding-left: var(--padding);
+  height: var(--large-font-size);
+  margin: auto 0;
+  /* border: 1px solid orange; */
+}
+.fill-right {
+  flex: 1;
+  display: flex;
+  min-width: -webkit-min-content; /* Workaround to Chrome bug */
+  justify-content: flex-end;
+  padding-right: var(--padding);
+  height: var(--large-font-size);
+  margin: auto 0;
+  /* border: 1px solid orange; */
 }
 
 .window-area {
   padding: var(--padding);
   overflow: auto;
   margin: 0 auto;
+  border-radius: inherit;
+  /* Debug */
+  /* border: 1px solid orangered; */
 }
 
 .window-footer {
-  padding-bottom: var(--padding);
-  text-align: center;
+  /* padding-bottom: var(--padding); */
+  border-radius: inherit;
+  display: flex;
+  justify-content: center;
+  /* Debug */
+  /* border: 1px solid orangered; */
+}
+
+.window-button {
+  background-color: #33333b;
+  color: var(--theme-main);
+  margin: 0 2px;
+  /* border: 1px solid orange; */
+}
+.window-button:hover {
+  background-color: #44444b;
 }
 
 /* Buttons */
 button {
-  background-color: orange;
-  color: black;
   font-family: var(--font-ui);
   font-size: var(--font-size);
+  padding-inline: 0;
   border: 0;
-  border-radius: var(--rounding);
+  border-radius: calc(var(--rounding) / 4);
   outline: none;
 }
-button:hover {
+
+.warning-button {
+  background-color: orange;
+  padding-inline: var(--padding);
+  color: black;
+}
+.warning-button:hover {
   background-color: orangered;
 }
 
@@ -172,27 +239,6 @@ code {
 
 /* Terminal */
 .terminal {
-  /* Terminal Colours */
-  --t-foreground: var(--theme-main-mono);
-  --t-background: var(--theme-bg);
-  --t-cursor: var(--theme-main);
-  --t-selection: #585b70;
-  --t-black: #45475a;
-  --t-red: #f38ba8;
-  --t-green: #a6e3a1;
-  --t-yellow: #f9e2af;
-  --t-blue: #89b4fa;
-  --t-purple: #f5c2e7;
-  --t-cyan: #94e2d5;
-  --t-white: #bac2de;
-  --t-l-black: #585b70;
-  --t-l-red: #f38ba8;
-  --t-l-green: #a6e3a1;
-  --t-l-yellow: #f9e2af;
-  --t-l-blue: #89b4fa;
-  --t-l-purple: #f5c2e7;
-  --t-l-cyan: #94e2d5;
-  --t-l-white: #a6adc8;
   /* Terminal Properties */
   color: var(--t-foreground);
   margin: 0;
