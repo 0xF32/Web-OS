@@ -11,7 +11,7 @@
     <!-- Hello World window -->
     <window
       name="window_helloWorld"
-      style="--x: 0px; --y: 0px; --width: 570px; --height: 800px; --z-index: 4"
+      style="--x: 0px; --y: 0px; --width: 350px; --height: 1000px; --z-index: 4"
       onclick="makeMain(this)"
     >
       <header class="window-header">Hello World!</header>
@@ -36,7 +36,10 @@
             All customisations and local changes that should be persistent
             between refreshes of the page are stored in localStorage
           </li>
-          <li>Here is a handy reset button: <button type="reset" onclick="resetAll()">Reset Everything</button></li>
+          <li>
+            Here is a handy reset button:
+            <button type="reset" onclick="resetAll()">Reset Everything</button>
+          </li>
         </ul>
         You can use a custom wallpaper by making a file in the fileSystem that
         contains a link to the image (or a base64 data uri), and then set the
@@ -48,10 +51,12 @@
         <p></p>
         List of things to implement:
         <ul>
+          <li>Window Title bars (min, max, close)</li>
+          <li>"Opened Apps" list, like a taskbar?</li>
+          <li>Options to minimise windows to above taskbar</li>
           <li>App Launcher</li>
           <li>Implement import and export of state</li>
           <li>Drag windows with mouse cursor</li>
-          <li>Window Title bars (min, max, close)</li>
           <li>Multiple of the same window</li>
           <li>Ability to write programs</li>
           <li>Tiling mode, where each window moves to make space for others</li>
@@ -73,10 +78,10 @@
     <window
       name="window_terminal"
       style="
-        --x: 100px;
-        --y: 100px;
-        --width: 860px;
-        --height: 600px;
+        --x: 410px;
+        --y: 0px;
+        --width: 960px;
+        --height: 700px;
         --z-index: 1;
       "
       onclick="makeMain(this)"
@@ -93,10 +98,10 @@
     <window
       name="window_CSSSettings"
       style="
-        --x: 600px;
-        --y: 200px;
+        --x: 1430px;
+        --y: 0px;
         --width: 470px;
-        --height: 600px;
+        --height: 610px;
         --z-index: 2;
       "
       onclick="makeMain(this)"
@@ -323,9 +328,9 @@
     <window
       name="window_JSSettings"
       style="
-        --x: 600px;
-        --y: 0px;
-        --width: 470px;
+        --x: 1530px;
+        --y: 870px;
+        --width: 360px;
         --height: 170px;
         --z-index: 3;
       "

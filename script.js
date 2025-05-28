@@ -77,13 +77,13 @@ async function initFS(dbName) {
         file: "terminal_help.txt",
         type: "file",
         contents:
-          "Welcome to the terminal help, a quick guide that lists the syntax of the available commands.<br /><br />help :: no args :: shows a list of commands<br />ls :: no args :: lists the files in the current path <br />clear :: no args :: clears the output of the terminal<br />echo :: dumbly prints all of the text following 'echo '<br />loop {amount} {command} :: dumbly loops the command for the amount specified, can be nested<br />neofetch :: no args :: prints browser info<br />cat {store} {file} :: outputs the contents of the file<br />pwd :: outputs the current path<br />fsw {store} {file} {type} {contents} :: writes the file to the store with the type and contents provided<br />rm {store} {file} :: deletes the file from the store<br /><br />More to be added soon!",
+          "<br />Welcome to the terminal help, a quick guide that lists the syntax of the available commands.<br /><br />help :: no args :: shows a list of commands<br />ls :: no args :: lists the files in the current path <br />clear :: no args :: clears the output of the terminal<br />echo :: dumbly prints all of the text following 'echo '<br />loop {amount} {command} :: dumbly loops the command for the amount specified, can be nested<br />neofetch :: no args :: prints browser info<br />cat {store} {file} :: outputs the contents of the file<br />pwd :: outputs the current path<br />fsw {store} {file} {type} {contents} :: writes the file to the store with the type and contents provided<br />rm {store} {file} :: deletes the file from the store<br /><br />More to be added soon!<br />",
       });
       homeStore.add({
         file: "welcome.txt",
         type: "file",
         contents:
-          "Hello World!<br /><br />Welcome to Web OS, read the Hello World window for more information.<br />To learn how to use the terminal, run the command: <code>`cat home terminal_help.txt`</code>",
+          "<br />Hello World!<br /><br />Welcome to Web OS, read the Hello World window for more information.<br />To learn how to use the terminal, run the command: <code>`cat home terminal_help.txt`</code><br />",
       });
       homeStore.add({
         file: "wall1.jpg",
@@ -91,9 +91,28 @@ async function initFS(dbName) {
         contents: "assets/images/wall1.jpg",
       });
       homeStore.add({
-        file: "wall2.jpg",
+        file: "Leaves.jpg",
         type: "file",
-        contents: "https://gitlab.com/garuda-linux/themes-and-settings/artwork/garuda-wallpapers/-/raw/9982951df13614bf9aa1471adcde9e811d34ce94/src/garuda-wallpapers/Malefor.jpg",
+        contents:
+          "https://cdn.prod.website-files.com/5ecba1656554083399a29f0b/5f0ef22c2aa9f8f4fe075a55_daniel-hjalmarsson-567159-unsplash.jpg",
+      });
+      homeStore.add({
+        file: "Malefor.jpg",
+        type: "file",
+        contents:
+          "https://gitlab.com/garuda-linux/themes-and-settings/artwork/garuda-wallpapers/-/raw/9982951df13614bf9aa1471adcde9e811d34ce94/src/garuda-wallpapers/Malefor.jpg",
+      });
+      homeStore.add({
+        file: "abstract-swirls.jpg",
+        type: "file",
+        contents:
+          "https://raw.githubusercontent.com/orangci/walls-catppuccin-mocha/master/abstract-swirls.jpg",
+      });
+      homeStore.add({
+        file: "dark-star.jpg",
+        type: "file",
+        contents:
+          "https://raw.githubusercontent.com/orangci/walls-catppuccin-mocha/master/dark-star.jpg",
       });
       homeStore.add({
         file: "wall1.svg",
@@ -108,32 +127,27 @@ async function initFS(dbName) {
       homeStore.add({
         file: "wall3.svg",
         type: "file",
-        contents:
-          "assets/images/wall3.svg",
+        contents: "assets/images/wall3.svg",
       });
       homeStore.add({
         file: "wall4.svg",
         type: "file",
-        contents:
-          "assets/images/wall4.svg",
+        contents: "assets/images/wall4.svg",
       });
       homeStore.add({
         file: "wall5.svg",
         type: "file",
-        contents:
-          "assets/images/wall5.svg",
+        contents: "assets/images/wall5.svg",
       });
       homeStore.add({
         file: "wall6.svg",
         type: "file",
-        contents:
-          "assets/images/wall6.svg",
+        contents: "assets/images/wall6.svg",
       });
       homeStore.add({
         file: "wall7.svg",
         type: "file",
-        contents:
-          "assets/images/wall7.svg",
+        contents: "assets/images/wall7.svg",
       });
       // "lib"
       let libStore = db.createObjectStore("lib", {
@@ -876,7 +890,7 @@ async function cat(args) {
     console.log("Running fsRead with args:", args);
     // execute
     let result = await fsRead("fileSystem", args[0], args[1]);
-    return "<br />" + result.contents + "<br />";
+    return result.contents;
   } else {
     return "No file selected";
   }
