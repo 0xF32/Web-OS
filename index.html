@@ -17,6 +17,7 @@
       <header class="window-header">
         <div class="fill-left">
           <svg
+            style="margin: auto 0"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
@@ -28,58 +29,11 @@
             />
           </svg>
         </div>
-        <span>Hello World!</span>
-        <div class="fill-right">
-          <button class="window-button" style="color: var(--theme-bg); background-color: var(--t-yellow);">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="22"
-              viewBox="0 0 24 22"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M5 11 19 11" />
-            </svg>
-          </button>
-          <button class="window-button" style="color: var(--theme-bg); background-color: var(--t-green);">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="22"
-              viewBox="0 0 24 22"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M5 4 19 4" />
-              <path d="M5 4 5 18" />
-              <path d="M19 18 5 18" />
-              <path d="M19 18 19 4" />
-            </svg>
-          </button>
-          <button class="window-button" style="color: var(--theme-bg); background-color: var(--t-red);">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="22"
-              viewBox="0 0 24 22"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M5 4 19 18"></path>
-              <path d="M19 4 5 18"></path>
-            </svg>
-          </button>
-        </div>
+        <div>Hello World!</div>
+        <div
+          class="fill-right windowControl"
+          id="window_helloWorld_Control"
+        ></div>
       </header>
       <div class="window-area">
         Welcome to this website, which aims to be a fully functional graphical
@@ -156,7 +110,14 @@
       "
       onclick="makeMain(this)"
     >
-      <div class="window-header">Terminal</div>
+      <header class="window-header">
+        <div class="fill-left"><code>&lt;/&gt;</code></div>
+        <div>Terminal</div>
+        <div
+          class="fill-right windowControl"
+          id="window_terminal_Control"
+        ></div>
+      </header>
       <code
         class="window-area terminal"
         id="active_terminal"
@@ -176,7 +137,14 @@
       "
       onclick="makeMain(this)"
     >
-      <header class="window-header">Global CSS Settings</header>
+      <header class="window-header">
+        <div class="fill-left"><code>CSS</code></div>
+        <div>Global CSS Settings</div>
+        <div
+          class="fill-right windowControl"
+          id="window_CSSSettings_Control"
+        ></div>
+      </header>
       <div class="window-area">
         <table>
           <tr>
@@ -411,7 +379,7 @@
             </td>
           </tr>
         </table>
-        <p style="font-size: var(--large-font-size); text-align: center;">
+        <p style="font-size: var(--large-font-size); text-align: center">
           Terminal Colours
         </p>
         <table>
@@ -636,7 +604,14 @@
       "
       onclick="makeMain(this)"
     >
-      <header class="window-header">Global JS Settings</header>
+      <header class="window-header">
+        <div class="fill-left"><code>JS</code></div>
+        <div>Global JS Settings</div>
+        <div
+          class="fill-right windowControl"
+          id="window_JSSettings_Control"
+        ></div>
+      </header>
       <div class="window-area">
         <table>
           <tr>
@@ -666,6 +641,74 @@
         </table>
       </div>
       <footer class="window-footer">Footer</footer>
+    </window>
+    <window
+      name="window_Taskbar"
+      style="
+        --x: 500px;
+        --y: 400px;
+        --width: 400px;
+        --height: 400px;
+        --z-index: 5;
+      "
+      onclick="makeMain(this)"
+    >
+      <div class="window-area">
+        <table>
+          <tr>
+            <th>Icon</th>
+            <th>App</th>
+            <th>Controls</th>
+          </tr>
+          <tr>
+            <td>
+              <svg
+                style="margin: auto 0"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path
+                  d="M21.41 8.64v-.05a10 10 0 00-18.78 0s0 0 0 .05a9.86 9.86 0 000 6.72v.05a10 10 0 0018.78 0s0 0 0-.05a9.86 9.86 0 000-6.72M4.26 14a7.8 7.8 0 010-4h1.86a16.7 16.7 0 000 4Zm.82 2h1.4a12 12 0 001 2.57A8 8 0 015.08 16m1.4-8h-1.4a8 8 0 012.37-2.57A12 12 0 006.48 8M11 19.7A6.34 6.34 0 018.57 16H11Zm0-5.7H8.14a14.4 14.4 0 010-4H11Zm0-6H8.57A6.34 6.34 0 0111 4.3Zm7.92 0h-1.4a12 12 0 00-1-2.57A8 8 0 0118.92 8M13 4.3A6.34 6.34 0 0115.43 8H13Zm0 15.4V16h2.43A6.34 6.34 0 0113 19.7m2.86-5.7H13v-4h2.86a14.4 14.4 0 010 4m.69 4.57a12 12 0 001-2.57h1.4a8 8 0 01-2.4 2.57M19.74 14h-1.86a16 16 0 00.12-2 16 16 0 00-.12-2h1.86a7.8 7.8 0 010 4"
+                />
+              </svg>
+            </td>
+            <td>Hello World!</td>
+            <td>
+              <div class="windowControl" id="window_helloWorld_Control"></div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <code>&lt;/&gt;</code>
+            </td>
+            <td>Terminal</td>
+            <td>
+              <div class="windowControl" id="window_terminal_Control"></div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <code>CSS</code>
+            </td>
+            <td>Global CSS Settings</td>
+            <td>
+              <div class="windowControl" id="window_CSSSettings_Control"></div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <code>JS</code>
+            </td>
+            <td>Global JS Settings</td>
+            <td>
+              <div class="windowControl" id="window_JSSettings_Control"></div>
+            </td>
+          </tr>
+        </table>
+      </div>
     </window>
     <script>
       init();

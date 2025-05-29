@@ -10,62 +10,123 @@ async function init() {
   // Global key listener
   document.addEventListener("keydown", keydown, false);
   // Sync all the css settings to the settings panel
-  syncCSSSetting("--wallpaper");
-  syncCSSSetting("--theme-main");
-  syncCSSSetting("--theme-main-mono");
-  syncCSSSetting("--theme-bg");
-  syncCSSSetting("--theme-bg-alt");
-  syncCSSSetting("--theme-bg-alt2");
-  syncCSSSetting("--border");
-  syncCSSSetting("--border-width");
-  syncCSSSetting("--shadow");
-  syncCSSSetting("--shadow-distance");
-  syncCSSSetting("--shadow-blur");
-  syncCSSSetting("--inner-shadow");
-  syncCSSSetting("--inner-shadow-distance");
-  syncCSSSetting("--inner-shadow-blur");
-  syncCSSSetting("--rounding");
-  syncCSSSetting("--btn-rounding");
-  syncCSSSetting("--padding");
-  syncCSSSetting("--panel-bg-blur");
-  syncCSSSetting("--font-size");
-  syncCSSSetting("--large-font-size");
-  syncCSSSetting("--font-ui");
-  syncCSSSetting("--font-monospace");
+  syncCSS("--wallpaper");
+  syncCSS("--theme-main");
+  syncCSS("--theme-main-mono");
+  syncCSS("--theme-bg");
+  syncCSS("--theme-bg-alt");
+  syncCSS("--theme-bg-alt2");
+  syncCSS("--border");
+  syncCSS("--border-width");
+  syncCSS("--shadow");
+  syncCSS("--shadow-distance");
+  syncCSS("--shadow-blur");
+  syncCSS("--inner-shadow");
+  syncCSS("--inner-shadow-distance");
+  syncCSS("--inner-shadow-blur");
+  syncCSS("--rounding");
+  syncCSS("--btn-rounding");
+  syncCSS("--padding");
+  syncCSS("--panel-bg-blur");
+  syncCSS("--font-size");
+  syncCSS("--large-font-size");
+  syncCSS("--font-ui");
+  syncCSS("--font-monospace");
   // Terminal Colours
-  syncCSSSetting("--t-foreground");
-  syncCSSSetting("--t-background");
-  syncCSSSetting("--t-cursor");
-  syncCSSSetting("--t-selection");
-  syncCSSSetting("--t-black");
-  syncCSSSetting("--t-red");
-  syncCSSSetting("--t-green");
-  syncCSSSetting("--t-yellow");
-  syncCSSSetting("--t-blue");
-  syncCSSSetting("--t-purple");
-  syncCSSSetting("--t-cyan");
-  syncCSSSetting("--t-white");
-  syncCSSSetting("--t-l-black");
-  syncCSSSetting("--t-l-red");
-  syncCSSSetting("--t-l-green");
-  syncCSSSetting("--t-l-yellow");
-  syncCSSSetting("--t-l-blue");
-  syncCSSSetting("--t-l-purple");
-  syncCSSSetting("--t-l-cyan");
-  syncCSSSetting("--t-l-white");
+  syncCSS("--t-foreground");
+  syncCSS("--t-background");
+  syncCSS("--t-cursor");
+  syncCSS("--t-selection");
+  syncCSS("--t-black");
+  syncCSS("--t-red");
+  syncCSS("--t-green");
+  syncCSS("--t-yellow");
+  syncCSS("--t-blue");
+  syncCSS("--t-purple");
+  syncCSS("--t-cyan");
+  syncCSS("--t-white");
+  syncCSS("--t-l-black");
+  syncCSS("--t-l-red");
+  syncCSS("--t-l-green");
+  syncCSS("--t-l-yellow");
+  syncCSS("--t-l-blue");
+  syncCSS("--t-l-purple");
+  syncCSS("--t-l-cyan");
+  syncCSS("--t-l-white");
   // Sync all the JS settings to the settings panel
-  syncJSSetting("windowMoveAmount");
-  syncJSSetting("windowResizeAmount");
+  syncJSVariable("windowMoveAmount");
+  syncJSVariable("windowResizeAmount");
   // Sync Window states:
   document.querySelectorAll("window").forEach((el) => {
-    syncElementCSSSetting(el, "--x");
-    syncElementCSSSetting(el, "--y");
-    syncElementCSSSetting(el, "--width");
-    syncElementCSSSetting(el, "--height");
-    syncElementCSSSetting(el, "--z-index");
+    syncElementCSS(el, "--x");
+    syncElementCSS(el, "--y");
+    syncElementCSS(el, "--width");
+    syncElementCSS(el, "--height");
+    syncElementCSS(el, "--z-index");
+    syncElementCSS(el, "--maximised");
+    syncElementCSS(el, "display");
+    syncElementCSS(el, "translate");
+    syncElementCSS(el, "width");
+    syncElementCSS(el, "height");
+    syncElementCSS(el, "border-radius");
+    syncElementCSS(el, "border");
   });
   // Set the wallpaper
-  await setWallpaper(getCSSSetting("--wallpaper"));
+  await setWallpaper(getCSS("--wallpaper"));
+
+  // Add window control elements to the inside of the tag
+  document.querySelectorAll(".windowControl").forEach((el) => {
+    el.innerHTML = `<button class="window-button min-button" onclick="minimiseWindow(this)">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="22"
+          viewBox="0 0 24 22"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M5 11 19 11" />
+        </svg>
+      </button>
+      <button class="window-button max-button" onclick="maximiseWindow(this)">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="22"
+          viewBox="0 0 24 22"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M5 4 19 4" />
+          <path d="M5 4 5 18" />
+          <path d="M19 18 5 18" />
+          <path d="M19 18 19 4" />
+        </svg>
+      </button>
+      <button class="window-button close-button">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="22"
+          viewBox="0 0 24 22"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M5 4 19 18"></path>
+          <path d="M19 4 5 18"></path>
+        </svg>
+      </button>`;
+  });
+
   // Done
   console.log("Init done!");
 }
@@ -87,6 +148,11 @@ async function initFS(dbName) {
       // "dev"
       let devStore = db.createObjectStore("dev", {
         keyPath: "file",
+      });
+      devStore.add({
+        file: "null",
+        type: "null",
+        contents: "",
       });
       // "etc"
       let etcStore = db.createObjectStore("etc", {
@@ -224,27 +290,68 @@ async function resetAll() {
 function makeMain(element) {
   document.querySelectorAll("window").forEach((el) => {
     el.id = "subWindow";
-    setElementCSSSetting(
-      el,
-      "--z-index",
-      getElementCSSSetting(el, "--z-index") - 1
-    );
+    setElementCSS(el, "--z-index", getElementCSS(el, "--z-index") - 1);
   });
   element.id = "mainWindow";
-  setElementCSSSetting(element, "--z-index", 4); // Set to the number of windows when adding a new window #TODO make automatic
+  setElementCSS(element, "--z-index", 5); // Set to the number of windows when adding a new window #TODO make automatic
   console.log(element.getAttribute("name"), "is main");
+}
+
+// Minimise
+function minimiseWindow(element) {
+  let window = element.parentElement.id.split("_");
+  window.pop();
+  window = document.getElementsByName(window.join("_"))[0];
+  let isVisible = getElementCSS(window, "display");
+  if (isVisible == "none") {
+    setElementCSS(window, "display", "grid");
+    console.log("Made visible:", window.getAttribute("name"));
+  } else {
+    setElementCSS(window, "display", "none");
+    console.log("Minimised:", window.getAttribute("name"));
+  }
+}
+// Maximise
+function maximiseWindow(element) {
+  let window = element.parentElement.id.split("_");
+  window.pop();
+  window = document.getElementsByName(window.join("_"))[0];
+  let isMaximised = getElementCSS(window, "--maximised");
+  if (isMaximised == 1) {
+    setElementCSS(window, "translate", "var(--x) var(--y)");
+    setElementCSS(window, "width", "var(--width)");
+    setElementCSS(window, "height", "var(--height)");
+    setElementCSS(window, "border-radius", "var(--rounding)");
+    setElementCSS(window, "border", "var(--border-width) solid var(--border)");
+    setElementCSS(window, "--maximised", 0);
+    console.log("Restored:", window);
+  } else {
+    let width = document.documentElement.clientWidth;
+    let height = document.documentElement.clientHeight;
+    setElementCSS(
+      window,
+      "translate",
+      "calc(0px - var(--padding)) calc(0px - var(--padding))"
+    );
+    setElementCSS(window, "width", width + "px");
+    setElementCSS(window, "height", height + "px");
+    setElementCSS(window, "border-radius", 0);
+    setElementCSS(window, "border", 0);
+    setElementCSS(window, "--maximised", 1);
+    console.log("Maximised:", window);
+  }
 }
 
 // Called when the wallpaper is changed
 async function setWallpaper(args) {
-  setCSSSetting("--wallpaper", args);
+  setCSS("--wallpaper", args);
   // Handle args
   args = args.split(" ");
   // Get the image
   let image = (await fsRead("fileSystem", args[0], args[1])).contents;
-  setCSSSetting("background-image", "url(" + image + ")");
+  setCSS("background-image", "url(" + image + ")");
   // Set the preview
-  setElementCSSSetting(
+  setElementCSS(
     document.getElementById("setting_wallpaper_preview"),
     "background-image",
     "url(" + image + ")"
@@ -255,13 +362,13 @@ async function setWallpaper(args) {
 function moveWindow(element, deltaX, deltaY) {
   // Move in X:
   // Calculate position
-  let x = parseInt(getElementCSSSetting(element, "--x")) + deltaX + "px";
-  setElementCSSSetting(element, "--x", x);
+  let x = parseInt(getElementCSS(element, "--x")) + deltaX + "px";
+  setElementCSS(element, "--x", x);
 
   // Move in Y:
   // Calculate position
-  let y = parseInt(getElementCSSSetting(element, "--y")) + deltaY + "px";
-  setElementCSSSetting(element, "--y", y);
+  let y = parseInt(getElementCSS(element, "--y")) + deltaY + "px";
+  setElementCSS(element, "--y", y);
 
   // Log
   // console.log(element.getAttribute("name"), "x =", x);
@@ -272,15 +379,14 @@ function moveWindow(element, deltaX, deltaY) {
 function resizeWindow(element, deltaWidth, deltaHeight) {
   // Resize width:
   // Calculate size
-  let width =
-    parseInt(getElementCSSSetting(element, "--width")) + deltaWidth + "px";
-  setElementCSSSetting(element, "--width", width);
+  let width = parseInt(getElementCSS(element, "--width")) + deltaWidth + "px";
+  setElementCSS(element, "--width", width);
 
   // Resize height:
   // Calculate size
   let height =
-    parseInt(getElementCSSSetting(element, "--height")) + deltaHeight + "px";
-  setElementCSSSetting(element, "--height", height);
+    parseInt(getElementCSS(element, "--height")) + deltaHeight + "px";
+  setElementCSS(element, "--height", height);
 
   // Log
   // console.log(element.getAttribute("name"), "width =", width);
@@ -351,7 +457,7 @@ function keydown(e) {
 
 // For CSS:
 // Get the value of a global css variable
-function getCSSSetting(setting) {
+function getCSS(setting) {
   // Check if the value exists
   if (localStorage.getItem(setting) == null) {
     // if not, set to the current value as declared in the css
@@ -368,7 +474,7 @@ function getCSSSetting(setting) {
 }
 
 // Set the value of a global css variable
-function setCSSSetting(setting, value) {
+function setCSS(setting, value) {
   let root = document.querySelector(":root");
   root.style.setProperty(setting, value);
   localStorage.setItem(setting, value);
@@ -376,10 +482,10 @@ function setCSSSetting(setting, value) {
 }
 
 // Sync the value of the css to the settings panel
-function syncCSSSetting(setting) {
+function syncCSS(setting) {
   // Get the value from local storage
-  let value = getCSSSetting(setting);
-  setCSSSetting(setting, value);
+  let value = getCSS(setting);
+  setCSS(setting, value);
   // Set the value
   let el = document.getElementById("setting" + setting);
   if (el) {
@@ -393,7 +499,7 @@ function syncCSSSetting(setting) {
 
 // For JavaScript:
 // Get the value of a variable
-function getJSSetting(setting) {
+function getJSVariable(setting) {
   // Check if the value exists
   if (localStorage.getItem(setting) == null) {
     // if not, set to the current value as declared in the css
@@ -405,17 +511,17 @@ function getJSSetting(setting) {
 }
 
 // Set the value of a variable
-function setJSSetting(setting, value) {
+function setJSVariable(setting, value) {
   (1, eval)(setting + "=" + value);
   localStorage.setItem(setting, value);
   // console.log(setting, "=", getJSSetting(setting));
 }
 
 // Sync the value of the JS variable to the settings panel
-function syncJSSetting(setting) {
+function syncJSVariable(setting) {
   // Get the value from local storage
-  let value = getJSSetting(setting);
-  setJSSetting(setting, value);
+  let value = getJSVariable(setting);
+  setJSVariable(setting, value);
   // Set the value
   let el = document.getElementById("setting_" + setting);
   if (el.type == "number") {
@@ -427,7 +533,7 @@ function syncJSSetting(setting) {
 
 // For individual elements CSS
 // Get the value of an element's css variable
-function getElementCSSSetting(element, setting) {
+function getElementCSS(element, setting) {
   // Check if the value exists
   if (localStorage.getItem(element.getAttribute("name") + setting) == null) {
     // if not, set to the current value as declared in the css
@@ -442,7 +548,7 @@ function getElementCSSSetting(element, setting) {
 }
 
 // Set the value of an element's css variable
-function setElementCSSSetting(element, setting, value) {
+function setElementCSS(element, setting, value) {
   element.style.setProperty(setting, value);
   localStorage.setItem(element.getAttribute("name") + setting, value);
   // console.log(
@@ -453,10 +559,10 @@ function setElementCSSSetting(element, setting, value) {
 }
 
 // Sync the value of an element's css variable to and from local storage
-function syncElementCSSSetting(element, setting) {
+function syncElementCSS(element, setting) {
   // Get the value from local storage
-  let value = getElementCSSSetting(element, setting);
-  setElementCSSSetting(element, setting, value);
+  let value = getElementCSS(element, setting);
+  setElementCSS(element, setting, value);
 }
 
 // #########################
@@ -545,6 +651,15 @@ async function openStore(db, store, mode) {
     return objectStore;
   } else {
     console.error("Store", store, "doesn't exist in db", db);
+  }
+}
+// Convert a local path to an absolute path
+async function getAbsolutePath(path) {
+  // Use the env_pwd
+  if (env_pwd[1] == "") {
+    return (env_pwd[0] + " " + path.join(" ")).split(" ");
+  } else {
+    return (env_pwd[0] + " " + env_pwd[1] + "/" + path.join(" ")).split(" ");
   }
 }
 
@@ -753,8 +868,6 @@ async function fsDelete(dbName, store, file) {
 // #   Terminal implementation   #
 // #                             #
 // ###############################
-const prompt =
-  "<span style='color: var(--t-blue)' >~</span><br /><span style='color: var(--t-green)' >❯</span> <input id='terminal_input' type='text' onchange='runCommand(this.value)'/>";
 let allowed_commands = [
   "help",
   "ls",
@@ -767,9 +880,18 @@ let allowed_commands = [
   "pwd",
   "fsw",
   "rm",
+  "cd",
 ];
 // Environment variables
 let env_pwd = ["home", ""];
+// Define the dynamic prompt
+function calc_prompt() {
+  return [
+    `<span style='color: var(--t-blue)' >`,
+    env_pwd.join(" "),
+    `</span><br /><span style='color: var(--t-green)' >❯</span> <input id='terminal_input' type='text' onchange='runCommand(this.value)'/>`,
+  ].join("");
+}
 // Run Command
 async function runCommand(input_args) {
   // Duplicate input so that it can be used later
@@ -783,7 +905,7 @@ async function runCommand(input_args) {
 
   // Handle special case for CLEAR function (removes all text in the terminal)
   if (command == "clear") {
-    document.getElementById("active_terminal").innerHTML = prompt;
+    document.getElementById("active_terminal").innerHTML = calc_prompt();
     // Refocus input
     document.getElementById("terminal_input").focus();
     return;
@@ -816,7 +938,7 @@ async function runCommand(input_args) {
     "<br />" +
     result +
     "<br />" +
-    prompt;
+    calc_prompt();
   // Refocus input
   document.getElementById("terminal_input").focus();
 }
@@ -893,6 +1015,9 @@ async function neofetch(_args) {
 async function rm(args) {
   // Handle args
   args = args.split(" ");
+  if (args.length <= 1) {
+    args = await getAbsolutePath(args);
+  }
   console.log("Running fsDelete with args:", args);
   // execute
   let result = await fsDelete("fileSystem", args[0], args[1]);
@@ -910,7 +1035,12 @@ async function cat(args) {
   if (args) {
     // Handle args
     args = args.split(" ");
-    console.log("Running fsRead with args:", args);
+    console.log("unprocessed args:", args);
+    if (args.length <= 1) {
+      args = await getAbsolutePath(args);
+    }
+    console.log("processed args:", args);
+    console.log("Running fsRead with args:", "fileSystem", args[0], args[1]);
     // execute
     let result = await fsRead("fileSystem", args[0], args[1]);
     return result.contents;
@@ -924,7 +1054,18 @@ async function pwd(_args) {
   return env_pwd.join(" ");
 }
 
+// CD function (changes current directory)
+async function cd(args) {
+  args = args.split(" ");
+  let store = args[0];
+  args.shift();
+  let path = args.join(" ");
+  // Set the path
+  env_pwd = [store, path];
+  return "";
+}
+
 // RESET TERMINAL function (debug to reset the terminal from the browser console)
 function reset_terminal() {
-  document.getElementById("active_terminal").innerHTML = prompt;
+  document.getElementById("active_terminal").innerHTML = calc_prompt();
 }
