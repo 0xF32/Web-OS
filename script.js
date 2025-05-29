@@ -27,6 +27,7 @@ async function init() {
   syncCSS("--rounding");
   syncCSS("--btn-rounding");
   syncCSS("--padding");
+  syncCSS("--scroll-bar-width");
   syncCSS("--panel-bg-blur");
   syncCSS("--font-size");
   syncCSS("--large-font-size");
@@ -274,10 +275,10 @@ async function initFS(dbName) {
 
 // Reset everything function
 async function resetAll() {
-  if (confirm("Are you sure you want to continue")) {
+  if (confirm("Are you sure you want to reset EVERYTHING")) {
     // Confirmed
-    resetFileSystem("fileSystem");
     localStorage.clear();
+    resetFileSystem("fileSystem");
     console.log("Cleared all data, and reset everything");
     location.reload();
   } else {
@@ -612,15 +613,13 @@ function syncElementCSS(element, setting) {
 // #                    #
 // ######################
 // Reset everything:
-async function resetFileSystem(dbName) {
+function resetFileSystem(dbName) {
   // Resets the database to the default state:
 
   // Delete the entire database
   indexedDB.deleteDatabase(dbName);
   console.log("Deleted DB", dbName);
 
-  // Re-initialise the DB
-  await initFS();
 }
 
 // Common/Raw functions:

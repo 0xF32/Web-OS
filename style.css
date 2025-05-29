@@ -1,21 +1,21 @@
 /* Define global variables */
 :root {
-  --wallpaper: home wall6.svg;
-  --theme-main: #88eeff;
+  --wallpaper: home Leaves.jpg;
+  --theme-main: #aaeecc;
   --theme-main-mono: #ddeeff;
   --theme-bg: #11111b;
-  --theme-bg-alt: #11111bbb;
+  --theme-bg-alt: #11111b88;
   --theme-bg-alt2: #11111b88;
-  --border: #88eeff;
+  --border: var(--theme-main);
   --border-width: 2px;
   --shadow: #11111b;
   --shadow-distance: 0;
   --shadow-blur: 16px;
-  --inner-shadow: #11111b;
+  --inner-shadow: var(--shadow);
   --inner-shadow-distance: 0;
   --inner-shadow-blur: 48px;
-  --rounding: 24px;
-  --btn-rounding: 6px;
+  --rounding: 12px;
+  --btn-rounding: 12px;
   --padding: 8px;
   --scroll-bar-width: 4px;
   --panel-bg-blur: 24px;
