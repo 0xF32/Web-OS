@@ -161,6 +161,7 @@ window {
   min-width: -webkit-min-content; /* Workaround to Chrome bug */
   padding-left: var(--padding);
   height: var(--large-font-size);
+  font-size: calc(var(--large-font-size) - var(--padding) * 0.75);
   margin: auto 0;
   /* border: 1px solid orange; */
 }
@@ -171,6 +172,7 @@ window {
   justify-content: flex-end;
   padding-right: var(--padding);
   height: var(--large-font-size);
+  font-size: calc(var(--large-font-size) - var(--padding) * 0.75);
   margin: auto 0;
   /* border: 1px solid orange; */
 }
@@ -252,7 +254,6 @@ input {
 /* Code */
 code {
   font-family: var(--font-monospace);
-  font-size: var(--font-size);
 }
 
 /* Terminal */
