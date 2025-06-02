@@ -164,6 +164,29 @@ async function initFS(dbName) {
         keyPath: "file",
       });
       homeStore.add({
+        file: "ArchLogo",
+        type: "file",
+        contents: `<pre>                   -'
+                  .o+'
+                 'ooo/
+                '+oooo:
+               '+oooooo:
+               -+oooooo+:
+             '/:-:++oooo+:
+            '/++++/+++++++:
+           '/++++++++++++++:
+          '/+++ooooooooooooo/'
+         ./ooosssso++osssssso+'
+        .oossssso-''''/ossssss+'
+       -osssssso.      :ssssssso.
+      :osssssss/        osssso+++.
+     /ossssssss/        +ssssooo/-
+   '/ossssso+/:-        -:/+osssso+-
+  '+sso+:-'                 '.-/+oso:
+ '++:.                           '-/+/
+ .'                                 '</pre>`,
+      });
+      homeStore.add({
         file: "terminal_help.txt",
         type: "file",
         contents:
@@ -619,7 +642,6 @@ function resetFileSystem(dbName) {
   // Delete the entire database
   indexedDB.deleteDatabase(dbName);
   console.log("Deleted DB", dbName);
-
 }
 
 // Common/Raw functions:
@@ -874,7 +896,6 @@ let allowed_commands = [
   "echo",
   "loop",
   "neofetch",
-  "image",
   "cat",
   "pwd",
   "fsw",
