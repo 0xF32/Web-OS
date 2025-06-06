@@ -1,14 +1,70 @@
 let windowMoveAmount = 10;
 let windowResizeAmount = 10;
+let currentID = 0;
 window.indexedDB;
+// Window constants:
+let windowControls = `\
+  <button class="window-button min-button" onclick="minimiseWindow(this)">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="22"
+      viewBox="0 0 24 22"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M5 11 19 11" />
+    </svg>
+  </button>
+  <button class="window-button max-button" onclick="maximiseWindow(this)">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="22"
+      viewBox="0 0 24 22"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M5 4 19 4" />
+      <path d="M5 4 5 18" />
+      <path d="M19 18 5 18" />
+      <path d="M19 18 19 4" />
+    </svg>
+  </button>
+  <button class="window-button close-button" onclick="closeWindow(this)">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="22"
+      viewBox="0 0 24 22"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M5 4 19 18"></path>
+      <path d="M19 4 5 18"></path>
+    </svg>
+  </button>`;
+
+// Init the IndexedDB
+initFS("fileSystem");
+// Global key listener
+document.addEventListener("keydown", keydown, false);
 
 async function init() {
-  // Init the IndexedDB
-  await initFS("fileSystem");
-  // Resets the terminal using the necessary JS vars
-  reset_terminal();
-  // Global key listener
-  document.addEventListener("keydown", keydown, false);
+  // Load windows that exist from localStorage
+  // make them from defaults if the key does not exist
+  await open("bin HelloWorld.html");
+  await open("bin Terminal.html");
+
   // Sync all the css settings to the settings panel
   syncCSS("--wallpaper");
   syncCSS("--theme-main");
@@ -57,6 +113,10 @@ async function init() {
   // Sync all the JS settings to the settings panel
   syncJSVariable("windowMoveAmount");
   syncJSVariable("windowResizeAmount");
+  // Add window control elements to the inside of the tag
+  document.querySelectorAll(".windowControl").forEach((el) => {
+    el.innerHTML = windowControls;
+  });
   // Sync Window states:
   document.querySelectorAll("window").forEach((el) => {
     syncElementCSS(el, "--x");
@@ -65,68 +125,32 @@ async function init() {
     syncElementCSS(el, "--height");
     syncElementCSS(el, "--z-index");
     syncElementCSS(el, "--maximised");
-    syncElementCSS(el, "display");
-    syncElementCSS(el, "translate");
-    syncElementCSS(el, "width");
-    syncElementCSS(el, "height");
-    syncElementCSS(el, "border-radius");
-    syncElementCSS(el, "border");
+    // Fix maximised states:
+    let isMaximised = getElementCSS(el, "--maximised");
+    if (isMaximised == 0) {
+      setElementCSS(el, "translate", "var(--x) var(--y)");
+      setElementCSS(el, "width", "var(--width)");
+      setElementCSS(el, "height", "var(--height)");
+      setElementCSS(el, "border-radius", "var(--rounding)");
+      setElementCSS(el, "border", "var(--border-width) solid var(--border)");
+      setElementCSS(el, "--maximised", 0);
+    } else {
+      let width = document.documentElement.clientWidth;
+      let height = document.documentElement.clientHeight;
+      setElementCSS(
+        el,
+        "translate",
+        "calc(0px - var(--padding)) calc(0px - var(--padding))"
+      );
+      setElementCSS(el, "width", width + "px");
+      setElementCSS(el, "height", height + "px");
+      setElementCSS(el, "border-radius", 0);
+      setElementCSS(el, "border", 0);
+      setElementCSS(el, "--maximised", 1);
+    }
   });
   // Set the wallpaper
   await setWallpaper(getCSS("--wallpaper"));
-
-  // Add window control elements to the inside of the tag
-  document.querySelectorAll(".windowControl").forEach((el) => {
-    el.innerHTML = `<button class="window-button min-button" onclick="minimiseWindow(this)">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="22"
-          viewBox="0 0 24 22"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path d="M5 11 19 11" />
-        </svg>
-      </button>
-      <button class="window-button max-button" onclick="maximiseWindow(this)">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="22"
-          viewBox="0 0 24 22"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path d="M5 4 19 4" />
-          <path d="M5 4 5 18" />
-          <path d="M19 18 5 18" />
-          <path d="M19 18 19 4" />
-        </svg>
-      </button>
-      <button class="window-button close-button">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="22"
-          viewBox="0 0 24 22"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path d="M5 4 19 18"></path>
-          <path d="M19 4 5 18"></path>
-        </svg>
-      </button>`;
-  });
 
   // Done
   console.log("Init done!");
@@ -145,6 +169,91 @@ async function initFS(dbName) {
       // "bin"
       let binStore = db.createObjectStore("bin", {
         keyPath: "file",
+      });
+      binStore.add({
+        file: "HelloWorld.html",
+        type: "app/html",
+        app: {
+          title: "Hello World!",
+          icon: "👋",
+          size: [370, 490],
+          position: [0, 0],
+        },
+        contents: `<div class="window-area">
+          Welcome to this website, which aims to be a fully functional graphical OS.
+          This website will demonstrate how Web-OS works, and how you can setup your
+          own distro of Web-OS.
+          <p></p>
+          All customisations made, and files saved, are stored in local-storage, so
+          that upon reloading the page, or closing the browser, OS state can be
+          restored.
+          <p></p>
+          The terminal is cool:
+          <code>\`cat welcome.txt\`</code>
+          <p></p>
+          Web-OS is still in the very early stages of development, new features may
+          break various parts of the OS. It is highly recommended to reset all your
+          data when a newer version is released.
+          <ul>
+          <li>All fileSystem data is stored in the IndexedDB.</li>
+          <li>
+              All customisations and local changes that should be persistent between
+              refreshes of the page are stored in localStorage.
+          </li>
+          <li>
+              And of course, if everything is reset, it will be as if you have never
+              visited the website before.
+          </li>
+          </ul>
+          You can use a custom wallpaper by making a file in the fileSystem that
+          contains a link to the image (or a base64 data uri), and then set the
+          wallpaper by setting the CSS Setting: <code>\`--wallpaper\`</code> to the
+          fileSystem path where you saved the image.
+          <p></p>
+          TODO: All data can be imported and exported if you want to mess around
+          with the setup of the OS without being in the OS.
+          <p></p>
+          List of things to implement:
+          <ul>
+          <li>Import and Export of CSS Settings.</li>
+          <li>App Launcher, and permanent closing of apps</li>
+          <li>Multiple of the same window</li>
+          <li>Import and Export of all Data.</li>
+          <li>Drag windows with mouse cursor</li>
+          <li>Tiling mode, where each window moves to make space for others</li>
+          <li>Ability to write programs</li>
+          <li>
+              Remove all text fields, replacing with custom key events, that keep
+              focus (specifically in the terminal)
+          </li>
+          <li>
+              Mock package manager and/or ability to make packages and pull request
+              on github
+          </li>
+          </ul>
+        </div>
+        <footer class="window-footer">
+          <span>
+            See the <a href="https://github.com/0xF32/Web-OS">Source Code</a>
+          </span>
+        </footer>`,
+      });
+      binStore.add({
+        file: "Terminal.html",
+        type: "app/html",
+        app: {
+          title: "Terminal",
+          icon: "&lt;/&gt;",
+          size: [510, 430],
+          position: [400, 60],
+        },
+        contents: `\
+          <code
+            class="window-area terminal"
+            onclick="if (event.target.children.namedItem('terminal_input')) { event.target.children.namedItem('terminal_input').focus() } else { resetTerminal(event.target) }"
+          >
+            Click to activate.
+          </code>`,
       });
       // "dev"
       let devStore = db.createObjectStore("dev", {
@@ -165,7 +274,7 @@ async function initFS(dbName) {
       });
       homeStore.add({
         file: "ArchLogo",
-        type: "file",
+        type: "file/txt",
         contents: `<pre>                   -'
                   .o+'
                  'ooo/
@@ -188,78 +297,84 @@ async function initFS(dbName) {
       });
       homeStore.add({
         file: "terminal_help.txt",
-        type: "file",
+        type: "file/txt",
         contents:
           "<br />Welcome to the terminal help, a quick guide that lists the syntax of the available commands.<br /><br />help :: no args :: shows a list of commands<br />ls :: no args :: lists the files in the current path <br />clear :: no args :: clears the output of the terminal<br />echo :: dumbly prints all of the text following 'echo '<br />loop {amount} {command} :: dumbly loops the command for the amount specified, can be nested<br />neofetch :: no args :: prints browser info<br />cat {store} {file} :: outputs the contents of the file<br />pwd :: outputs the current path<br />fsw {store} {file} {type} {contents} :: writes the file to the store with the type and contents provided<br />rm {store} {file} :: deletes the file from the store<br /><br />More to be added soon!<br />",
       });
       homeStore.add({
         file: "welcome.txt",
-        type: "file",
+        type: "file/txt",
         contents:
           "<br />Hello World!<br /><br />Welcome to Web OS, read the Hello World window for more information.<br />To learn how to use the terminal, run the command: <code>`cat home terminal_help.txt`</code><br />",
       });
       homeStore.add({
         file: "wall1.jpg",
-        type: "file",
+        type: "image/jpg",
         contents: "assets/images/wall1.jpg",
       });
       homeStore.add({
         file: "Leaves.jpg",
-        type: "file",
+        type: "image/jpg",
         contents:
           "https://cdn.prod.website-files.com/5ecba1656554083399a29f0b/5f0ef22c2aa9f8f4fe075a55_daniel-hjalmarsson-567159-unsplash.jpg",
       });
       homeStore.add({
         file: "Malefor.jpg",
-        type: "file",
+        type: "image/jpg",
         contents:
           "https://gitlab.com/garuda-linux/themes-and-settings/artwork/garuda-wallpapers/-/raw/9982951df13614bf9aa1471adcde9e811d34ce94/src/garuda-wallpapers/Malefor.jpg",
       });
       homeStore.add({
         file: "abstract-swirls.jpg",
-        type: "file",
+        type: "image/jpg",
         contents:
           "https://raw.githubusercontent.com/orangci/walls-catppuccin-mocha/master/abstract-swirls.jpg",
       });
       homeStore.add({
         file: "dark-star.jpg",
-        type: "file",
+        type: "image/jpg",
         contents:
           "https://raw.githubusercontent.com/orangci/walls-catppuccin-mocha/master/dark-star.jpg",
       });
       homeStore.add({
+        file: "flying-comets-clouds.jpg",
+        type: "image/jpg",
+        contents:
+          "https://raw.githubusercontent.com/orangci/walls-catppuccin-mocha/master/flying-comets-clouds.jpg",
+      });
+      homeStore.add({
         file: "wall1.svg",
-        type: "file",
+        type: "image/svg",
         contents: "assets/images/wall1.svg",
       });
       homeStore.add({
         file: "wall2.svg",
-        type: "file",
+        type: "image/svg",
         contents: "assets/images/wall2.svg",
       });
       homeStore.add({
         file: "wall3.svg",
-        type: "file",
+        type: "image/svg",
         contents: "assets/images/wall3.svg",
       });
       homeStore.add({
         file: "wall4.svg",
-        type: "file",
+        type: "image/svg",
         contents: "assets/images/wall4.svg",
       });
       homeStore.add({
         file: "wall5.svg",
-        type: "file",
+        type: "image/svg",
         contents: "assets/images/wall5.svg",
       });
       homeStore.add({
         file: "wall6.svg",
-        type: "file",
+        type: "image/svg",
         contents: "assets/images/wall6.svg",
       });
       homeStore.add({
         file: "wall7.svg",
-        type: "file",
+        type: "image/svg",
         contents: "assets/images/wall7.svg",
       });
       // "lib"
@@ -310,14 +425,65 @@ async function resetAll() {
   }
 }
 
+// Make window function
+// adds a window to the body
+// initialises:
+//   css: size, position, z-index, maximisation
+//   icon, title, window buttons
+//   add to taskbar / window list
+// uses localStorage values while doing above
+// if they don't exist, makes them
+async function makeWindow(id, size, position, icon, title, content) {
+  // Define the window HTML
+  let windowHTML = `\
+  <!-- ###################-->
+  <!-- #-->
+  <!-- #   ${title} Window-->
+  <!-- #-->
+  <!-- ###################-->
+  <window
+    name="window_${id}"
+    style="
+      --x: ${position[0]}px;
+      --y: ${position[1]}px;
+      --width: ${size[0]}px;
+      --height: ${size[1]}px;
+      --z-index: ${numberOfWindows()};
+      --maximised: 0;
+    "
+    onclick="makeMain(this)"
+    id=${id}
+  >
+    <header class="window-header">
+      <div class="fill-left">${icon}</div>
+      <div>${title}</div>
+      <div
+        class="fill-right windowControl"
+        id="window_${id}_Control"
+      >${windowControls}</div>
+    </header>
+    ${content}
+  </window>`;
+
+  // Add to document
+  document.querySelector("body").innerHTML += windowHTML;
+}
+
+// Count the number of windows:
+function numberOfWindows() {
+  return document.querySelectorAll("window").length;
+}
+
 // Called when a window is clicked
-function makeMain(element) {
+async function makeMain(element) {
+  if (element.children) {
+  }
   document.querySelectorAll("window").forEach((el) => {
-    el.id = "subWindow";
+    el.className = "subWindow";
     setElementCSS(el, "--z-index", getElementCSS(el, "--z-index") - 1);
   });
-  element.id = "mainWindow";
-  setElementCSS(element, "--z-index", 5); // Set to the number of windows when adding a new window #TODO make automatic
+  element.className = "mainWindow";
+  setElementCSS(element, "--z-index", numberOfWindows()); // Set to the number of windows when adding a new window #TODO make automatic
   console.log(element.getAttribute("name"), "is main");
 }
 
@@ -364,6 +530,14 @@ function maximiseWindow(element) {
     setElementCSS(window, "--maximised", 1);
     console.log("Maximised:", window);
   }
+}
+
+// Close
+function closeWindow(element) {
+  let window = element.parentElement.id.split("_");
+  window.pop();
+  window = document.getElementsByName(window.join("_"))[0];
+  window.remove();
 }
 
 // Called when the wallpaper is changed
@@ -423,7 +597,7 @@ function keydown(e) {
   if (document.activeElement.matches("input")) return;
 
   // Get the window and its style for easy access
-  let mainWindow = document.getElementById("mainWindow");
+  let mainWindow = document.getElementsByClassName("mainWindow")[0];
   // If shifting, resize the window
   if (e.shiftKey) {
     // Manage resizing the window
@@ -558,33 +732,19 @@ function syncJSVariable(setting) {
 // For individual elements CSS
 // Get the value of an element's css variable
 function getElementCSS(element, setting) {
-  // Check if the value exists
-  if (localStorage.getItem(element.getAttribute("name") + setting) == null) {
-    // if not, set to the current value as declared in the css
-    localStorage.setItem(
-      element.getAttribute("name") + setting,
-      getComputedStyle(element).getPropertyValue(setting)
-    );
-  }
-  // Get the value from local storage
-  let value = localStorage.getItem(element.getAttribute("name") + setting);
+  // Get the value from the computed style TODO: change to be the non-computed
+  let value = getComputedStyle(element).getPropertyValue(setting);
   return value;
 }
 
 // Set the value of an element's css variable
 function setElementCSS(element, setting, value) {
   element.style.setProperty(setting, value);
-  localStorage.setItem(element.getAttribute("name") + setting, value);
-  // console.log(
-  //   element.getAttribute("name") + setting,
-  //   "=",
-  //   getElementCSSSetting(element, setting)
-  // );
 }
 
-// Sync the value of an element's css variable to and from local storage
+// Sync the value of an element's css variable
 function syncElementCSS(element, setting) {
-  // Get the value from local storage
+  // Get and set the setting to sync
   let value = getElementCSS(element, setting);
   setElementCSS(element, setting, value);
 }
@@ -774,7 +934,7 @@ async function fsRead(dbName, store, file) {
 
 // Write:
 // Modifies the object in the IndexedDB
-async function fsWrite(dbName, store, file, type, contents) {
+async function fsWrite(dbName, store, object) {
   // dbName is the database to use as the fileSystem
   // Store is the top level "folder" to look in
   // File is the key which points to the object
@@ -789,13 +949,9 @@ async function fsWrite(dbName, store, file, type, contents) {
   let objectStore = await openStore(db, store, "readwrite");
 
   // Will overwrite the file if it exists
-  let object = await new Promise(function dbPutObjectPromise(resolve) {
+  let result = await new Promise(function dbPutObjectPromise(resolve) {
     // Put an object into the objectStore
-    let putRequest = objectStore.put({
-      file: file,
-      type: type,
-      contents: contents,
-    });
+    let putRequest = objectStore.put(object);
 
     putRequest.onsuccess = function dbPutObjectSuccess(event) {
       // Success
@@ -816,7 +972,7 @@ async function fsWrite(dbName, store, file, type, contents) {
   });
 
   // Do stuff with the returned object
-  return object;
+  return result;
 }
 // Temporary Terminal wrapper
 async function fsw(args) {
@@ -901,6 +1057,7 @@ let allowed_commands = [
   "fsw",
   "rm",
   "cd",
+  "open",
 ];
 // Environment variables
 let env_pwd = ["home", ""];
@@ -909,11 +1066,11 @@ function calc_prompt() {
   return [
     `<span style='color: var(--t-blue)' >`,
     env_pwd.join(" "),
-    `</span><br /><span style='color: var(--t-green)' >❯</span> <input id='terminal_input' type='text' onchange='runCommand(this.value)'/>`,
+    `</span><br /><span style='color: var(--t-green)' >❯</span> <input name='terminal_input' type='text' onchange='runCommand(this.parentElement, this.value)'/>`,
   ].join("");
 }
 // Run Command
-async function runCommand(input_args) {
+async function runCommand(whichTerminal, input_args) {
   // Duplicate input so that it can be used later
   let raw_input = input_args;
 
@@ -925,9 +1082,10 @@ async function runCommand(input_args) {
 
   // Handle special case for CLEAR function (removes all text in the terminal)
   if (command == "clear") {
-    document.getElementById("active_terminal").innerHTML = calc_prompt();
+    whichTerminal.innerHTML = calc_prompt();
     // Refocus input
-    document.getElementById("terminal_input").focus();
+    whichTerminal.children.namedItem("terminal_input").focus();
+    // document.getElementById("terminal_input").focus();
     return;
   }
 
@@ -949,18 +1107,18 @@ async function runCommand(input_args) {
   }
 
   // Once output is guaranteed, remove the input field
-  document.getElementById("terminal_input").remove();
+  whichTerminal.children.namedItem("terminal_input").remove();
 
   // Output the input, the result, and remake the prompt
-  document.getElementById("active_terminal").innerHTML =
-    document.getElementById("active_terminal").innerHTML +
+  whichTerminal.innerHTML =
+    whichTerminal.innerHTML +
     raw_input +
     "<br />" +
     result +
     "<br />" +
     calc_prompt();
   // Refocus input
-  document.getElementById("terminal_input").focus();
+  whichTerminal.children.namedItem("terminal_input").focus();
 }
 
 // #####################################################
@@ -1085,7 +1243,33 @@ async function cd(args) {
   return "";
 }
 
-// RESET TERMINAL function (debug to reset the terminal from the browser console)
-function reset_terminal() {
-  document.getElementById("active_terminal").innerHTML = calc_prompt();
+// OPEN function (opens a new window with from the specified content)
+async function open(args) {
+  if (args) {
+    // Handle args
+    args = args.split(" ");
+    console.log("unprocessed args:", args);
+    if (args.length <= 1) {
+      args = await getAbsolutePath(args);
+    }
+    console.log("processed args:", args);
+    console.log("Running fsRead with args:", "fileSystem", args[0], args[1]);
+    // execute
+    let result = await fsRead("fileSystem", args[0], args[1]);
+    let title = result.app.title;
+    let icon = result.app.icon;
+    let size = result.app.size;
+    let position = result.app.position;
+    let content = result.contents;
+    currentID += 1;
+    await makeWindow(currentID, size, position, icon, title, content);
+    return "Successfully opened", result.file;
+  }
 }
+
+// RESET TERMINAL function (debug to reset selected terminal from the browser console)
+function resetTerminal(element) {
+  element.innerHTML = calc_prompt();
+}
+
+init();
