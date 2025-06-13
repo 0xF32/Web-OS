@@ -1,13 +1,13 @@
 /* Define global variables */
 :root {
-  --wallpaper: home Leaves.jpg;
-  --theme-main: #aaeecc;
+  --wallpaper: home wall8.svg;
+  --theme-main: #ddeeff;
   --theme-main-mono: #ddeeff;
   --theme-bg: #11111b;
   --theme-bg-alt: #11111b88;
-  --theme-bg-alt2: #11111b88;
+  --theme-bg-alt2: #11111b44;
   --border: var(--theme-main);
-  --border-width: 2px;
+  --border-width: 0;
   --shadow: #11111b;
   --shadow-distance: 0;
   --shadow-blur: 16px;
@@ -138,6 +138,7 @@ window {
   background-color: var(--theme-bg-alt);
   backdrop-filter: blur(var(--panel-bg-blur));
   border: var(--border-width) solid var(--border);
+  border-image: linear-gradient();
   box-shadow: inset var(--inner-shadow-distance) var(--inner-shadow-distance)
       var(--inner-shadow-blur) var(--inner-shadow),
     var(--shadow-distance) var(--shadow-distance) var(--shadow-blur)
@@ -200,7 +201,7 @@ window {
   margin: auto 0;
   height: 24px;
   color: var(--theme-main);
-  background-color: var(--theme-bg);
+  background-color: var(--theme-bg-alt2);
   transition-duration: 200ms;
   /* border: 1px solid orange; */
 }
