@@ -813,44 +813,54 @@ async function initFS(dbName) {
           "https://raw.githubusercontent.com/orangci/walls-catppuccin-mocha/master/flying-comets-clouds.jpg",
       });
       homeStore.add({
-        file: "wall1.svg",
+        file: "wall01.svg",
         type: "image/svg",
-        contents: "assets/images/wall1.svg",
+        contents: "assets/images/wall01.svg",
       });
       homeStore.add({
-        file: "wall2.svg",
+        file: "wall02.svg",
         type: "image/svg",
-        contents: "assets/images/wall2.svg",
+        contents: "assets/images/wall02.svg",
       });
       homeStore.add({
-        file: "wall3.svg",
+        file: "wall03.svg",
         type: "image/svg",
-        contents: "assets/images/wall3.svg",
+        contents: "assets/images/wall03.svg",
       });
       homeStore.add({
-        file: "wall4.svg",
+        file: "wall04.svg",
         type: "image/svg",
-        contents: "assets/images/wall4.svg",
+        contents: "assets/images/wall04.svg",
       });
       homeStore.add({
-        file: "wall5.svg",
+        file: "wall05.svg",
         type: "image/svg",
-        contents: "assets/images/wall5.svg",
+        contents: "assets/images/wall05.svg",
       });
       homeStore.add({
-        file: "wall6.svg",
+        file: "wall06.svg",
         type: "image/svg",
-        contents: "assets/images/wall6.svg",
+        contents: "assets/images/wall06.svg",
       });
       homeStore.add({
-        file: "wall7.svg",
+        file: "wall07.svg",
         type: "image/svg",
-        contents: "assets/images/wall7.svg",
+        contents: "assets/images/wall07.svg",
       });
       homeStore.add({
-        file: "wall8.svg",
+        file: "wall08.svg",
         type: "image/svg",
-        contents: "assets/images/wall8.svg",
+        contents: "assets/images/wall08.svg",
+      });
+      homeStore.add({
+        file: "wall09.svg",
+        type: "image/svg",
+        contents: "assets/images/wall09.svg",
+      });
+      homeStore.add({
+        file: "wall10.svg",
+        type: "image/svg",
+        contents: "assets/images/wall10.svg",
       });
       // "lib"
       let libStore = db.createObjectStore("lib", {
