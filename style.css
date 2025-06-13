@@ -1,13 +1,13 @@
 /* Define global variables */
 :root {
-  --wallpaper: home wall8.svg;
+  --wallpaper: home wall6.svg;
   --theme-main: #ddeeff;
   --theme-main-mono: #ddeeff;
   --theme-bg: #11111b;
   --theme-bg-alt: #11111b88;
   --theme-bg-alt2: #11111b44;
   --border: var(--theme-main);
-  --border-width: 0;
+  --border-width: 1px;
   --shadow: #11111b;
   --shadow-distance: 0;
   --shadow-blur: 16px;
