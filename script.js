@@ -64,6 +64,7 @@ async function init() {
   // make them from defaults if the key does not exist
   await open("bin HelloWorld.html");
   await open("bin Terminal.html");
+  await open("bin CSSSettings.html");
 
   // Sync all the css settings to the settings panel
   syncCSS("--wallpaper");
@@ -243,7 +244,7 @@ async function initFS(dbName) {
         type: "app/html",
         app: {
           title: "Terminal",
-          icon: "&lt;/&gt;",
+          icon: "<code>&lt;/&gt;</code>",
           size: [510, 430],
           position: [400, 60],
         },
@@ -255,6 +256,475 @@ async function initFS(dbName) {
             Click to activate.
           </code>`,
       });
+      binStore.add({
+        file: "CSSSettings.html",
+        type: "app/html",
+        app: {
+          title: "CSS Settings",
+          icon: "<code>CSS</code>",
+          size: [460, 490],
+          position: [940, 0],
+        },
+        contents: `\
+        <div class="window-area">
+          <table>
+            <tr>
+              <th>Setting</th>
+              <th>Value</th>
+              <th>Preview</th>
+            </tr>
+            <tr>
+              <td><code>--wallpaper</code></td>
+              <td>
+                <input
+                  id="setting--wallpaper"
+                  onchange="setWallpaper(this.value)"
+                />
+              </td>
+              <td
+                name="setting_wallpaper_preview"
+                id="setting_wallpaper_preview"
+                style="
+                  background-repeat: no-repeat;
+                  background-size: cover;
+                  background-position: center;
+                "
+              ></td>
+            </tr>
+            <tr>
+              <td><code>--theme-main</code></td>
+              <td>
+                <input
+                  id="setting--theme-main"
+                  onchange="setCSS('--theme-main', this.value)"
+                />
+              </td>
+              <td style="background-color: var(--theme-main)"></td>
+            </tr>
+            <tr>
+              <td><code>--theme-main-mono</code></td>
+              <td>
+                <input
+                  id="setting--theme-main-mono"
+                  onchange="setCSS('--theme-main-mono', this.value)"
+                />
+              </td>
+              <td style="background-color: var(--theme-main-mono)"></td>
+            </tr>
+            <tr>
+              <td><code>--theme-bg</code></td>
+              <td>
+                <input
+                  id="setting--theme-bg"
+                  onchange="setCSS('--theme-bg', this.value)"
+                />
+              </td>
+              <td style="background-color: var(--theme-bg)"></td>
+            </tr>
+            <tr>
+              <td><code>--theme-bg-alt</code></td>
+              <td>
+                <input
+                  id="setting--theme-bg-alt"
+                  onchange="setCSS('--theme-bg-alt', this.value)"
+                />
+              </td>
+              <td style="background-color: var(--theme-bg-alt)"></td>
+            </tr>
+            <tr>
+              <td><code>--theme-bg-alt2</code></td>
+              <td>
+                <input
+                  id="setting--theme-bg-alt2"
+                  onchange="setCSS('--theme-bg-alt2', this.value)"
+                />
+              </td>
+              <td style="background-color: var(--theme-bg-alt2)"></td>
+            </tr>
+            <tr>
+              <td><code>--border</code></td>
+              <td>
+                <input
+                  id="setting--border"
+                  onchange="setCSS('--border', this.value)"
+                />
+              </td>
+              <td style="background-color: var(--border)"></td>
+            </tr>
+            <tr>
+              <td><code>--border-width</code></td>
+              <td>
+                <input
+                  id="setting--border-width"
+                  type="number"
+                  onchange="setCSS('--border-width', this.value + 'px')"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td><code>--shadow</code></td>
+              <td>
+                <input
+                  id="setting--shadow"
+                  onchange="setCSS('--shadow', this.value)"
+                />
+              </td>
+              <td style="background-color: var(--shadow)"></td>
+            </tr>
+            <tr>
+              <td><code>--shadow-distance</code></td>
+              <td>
+                <input
+                  id="setting--shadow-distance"
+                  type="number"
+                  onchange="setCSS('--shadow-distance', this.value + 'px')"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td><code>--shadow-blur</code></td>
+              <td>
+                <input
+                  id="setting--shadow-blur"
+                  type="number"
+                  onchange="setCSS('--shadow-blur', this.value + 'px')"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td><code>--inner-shadow</code></td>
+              <td>
+                <input
+                  id="setting--inner-shadow"
+                  onchange="setCSS('--inner-shadow', this.value)"
+                />
+              </td>
+              <td style="background-color: var(--shadow)"></td>
+            </tr>
+            <tr>
+              <td><code>--inner-shadow-distance</code></td>
+              <td>
+                <input
+                  id="setting--inner-shadow-distance"
+                  type="number"
+                  onchange="setCSS('--inner-shadow-distance', this.value + 'px')"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td><code>--inner-shadow-blur</code></td>
+              <td>
+                <input
+                  id="setting--inner-shadow-blur"
+                  type="number"
+                  onchange="setCSS('--inner-shadow-blur', this.value + 'px')"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td><code>--rounding</code></td>
+              <td>
+                <input
+                  id="setting--rounding"
+                  type="number"
+                  onchange="setCSS('--rounding', this.value + 'px')"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td><code>--btn-rounding</code></td>
+              <td>
+                <input
+                  id="setting--btn-rounding"
+                  type="number"
+                  onchange="setCSS('--btn-rounding', this.value + 'px')"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td><code>--scroll-bar-width</code></td>
+              <td>
+                <input
+                  id="setting--scroll-bar-width"
+                  type="number"
+                  onchange="setCSS('--scroll-bar-width', this.value + 'px')"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td><code>--padding</code></td>
+              <td>
+                <input
+                  id="setting--padding"
+                  type="number"
+                  onchange="setCSS('--padding', this.value + 'px')"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td><code>--panel-bg-blur</code></td>
+              <td>
+                <input
+                  id="setting--panel-bg-blur"
+                  type="number"
+                  onchange="setCSS('--panel-bg-blur', this.value + 'px')"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td><code>--font-size</code></td>
+              <td>
+                <input
+                  id="setting--font-size"
+                  type="number"
+                  onchange="setCSS('--font-size', this.value + 'px')"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td><code>--large-font-size</code></td>
+              <td>
+                <input
+                  id="setting--large-font-size"
+                  type="number"
+                  onchange="setCSS('--large-font-size', this.value + 'px')"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td><code>--font-ui</code></td>
+              <td>
+                <input
+                  id="setting--font-ui"
+                  onchange="setCSS('--font-ui', this.value)"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td><code>--font-monospace</code></td>
+              <td>
+                <input
+                  id="setting--font-monospace"
+                  onchange="setCSS('--font-monospace', this.value)"
+                />
+              </td>
+            </tr>
+          </table>
+          <p style="font-size: var(--large-font-size); text-align: center">
+            Terminal Colours
+          </p>
+          <table>
+            <tr>
+              <th>Setting</th>
+              <th>Value</th>
+              <th>Preview</th>
+            </tr>
+            <tr>
+              <td><code>--t-foreground</code></td>
+              <td>
+                <input
+                  id="setting--t-foreground"
+                  onchange="setCSS('--t-foreground', this.value)"
+                />
+              </td>
+              <td style="background-color: var(--t-foreground)"></td>
+            </tr>
+            <tr>
+              <td><code>--t-background</code></td>
+              <td>
+                <input
+                  id="setting--t-background"
+                  onchange="setCSS('--t-background', this.value)"
+                />
+              </td>
+              <td style="background-color: var(--t-background)"></td>
+            </tr>
+            <tr>
+              <td><code>--t-cursor</code></td>
+              <td>
+                <input
+                  id="setting--t-cursor"
+                  onchange="setCSS('--t-cursor', this.value)"
+                />
+              </td>
+              <td style="background-color: var(--t-cursor)"></td>
+            </tr>
+            <tr>
+              <td><code>--t-selection</code></td>
+              <td>
+                <input
+                  id="setting--t-selection"
+                  onchange="setCSS('--t-selection', this.value)"
+                />
+              </td>
+              <td style="background-color: var(--t-selection)"></td>
+            </tr>
+            <tr>
+              <td><code>--t-black</code></td>
+              <td>
+                <input
+                  id="setting--t-black"
+                  onchange="setCSS('--t-black', this.value)"
+                />
+              </td>
+              <td style="background-color: var(--t-black)"></td>
+            </tr>
+            <tr>
+              <td><code>--t-red</code></td>
+              <td>
+                <input
+                  id="setting--t-red"
+                  onchange="setCSS('--t-red', this.value)"
+                />
+              </td>
+              <td style="background-color: var(--t-red)"></td>
+            </tr>
+            <tr>
+              <td><code>--t-green</code></td>
+              <td>
+                <input
+                  id="setting--t-green"
+                  onchange="setCSS('--t-green', this.value)"
+                />
+              </td>
+              <td style="background-color: var(--t-green)"></td>
+            </tr>
+            <tr>
+              <td><code>--t-yellow</code></td>
+              <td>
+                <input
+                  id="setting--t-yellow"
+                  onchange="setCSS('--t-yellow', this.value)"
+                />
+              </td>
+              <td style="background-color: var(--t-yellow)"></td>
+            </tr>
+            <tr>
+              <td><code>--t-blue</code></td>
+              <td>
+                <input
+                  id="setting--t-blue"
+                  onchange="setCSS('--t-blue', this.value)"
+                />
+              </td>
+              <td style="background-color: var(--t-blue)"></td>
+            </tr>
+            <tr>
+              <td><code>--t-purple</code></td>
+              <td>
+                <input
+                  id="setting--t-purple"
+                  onchange="setCSS('--t-purple', this.value)"
+                />
+              </td>
+              <td style="background-color: var(--t-purple)"></td>
+            </tr>
+            <tr>
+              <td><code>--t-cyan</code></td>
+              <td>
+                <input
+                  id="setting--t-cyan"
+                  onchange="setCSS('--t-cyan', this.value)"
+                />
+              </td>
+              <td style="background-color: var(--t-cyan)"></td>
+            </tr>
+            <tr>
+              <td><code>--t-white</code></td>
+              <td>
+                <input
+                  id="setting--t-white"
+                  onchange="setCSS('--t-white', this.value)"
+                />
+              </td>
+              <td style="background-color: var(--t-white)"></td>
+            </tr>
+            <tr>
+              <td><code>--t-l-black</code></td>
+              <td>
+                <input
+                  id="setting--t-l-black"
+                  onchange="setCSS('--t-l-black', this.value)"
+                />
+              </td>
+              <td style="background-color: var(--t-l-black)"></td>
+            </tr>
+            <tr>
+              <td><code>--t-l-red</code></td>
+              <td>
+                <input
+                  id="setting--t-l-red"
+                  onchange="setCSS('--t-l-red', this.value)"
+                />
+              </td>
+              <td style="background-color: var(--t-l-red)"></td>
+            </tr>
+            <tr>
+              <td><code>--t-l-green</code></td>
+              <td>
+                <input
+                  id="setting--t-l-green"
+                  onchange="setCSS('--t-l-green', this.value)"
+                />
+              </td>
+              <td style="background-color: var(--t-l-green)"></td>
+            </tr>
+            <tr>
+              <td><code>--t-l-yellow</code></td>
+              <td>
+                <input
+                  id="setting--t-l-yellow"
+                  onchange="setCSS('--t-l-yellow', this.value)"
+                />
+              </td>
+              <td style="background-color: var(--t-l-yellow)"></td>
+            </tr>
+            <tr>
+              <td><code>--t-l-blue</code></td>
+              <td>
+                <input
+                  id="setting--t-l-blue"
+                  onchange="setCSS('--t-l-blue', this.value)"
+                />
+              </td>
+              <td style="background-color: var(--t-l-blue)"></td>
+            </tr>
+            <tr>
+              <td><code>--t-l-purple</code></td>
+              <td>
+                <input
+                  id="setting--t-l-purple"
+                  onchange="setCSS('--t-l-purple', this.value)"
+                />
+              </td>
+              <td style="background-color: var(--t-l-purple)"></td>
+            </tr>
+            <tr>
+              <td><code>--t-l-cyan</code></td>
+              <td>
+                <input
+                  id="setting--t-l-cyan"
+                  onchange="setCSS('--t-l-cyan', this.value)"
+                />
+              </td>
+              <td style="background-color: var(--t-l-cyan)"></td>
+            </tr>
+            <tr>
+              <td><code>--t-l-white</code></td>
+              <td>
+                <input
+                  id="setting--t-l-white"
+                  onchange="setCSS('--t-l-white', this.value)"
+                />
+              </td>
+              <td style="background-color: var(--t-l-white)"></td>
+            </tr>
+          </table>
+        </div>
+        <footer class="window-footer">
+          Export and Import Buttons can go here!
+        </footer>`
+      })
       // "dev"
       let devStore = db.createObjectStore("dev", {
         keyPath: "file",
@@ -376,6 +846,11 @@ async function initFS(dbName) {
         file: "wall7.svg",
         type: "image/svg",
         contents: "assets/images/wall7.svg",
+      });
+      homeStore.add({
+        file: "wall8.svg",
+        type: "image/svg",
+        contents: "assets/images/wall8.svg",
       });
       // "lib"
       let libStore = db.createObjectStore("lib", {
