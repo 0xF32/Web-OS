@@ -769,7 +769,20 @@ async function initFS(dbName) {
         file: "terminal_help.txt",
         type: "file/txt",
         contents:
-          "<br />Welcome to the terminal help, a quick guide that lists the syntax of the available commands.<br /><br />help :: no args :: shows a list of commands<br />ls :: no args :: lists the files in the current path <br />clear :: no args :: clears the output of the terminal<br />echo :: dumbly prints all of the text following 'echo '<br />loop {amount} {command} :: dumbly loops the command for the amount specified, can be nested<br />neofetch :: no args :: prints browser info<br />cat {store} {file} :: outputs the contents of the file<br />pwd :: outputs the current path<br />fsw {store} {file} {type} {contents} :: writes the file to the store with the type and contents provided<br />rm {store} {file} :: deletes the file from the store<br /><br />More to be added soon!<br />",
+          `<pre>Welcome to the terminal help, a quick guide that lists the syntax of the available commands.
+
+help :: no args :: shows a list of commands
+ls :: no args :: lists the files in the current path
+clear :: no args :: clears the output of the terminal
+echo :: dumbly prints all of the text following the prompt
+loop {amount} {command} :: dumbly loops the command for the amount specified, can be nested
+neofetch :: no args :: prints browser info
+cat {optional:store} {file} :: outputs the contents of the file
+pwd :: outputs the current path
+fsw {store} {object} :: writes the object to the store, currently for testing
+rm {optional:store} {file} :: deletes the file from the store
+
+More to be added soon!</pre>`,
       });
       homeStore.add({
         file: "welcome.txt",
@@ -786,7 +799,7 @@ async function initFS(dbName) {
         file: "Leaves.jpg",
         type: "image/jpg",
         contents:
-          "https://cdn.prod.website-files.com/5ecba1656554083399a29f0b/5f0ef22c2aa9f8f4fe075a55_daniel-hjalmarsson-567159-unsplash.jpg",
+          "assets/images/Leaves.jpg",
       });
       homeStore.add({
         file: "Malefor.jpg",
@@ -1445,9 +1458,9 @@ async function fsWrite(dbName, store, object) {
 
     putRequest.onerror = function dbPutObjectError(event) {
       console.error(
-        "Error putting file",
-        file,
-        "to objectStore",
+        "Error putting object",
+        object,
+        "into objectStore",
         objectStore,
         "\nError:",
         event.target.error
@@ -1464,23 +1477,17 @@ async function fsw(args) {
   // Handle args
   args = args.split(" ");
   let store = args[0];
-  let file = args[1];
-  let type = args[2];
   args.shift();
-  args.shift();
-  args.shift();
-  let contents = args.join(" ");
+  let object = JSON.parse(args.join(" "));
   console.log(
     "Running fsWrite with args:",
     "fileSystem",
     store,
-    file,
-    type,
-    contents
+    object
   );
   // execute
-  let object = await fsWrite("fileSystem", store, file, type, contents);
-  let result = await fsRead("fileSystem", store, file);
+  await fsWrite("fileSystem", store, object);
+  let result = await fsRead("fileSystem", store, object.file);
   // Output to terminal
   return JSON.stringify(result);
 }

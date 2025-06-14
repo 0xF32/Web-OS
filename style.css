@@ -1,7 +1,7 @@
 /* Define global variables */
 :root {
-  --wallpaper: home wall06.svg;
-  --theme-main: #f89;
+  --wallpaper: home Malefor.jpg;
+  --theme-main: #c36;
   --theme-main-mono: #ddeeff;
   --theme-bg: #11111b;
   --theme-bg-alt: #11111b88;
@@ -151,6 +151,7 @@ window {
   color: var(--theme-main);
   -webkit-user-select: none;
   user-select: none;
+  padding: var(--padding);
   /* border-radius: inherit; */
   border-bottom: var(--border-width) solid var(--border);
   display: flex;
@@ -191,6 +192,7 @@ window {
   /* padding-bottom: var(--padding); */
   display: flex;
   justify-content: center;
+  padding: var(--padding);
   /* border-radius: inherit; */
   border-top: var(--border-width) solid var(--border);
   /* Debug */
