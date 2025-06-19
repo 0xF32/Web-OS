@@ -101,17 +101,17 @@ a:active {
 }
 /* Track */
 ::-webkit-scrollbar-track {
-  border-radius: var(--rounding);
+  border-radius: var(--btn-rounding);
 }
 /* Handle */
 ::-webkit-scrollbar-thumb {
   background: var(--theme-main);
-  border-radius: var(--rounding);
+  border-radius: var(--btn-rounding);
 }
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: var(--theme-main-mono);
-  border-radius: var(--rounding);
+  border-radius: var(--btn-rounding);
 }
 /* The all important corner */
 ::-webkit-scrollbar-corner {
@@ -220,43 +220,12 @@ window {
   background-color: var(--t-green);
 }
 
-/* Buttons */
-button {
-  font-family: var(--font-ui);
-  font-size: var(--font-size);
-  padding-inline: 0;
-  border: 0;
-  border-radius: var(--btn-rounding);
-  outline: none;
-}
-
-.text-button {
-  padding-inline: var(--padding);
-}
-
 .warning-button {
   background-color: orange;
   color: black;
 }
 .warning-button:hover {
   background-color: orangered;
-}
-
-/* Inputs */
-input {
-  background-color: var(--theme-bg-alt2);
-  color: var(--theme-main-mono);
-  font-family: var(--font-ui);
-  font-size: var(--font-size);
-  border: 0;
-  border-radius: var(--rounding);
-  outline: none;
-  padding-inline: 8px;
-}
-
-/* Code */
-code {
-  font-family: var(--font-monospace);
 }
 
 /* Terminal */
@@ -280,4 +249,95 @@ code {
   outline: none;
   padding-inline: 0;
   padding: 0;
+}
+
+/*
+Standard UI Kit:
+A good set of standard ui classes to make stuff not look so bad.
+*/
+
+/* Alignment */
+/* Left */
+.left {
+  align-items: start;
+  text-align: left;
+  align-self: self-start;
+  margin-right: auto;
+}
+/* Center */
+.center {
+  align-items: center;
+  text-align: center;
+  align-self: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+/* Right */
+.right {
+  align-items: end;
+  text-align: right;
+  align-self: self-end;
+  margin-left: auto;
+}
+/* Top */
+.top {
+  margin-top: 0;
+  margin-bottom: auto;
+}
+/* Middle */
+.middle {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+/* Bottom */
+.bottom {
+  margin-bottom: 0;
+  margin-top: auto;
+}
+
+/* Buttons */
+button {
+  font-family: var(--font-ui);
+  font-size: var(--font-size);
+  padding-inline: 0;
+  border: 0;
+  border-radius: var(--btn-rounding);
+  outline: none;
+}
+/* Buttons containing only an icon */
+.icon-button {
+  color: var(--theme-main);
+  background-color: var(--theme-bg-alt2);
+}
+/* Buttons containing text and/or icons */
+.text-button {
+  padding-inline: var(--padding);
+}
+
+/* Inputs */
+input {
+  background-color: var(--theme-bg-alt2);
+  color: var(--theme-main-mono);
+  font-family: var(--font-ui);
+  font-size: var(--font-size);
+  border: 0;
+  border-radius: var(--btn-rounding);
+  outline: none;
+  padding-inline: 8px;
+}
+
+/* Ranges */
+input[type="range"] {
+  background-color: var(--theme-bg-alt2);
+  color: var(--theme-main-mono);
+  border-radius: var(--btn-rounding);
+  accent-color: var(--theme-main);
+  outline: 0;
+  appearance: none;
+  padding-inline: 0;
+}
+
+/* Code */
+code {
+  font-family: var(--font-monospace);
 }
