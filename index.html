@@ -8,140 +8,13 @@
     <script src="script.js" defer async></script>
   </head>
   <body>
-    <!-- ########################## -->
-    <!-- #                        # -->
-    <!-- #   JS SEttings Window   # -->
-    <!-- #                        # -->
-    <!-- ########################## -->
+    <!-- ########### -->
+    <!-- #         # -->
+    <!-- #   Bar   # -->
+    <!-- #         # -->
+    <!-- ########### -->
     <window
-      name="window_JSSettings"
-      style="
-        --x: 0px;
-        --y: 520px;
-        --width: 370px;
-        --height: 170px;
-        --z-index: 3;
-        --maximised: 0;
-      "
-      onclick="makeMain(this)"
-    >
-      <header class="window-header">
-        <div class="fill-left"><code>JS</code></div>
-        <div>Global JS Settings</div>
-        <div
-          class="fill-right windowControl"
-          id="window_JSSettings_Control"
-        ></div>
-      </header>
-      <div class="window-area">
-        <table>
-          <tr>
-            <th>Setting</th>
-            <th>Value</th>
-          </tr>
-          <tr>
-            <td><code>windowMoveAmount</code></td>
-            <td>
-              <input
-                id="setting_windowMoveAmount"
-                type="number"
-                onchange="setJSVariable('windowMoveAmount', this.value)"
-              />
-            </td>
-          </tr>
-          <tr>
-            <td><code>windowResizeAmount</code></td>
-            <td>
-              <input
-                id="setting_windowResizeAmount"
-                type="number"
-                onchange="setJSVariable('windowResizeAmount', this.value)"
-              />
-            </td>
-          </tr>
-        </table>
-      </div>
-      <footer class="window-footer">
-        Export and Import Buttons can go here!
-      </footer>
-    </window>
-    <!-- ################## -->
-    <!-- #                # -->
-    <!-- #   Dev Window   # -->
-    <!-- #                # -->
-    <!-- ################## -->
-    <window
-      name="window_DEV"
-      style="
-        --x: 400px;
-        --y: 520px;
-        --width: 400px;
-        --height: 170px;
-        --z-index: 7;
-        --maximised: 0;
-      "
-      onclick="makeMain(this)"
-    >
-      <header class="window-header">
-        <div class="fill-left"><code>DEV</code></div>
-        <div>DEV</div>
-        <div class="fill-right windowControl" id="window_DEV_Control"></div>
-      </header>
-      <div class="window-area">
-        <table>
-          <tr>
-            <th>Button</th>
-            <th>Description</th>
-          </tr>
-          <tr>
-            <td>
-              <button
-                class="warning-button"
-                style="padding: 0 var(--padding)"
-                onclick="if (confirm('Are you sure you want to fully reset the fileSystem')) { resetFileSystem('fileSystem'); location.reload(); }"
-              >
-                Reset fileSystem
-              </button>
-            </td>
-            <td>Deletes all data in the indexedDB</td>
-          </tr>
-          <tr>
-            <td>
-              <button
-                class="warning-button"
-                style="padding: 0 var(--padding)"
-                onclick="if (confirm('Are you sure you want to fully reset customisations stored in localStorage')) { localStorage.clear(); location.reload(); }"
-              >
-                Reset localStorage
-              </button>
-            </td>
-            <td>Deletes all data in the localStorage</td>
-          </tr>
-          <tr>
-            <td>
-              <button
-                class="warning-button"
-                style="padding: 0 var(--padding)"
-                onclick="resetAll()"
-              >
-                Reset ALL!
-              </button>
-            </td>
-            <td>Reset everything to original state</td>
-          </tr>
-        </table>
-      </div>
-      <footer class="window-footer">
-        If this window exists, the website is unstable
-      </footer>
-    </window>
-    <!-- ####################### -->
-    <!-- #                     # -->
-    <!-- #   Taskbar Window?   # -->
-    <!-- #                     # -->
-    <!-- ####################### -->
-    <window
-      name="window_Taskbar"
+      name="window_Bar"
       style="
         --x: 400px;
         --y: 0px;
@@ -335,60 +208,113 @@
         <div>Music Player</div>
         <div class="fill-right windowControl" id="window_Music_Control"></div>
       </header>
-      <iframe
-        src="apps/music/music.html"
-        frameborder="0"
-        width="100%"
-        height="100%"
-      ></iframe>
-    </window>
-    <!-- ############################ -->
-    <!-- #                          # -->
-    <!-- #   Custom iFrame Window   # -->
-    <!-- #                          # -->
-    <!-- ############################ -->
-    <window
-      name="window_customIFrame"
-      style="
-        --x: 1430px;
-        --y: 0px;
-        --width: 500px;
-        --height: 800px;
-        --z-index: 4;
-        --maximised: 0;
-      "
-      onclick="makeMain(this)"
-    >
-      <header class="window-header">
-        <div class="fill-left">🌐</div>
-        <div>Custom iFrame</div>
-        <div
-          class="fill-right windowControl"
-          id="window_customIFrame_Control"
-        ></div>
-      </header>
-      <div class="window-area" style="margin: 0">
-        <input
-          style="
-            width: calc(100% - 2 * var(--padding));
-            padding-bottom: var(--padding);
-          "
-          type="text"
-          value="./"
-          onchange="document.getElementById('customIFrame_frame').src = this.value"
-        />
-        <div style="width: 100%; height: calc(100% - 1em - 2 * var(--padding))">
-          <iframe
-            src="./"
-            width="100%"
-            height="100%"
-            frameborder="0"
-            allowtransparency="true"
-            id="customIFrame_frame"
-          ></iframe>
+      <script
+        src="https://kit.fontawesome.com/ab54ee68f9.js"
+        crossorigin="anonymous"
+      ></script>
+      <div class="window-area" style="margin: auto;">
+        <div class="center">
+          <img
+            style="max-width: 12em; max-height: 12em; border-radius: 100%;"
+            src="apps/music/images/Airflow.jpg"
+            id="image"
+          />
+          <audio src="apps/music/music/Airflow.mp3" id="audio"></audio>
         </div>
+        <p class="center" id="music-title">Airflow</p>
+        <table>
+          <tr>
+            <td><p class="time-progress" id="time-progress">0:00</p></td>
+            <td><div class="progress" id="progress"></div></td>
+            <td><p class="total-track-time" id="total-track-time">0:00</p></td>
+          </tr>
+        </table>
+        <table style="width: 100%">
+          <tr>
+            <td>
+              <div class="center">
+                <button
+                  style="width: 2em; height: 2em"
+                  class="icon-button"
+                  id="replay"
+                >
+                  <i class="fas fa-redo"></i>
+                </button>
+              </div>
+            </td>
+            <td>
+              <div class="center">
+                <button
+                  style="width: 2em; height: 2em"
+                  class="icon-button"
+                  id="previous-track"
+                >
+                  <i class="fas fa-step-backward"></i>
+                </button>
+              </div>
+            </td>
+            <td>
+              <div class="center">
+                <button
+                  style="width: 2em; height: 2em"
+                  class="icon-button"
+                  id="play"
+                >
+                  <i class="fas fa-play"></i>
+                </button>
+              </div>
+            </td>
+            <td>
+              <div class="center">
+                <button
+                  style="width: 2em; height: 2em"
+                  class="icon-button"
+                  id="next-track"
+                >
+                  <i class="fas fa-step-forward"></i>
+                </button>
+              </div>
+            </td>
+            <td>
+              <div class="center">
+                <button
+                  style="width: 2em; height: 2em"
+                  class="icon-button"
+                  id="shuffle"
+                >
+                  <i class="fas fa-random"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </table>
+        <table>
+          <tr>
+            <td>
+              <div class="middle">
+                <i class="fas fa-volume-mute mute" id="mute"></i>
+              </div>
+            </td>
+            <td>
+              <div class="middle">
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="100"
+                  id="volume-range"
+                />
+              </div>
+            </td>
+            <td>
+              <div class="middle">
+                <i class="fas fa-volume-up volume-up" id="volume-up"></i>
+              </div>
+            </td>
+          </tr>
+        </table>
+        <script src="apps/music/music.js"></script>
       </div>
-      <footer class="window-footer">Testing external iframes</footer>
     </window>
   </body>
 </html>

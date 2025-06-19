@@ -65,6 +65,11 @@ async function init() {
   await open("bin HelloWorld.html");
   await open("bin Terminal.html");
   await open("bin CSSSettings.html");
+  await open("bin JSSettings.html");
+  await open("bin DEV.html");
+  // await open("bin Bar.html");
+  // await open("bin Music.html");
+  await open("bin iFrameBrowser.html");
 
   // Sync all the css settings to the settings panel
   syncCSS("--wallpaper");
@@ -723,8 +728,201 @@ async function initFS(dbName) {
         </div>
         <footer class="window-footer">
           Export and Import Buttons can go here!
-        </footer>`
-      })
+        </footer>`,
+      });
+      binStore.add({
+        file: "JSSettings.html",
+        type: "app/html",
+        app: {
+          title: "JS Settings",
+          icon: "<code>JS</code>",
+          size: [370, 170],
+          position: [0, 520],
+        },
+        contents: `\
+          <div class="window-area">
+            <table>
+              <tr>
+                <th>Setting</th>
+                <th>Value</th>
+              </tr>
+              <tr>
+                <td><code>windowMoveAmount</code></td>
+                <td>
+                  <input
+                    id="setting_windowMoveAmount"
+                    type="number"
+                    onchange="setJSVariable('windowMoveAmount', this.value)"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td><code>windowResizeAmount</code></td>
+                <td>
+                  <input
+                    id="setting_windowResizeAmount"
+                    type="number"
+                    onchange="setJSVariable('windowResizeAmount', this.value)"
+                  />
+                </td>
+              </tr>
+            </table>
+          </div>
+          <footer class="window-footer">
+            Export and Import Buttons can go here!
+          </footer>`,
+      });
+      binStore.add({
+        file: "DEV.html",
+        type: "app/html",
+        app: {
+          title: "DEV",
+          icon: "<code>DEV</code>",
+          size: [400, 170],
+          position: [400, 520],
+        },
+        contents: `\
+          <div class="window-area">
+            <table>
+              <tr>
+                <th>Button</th>
+                <th>Description</th>
+              </tr>
+              <tr>
+                <td>
+                  <button
+                    class="warning-button"
+                    style="padding: 0 var(--padding)"
+                    onclick="if (confirm('Are you sure you want to fully reset the fileSystem')) { resetFileSystem('fileSystem'); location.reload(); }"
+                  >
+                    Reset fileSystem
+                  </button>
+                </td>
+                <td>Deletes all data in the indexedDB</td>
+              </tr>
+              <tr>
+                <td>
+                  <button
+                    class="warning-button"
+                    style="padding: 0 var(--padding)"
+                    onclick="if (confirm('Are you sure you want to fully reset customisations stored in localStorage')) { localStorage.clear(); location.reload(); }"
+                  >
+                    Reset localStorage
+                  </button>
+                </td>
+                <td>Deletes all data in the localStorage</td>
+              </tr>
+              <tr>
+                <td>
+                  <button
+                    class="warning-button"
+                    style="padding: 0 var(--padding)"
+                    onclick="resetAll()"
+                  >
+                    Reset ALL!
+                  </button>
+                </td>
+                <td>Reset everything to original state</td>
+              </tr>
+            </table>
+          </div>
+          <footer class="window-footer">
+            If this window exists, the website is unstable
+          </footer>`,
+      });
+      binStore.add({
+        file: "Music.html",
+        type: "app/html",
+        app: {
+          title: "Music Player",
+          icon: "<code>🎵</code>",
+          size: [510, 30],
+          position: [400, 0],
+        },
+        contents: `\
+            <head>
+              <style>
+              
+              </style>
+              <link rel="stylesheet" href="apps/music/music.css" />
+              <script
+                src="https://kit.fontawesome.com/ab54ee68f9.js"
+                crossorigin="anonymous"
+              ></script>
+            </head>
+            <body>
+              <div class="player-container">
+                <div class="image-container">
+                  <img src="apps/music/images/Airflow.jpg" alt="music cover" id="image" />
+                </div>
+                <audio src="apps/music/music/Airflow.mp3" id="audio"></audio>
+
+                <p class="music-title" id="music-title">Airflow</p>
+                <div class="cta-container">
+                  <button class="replay" id="replay">
+                    <i class="fas fa-redo"></i>
+                  </button>
+                  <button class="previous-btn" id="previous-track">
+                    <i class="fas fa-step-backward"></i>
+                  </button>
+                  <button class="play-btn" id="play">
+                    <i class="fas fa-play"></i>
+                  </button>
+                  <button class="next-track-btn" id="next-track">
+                    <i class="fas fa-step-forward"></i>
+                  </button>
+                  <button class="random" id="shuffle">
+                    <i class="fas fa-random"></i>
+                  </button>
+                </div>
+                <div class="progress-container" id="progress-container">
+                  <p class="time-progress" id="time-progress"></p>
+                  <div class="progress" id="progress"></div>
+                  <p class="total-track-time" id="total-track-time"></p>
+                </div>
+
+                <div class="range-container">
+                  <i class="fas fa-volume-mute mute" id="mute"></i>
+                  <input type="range" min="0" max="100" value="100" id="volume-range" />
+                  <i class="fas fa-volume-up volume-up" id="volume-up"></i>
+                </div>
+              </div>
+              <script src="apps/music/music.js"></script>
+            </body>`,
+      });
+      binStore.add({
+        file: "iFrameBrowser.html",
+        type: "app/html",
+        app: {
+          title: "iFrame Browser",
+          icon: "<code>🌐</code>",
+          size: [500, 800],
+          position: [1430, 0],
+        },
+        contents: `\
+          <div class="window-area" style="margin: 0">
+            <input
+              style="
+                width: calc(100% - 2 * var(--padding));
+                padding-bottom: var(--padding);
+              "
+              type="text"
+              value=""
+              onchange="document.getElementById('customIFrame_frame').src = this.value"
+            />
+            <div style="width: 100%; height: calc(100% - 1em - 2 * var(--padding))">
+              <iframe
+                src=""
+                width="100%"
+                height="100%"
+                frameborder="0"
+                allowtransparency="true"
+                id="customIFrame_frame"
+              ></iframe>
+            </div>
+          </div>
+          <footer class="window-footer">Testing external iframes</footer>`,
+      });
       // "dev"
       let devStore = db.createObjectStore("dev", {
         keyPath: "file",
@@ -769,20 +967,7 @@ async function initFS(dbName) {
         file: "terminal_help.txt",
         type: "file/txt",
         contents:
-          `<pre>Welcome to the terminal help, a quick guide that lists the syntax of the available commands.
-
-help :: no args :: shows a list of commands
-ls :: no args :: lists the files in the current path
-clear :: no args :: clears the output of the terminal
-echo :: dumbly prints all of the text following the prompt
-loop {amount} {command} :: dumbly loops the command for the amount specified, can be nested
-neofetch :: no args :: prints browser info
-cat {optional:store} {file} :: outputs the contents of the file
-pwd :: outputs the current path
-fsw {store} {object} :: writes the object to the store, currently for testing
-rm {optional:store} {file} :: deletes the file from the store
-
-More to be added soon!</pre>`,
+          "<br />Welcome to the terminal help, a quick guide that lists the syntax of the available commands.<br /><br />help :: no args :: shows a list of commands<br />ls :: no args :: lists the files in the current path <br />clear :: no args :: clears the output of the terminal<br />echo :: dumbly prints all of the text following 'echo '<br />loop {amount} {command} :: dumbly loops the command for the amount specified, can be nested<br />neofetch :: no args :: prints browser info<br />cat {store} {file} :: outputs the contents of the file<br />pwd :: outputs the current path<br />fsw {store} {file} {type} {contents} :: writes the file to the store with the type and contents provided<br />rm {store} {file} :: deletes the file from the store<br /><br />More to be added soon!<br />",
       });
       homeStore.add({
         file: "welcome.txt",
@@ -796,10 +981,14 @@ More to be added soon!</pre>`,
         contents: "assets/images/wall1.jpg",
       });
       homeStore.add({
+        file: "Astronaut.jpg",
+        type: "image/jpg",
+        contents: "assets/images/Astronaut.jpg",
+      });
+      homeStore.add({
         file: "Leaves.jpg",
         type: "image/jpg",
-        contents:
-          "assets/images/Leaves.jpg",
+        contents: "assets/images/Leaves.jpg",
       });
       homeStore.add({
         file: "Malefor.jpg",
@@ -1479,12 +1668,7 @@ async function fsw(args) {
   let store = args[0];
   args.shift();
   let object = JSON.parse(args.join(" "));
-  console.log(
-    "Running fsWrite with args:",
-    "fileSystem",
-    store,
-    object
-  );
+  console.log("Running fsWrite with args:", "fileSystem", store, object);
   // execute
   await fsWrite("fileSystem", store, object);
   let result = await fsRead("fileSystem", store, object.file);

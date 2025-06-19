@@ -21,8 +21,8 @@ let songIndex = 0;
 
 //Init the first song
 function initSong() {
-  audio.src = `music/${songs[songIndex]}.mp3`;
-  image.src = `images/${songs[songIndex]}.jpg`;
+  audio.src = `apps/music/music/${songs[songIndex]}.mp3`;
+  image.src = `apps/music/images/${songs[songIndex]}.jpg`;
   trackTitle.textContent = songs[songIndex];
 }
 
@@ -129,7 +129,7 @@ nextTrackBtn.addEventListener('click', nextTrack);
 previousTrackBtn.addEventListener('click', previousTrack);
 replay.addEventListener('click', repeatTrack);
 shuffleBtn.addEventListener('click', randomTrack);
-progressContainer.addEventListener('click', updateProgress);
+// progressContainer.addEventListener('click', updateProgress);
 
 audio.addEventListener('loadedmetadata', () => {
   //Display the track:s total duration
