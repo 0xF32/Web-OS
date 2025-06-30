@@ -905,6 +905,7 @@ async function initFS(dbName) {
               style="
                 width: calc(100% - 2 * var(--padding));
                 padding-bottom: var(--padding);
+                padding-top: var(--padding);
               "
               type="text"
               value=""

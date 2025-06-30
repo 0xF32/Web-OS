@@ -2,13 +2,13 @@
 :root {
   --wallpaper: home Malefor.jpg;
   --theme-main: #c36;
-  --theme-main-mono: #ddeeff;
-  --theme-bg: #11111b;
-  --theme-bg-alt: #11111b88;
-  --theme-bg-alt2: #11111b44;
+  --theme-main-mono: #def;
+  --theme-bg: #111115;
+  --theme-bg-alt: #11111588;
+  --theme-bg-alt2: #def3;
   --border: var(--theme-main);
   --border-width: 1px;
-  --shadow: #11111b;
+  --shadow: #111115;
   --shadow-distance: 0;
   --shadow-blur: 16px;
   --inner-shadow: var(--shadow);
@@ -154,7 +154,7 @@ window {
   user-select: none;
   padding: var(--padding);
   /* border-radius: inherit; */
-  border-bottom: var(--border-width) solid var(--border);
+  /* border-bottom: var(--border-width) solid var(--border); */
   display: flex;
   justify-content: center;
 }
@@ -182,6 +182,7 @@ window {
 
 .window-area {
   padding: var(--padding);
+  width: calc(100% - 4 * var(--padding));
   overflow: auto;
   margin: 0 auto;
   /* border-radius: inherit; */
@@ -195,7 +196,7 @@ window {
   justify-content: center;
   padding: var(--padding);
   /* border-radius: inherit; */
-  border-top: var(--border-width) solid var(--border);
+  /* border-top: var(--border-width) solid var(--border); */
   /* Debug */
   /* border: 1px solid orangered; */
 }

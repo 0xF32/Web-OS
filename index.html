@@ -230,15 +230,20 @@
         ];
         // Index
         let songIndex = 0;
-
-        // Define states
-        let paused = true;
       </script>
       <style>
         #music-song-image {
-          max-width: 12em;
-          max-height: 12em;
+          max-width: 10em;
+          max-height: 10em;
+          margin: 1em;
           border-radius: var(--rounding);
+          transition-duration: 200ms;
+          box-shadow: var(--shadow-distance) var(--shadow-distance) var(--shadow-blur) var(--shadow);
+        }
+        .music-playing-image {
+          max-width: 12em !important;
+          max-height: 12em !important;
+          margin: 0 !important;
         }
         #music-progress-container {
           background-color: var(--theme-bg-alt2);
@@ -253,6 +258,9 @@
           height: 100%;
           width: 0%;
           transition: width 0.1s linear;
+        }
+        .music-volume {
+          width: calc(100% - 2 * var(--padding));
         }
         .control-button {
           width: 2em;
@@ -285,6 +293,18 @@
                 document.getElementById('music-song-audio').currentTime
                  / document.getElementById('music-song-audio').duration
                ) * 100 + '%';
+            "
+            onended="
+              songIndex += 1;
+              if (!(songIndex < queue.length)) {
+                songIndex = 0;
+              }
+              document.getElementById('music-song-audio').src = queue[songIndex].audio;
+              document.getElementById('music-song-image').src = queue[songIndex].image;
+              document,getElementById('music-song-title').textContent = queue[songIndex].title;
+              if (document.getElementById('music-song-image').classList.contains('music-playing-image')) {
+                document.getElementById('music-song-audio').play();
+              }
             "
           ></audio>
           <div class="label" id="music-song-title">Airflow</div>
@@ -335,7 +355,7 @@
                 document.getElementById('music-song-audio').src = queue[songIndex].audio;
                 document.getElementById('music-song-image').src = queue[songIndex].image;
                 document,getElementById('music-song-title').textContent = queue[songIndex].title;
-                if (!paused) {
+                if (document.getElementById('music-song-image').classList.contains('music-playing-image')) {
                   document.getElementById('music-song-audio').play();
                 }
               "
@@ -346,16 +366,17 @@
             <button
               class="icon-button control-button"
               onclick="
-                if (paused) {
-                  this.querySelector('.fas').classList.remove('fa-play');
-                  this.querySelector('.fas').classList.add('fa-pause');
-                  document.getElementById('music-song-audio').play();
-                  paused = false;
-                } else {
+                // If playing: pause, else play
+                if (document.getElementById('music-song-image').classList.contains('music-playing-image')) {
                   this.querySelector('.fas').classList.remove('fa-pause');
                   this.querySelector('.fas').classList.add('fa-play');
                   document.getElementById('music-song-audio').pause();
-                  paused = true;
+                  document.getElementById('music-song-image').classList.remove('music-playing-image');
+                } else {
+                  this.querySelector('.fas').classList.remove('fa-play');
+                  this.querySelector('.fas').classList.add('fa-pause');
+                  document.getElementById('music-song-audio').play();
+                  document.getElementById('music-song-image').classList.add('music-playing-image')
                 }
               "
             >
@@ -372,7 +393,7 @@
                 document.getElementById('music-song-audio').src = queue[songIndex].audio;
                 document.getElementById('music-song-image').src = queue[songIndex].image;
                 document,getElementById('music-song-title').textContent = queue[songIndex].title;
-                if (!paused) {
+                if (document.getElementById('music-song-image').classList.contains('music-playing-image')) {
                   document.getElementById('music-song-audio').play();
                 }
               "
@@ -396,7 +417,7 @@
                 document.getElementById('music-song-audio').src = queue[songIndex].audio;
                 document.getElementById('music-song-image').src = queue[songIndex].image;
                 document,getElementById('music-song-title').textContent = queue[songIndex].title;
-                if (!paused) {
+                if (document.getElementById('music-song-image').classList.contains('music-playing-image')) {
                   document.getElementById('music-song-audio').play();
                 }
               "
@@ -410,8 +431,9 @@
           <div class="left middle">
             <i class="fas fa-volume-mute mute"></i>
           </div>
-          <div class="center middle">
+          <div class="center middle music-volume">
             <input
+              class="music-volume"
               type="range"
               min="0"
               max="100"
