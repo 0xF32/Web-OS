@@ -908,12 +908,12 @@ async function initFS(dbName) {
                 padding-top: var(--padding);
               "
               type="text"
-              value=""
+              value="assets"
               onchange="document.getElementById('customIFrame_frame').src = this.value"
             />
             <div style="width: 100%; height: calc(100% - 1em - 2 * var(--padding))">
               <iframe
-                src=""
+                src="assets"
                 width="100%"
                 height="100%"
                 frameborder="0"
