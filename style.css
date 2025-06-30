@@ -310,6 +310,7 @@ A good set of standard ui classes to make stuff not look so bad.
 /* Label / Heading / Large text */
 .label {
   font-size: var(--label-font-size);
+  padding: var(--padding);
 }
 
 /* Icons */
@@ -333,6 +334,7 @@ button {
   border: 0;
   border-radius: var(--btn-rounding);
   outline: none;
+  cursor: pointer;
 }
 button:hover {
   color: var(--theme-bg);
