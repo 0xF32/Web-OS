@@ -1124,11 +1124,6 @@ async function resetAll() {
 async function makeWindow(id, size, position, icon, title, content) {
   // Define the window HTML
   let windowHTML = `\
-  <!-- ###################-->
-  <!-- #-->
-  <!-- #   ${title} Window-->
-  <!-- #-->
-  <!-- ###################-->
   <window
     name="window_${id}"
     style="
@@ -1153,8 +1148,30 @@ async function makeWindow(id, size, position, icon, title, content) {
     ${content}
   </window>`;
 
+  let window = document.createElement("window");
+  window.setAttribute("name", "window_" + id);
+  setElementCSS(window, "--x", position[0] + "px");
+  setElementCSS(window, "--y", position[1] + "px");
+  setElementCSS(window, "--width", size[0] + "px");
+  setElementCSS(window, "--height", size[1] + "px");
+  setElementCSS(window, "--z-index", numberOfWindows());
+  setElementCSS(window, "--maximised", 0);
+  window.addEventListener("click", () => makeMain(document.getElementById(id)));
+  window.id = id;
+  window.innerHTML = `\
+  <header class="window-header">
+    <div class="fill-left">${icon}</div>
+    <div>${title}</div>
+    <div
+      class="fill-right windowControl"
+      id="window_${id}_Control"
+    >${windowControls}</div>
+  </header>
+  ${content}`
+
   // Add to document
-  document.querySelector("body").innerHTML += windowHTML;
+  document.body.append(window);
+  // document.body.innerHTML += windowHTML;
 }
 
 // Count the number of windows:
