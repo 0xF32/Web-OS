@@ -208,112 +208,224 @@
         <div>Music Player</div>
         <div class="fill-right windowControl" id="window_Music_Control"></div>
       </header>
-      <script
-        src="https://kit.fontawesome.com/ab54ee68f9.js"
-        crossorigin="anonymous"
-      ></script>
-      <div class="window-area" style="margin: auto;">
-        <div class="center">
-          <img
-            style="max-width: 12em; max-height: 12em; border-radius: 100%;"
-            src="apps/music/images/Airflow.jpg"
-            id="image"
-          />
-          <audio src="apps/music/music/Airflow.mp3" id="audio"></audio>
+      <script src="assets/fonts/fontawesome.js"></script>
+      <script>
+        // Define initial queue
+        let queue = [
+          {
+            title: "Airflow",
+            audio: "assets/music/Airflow.mp3",
+            image: "assets/music/images/noImage.jpg",
+          },
+          {
+            title: "An Epic Story",
+            audio: "assets/music/An Epic Story.mp3",
+            image: "assets/music/images/noImage.jpg",
+          },
+          {
+            title: "Microworld",
+            audio: "assets/music/Microworld.mp3",
+            image: "assets/music/images/noImage.jpg",
+          },
+        ];
+        // Index
+        let songIndex = 0;
+
+        // Define states
+        let paused = true;
+      </script>
+      <style>
+        #music-song-image {
+          max-width: 12em;
+          max-height: 12em;
+          border-radius: var(--rounding);
+        }
+        #music-progress-container {
+          background-color: var(--theme-bg-alt2);
+          border-radius: var(--btn-rounding);
+          padding: 0;
+          cursor: pointer;
+          height: var(--scroll-bar-width);
+        }
+        #music-progress {
+          background-color: var(--theme-main);
+          border-radius: var(--btn-rounding);
+          height: 100%;
+          width: 0%;
+          transition: width 0.1s linear;
+        }
+        .control-button {
+          width: 2em;
+          height: 2em;
+        }
+        .toggled {
+          background-color: var(--theme-main-mono);
+          color: var(--theme-bg);
+        }
+      </style>
+      <div class="window-area padded center middle">
+        <!-- Song info -->
+        <div class="center padded">
+          <img src="assets/music/images/noImage.jpg" id="music-song-image" />
+          <audio
+            src="assets/music/Airflow.mp3"
+            id="music-song-audio"
+            onloadedmetadata="
+              document.getElementById('music-progress-total').textContent
+               = new Date(
+                document.getElementById('music-song-audio').duration * 1000
+              ).toISOString().slice(11, 19);
+            "
+            ontimeupdate="
+              document.getElementById('music-progress-time').textContent
+               = new Date(
+                document.getElementById('music-song-audio').currentTime * 1000
+              ).toISOString().slice(11,19);
+              document.getElementById('music-progress').style.width = (
+                document.getElementById('music-song-audio').currentTime
+                 / document.getElementById('music-song-audio').duration
+               ) * 100 + '%';
+            "
+          ></audio>
+          <div class="label" id="music-song-title">Airflow</div>
         </div>
-        <p class="center" id="music-title">Airflow</p>
-        <table>
-          <tr>
-            <td><p class="time-progress" id="time-progress">0:00</p></td>
-            <td><div class="progress" id="progress"></div></td>
-            <td><p class="total-track-time" id="total-track-time">0:00</p></td>
-          </tr>
-        </table>
-        <table style="width: 100%">
-          <tr>
-            <td>
-              <div class="center">
-                <button
-                  style="width: 2em; height: 2em"
-                  class="icon-button"
-                  id="replay"
-                >
-                  <i class="fas fa-redo"></i>
-                </button>
-              </div>
-            </td>
-            <td>
-              <div class="center">
-                <button
-                  style="width: 2em; height: 2em"
-                  class="icon-button"
-                  id="previous-track"
-                >
-                  <i class="fas fa-step-backward"></i>
-                </button>
-              </div>
-            </td>
-            <td>
-              <div class="center">
-                <button
-                  style="width: 2em; height: 2em"
-                  class="icon-button"
-                  id="play"
-                >
-                  <i class="fas fa-play"></i>
-                </button>
-              </div>
-            </td>
-            <td>
-              <div class="center">
-                <button
-                  style="width: 2em; height: 2em"
-                  class="icon-button"
-                  id="next-track"
-                >
-                  <i class="fas fa-step-forward"></i>
-                </button>
-              </div>
-            </td>
-            <td>
-              <div class="center">
-                <button
-                  style="width: 2em; height: 2em"
-                  class="icon-button"
-                  id="shuffle"
-                >
-                  <i class="fas fa-random"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-        </table>
-        <table>
-          <tr>
-            <td>
-              <div class="middle">
-                <i class="fas fa-volume-mute mute" id="mute"></i>
-              </div>
-            </td>
-            <td>
-              <div class="middle">
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value="100"
-                  id="volume-range"
-                />
-              </div>
-            </td>
-            <td>
-              <div class="middle">
-                <i class="fas fa-volume-up volume-up" id="volume-up"></i>
-              </div>
-            </td>
-          </tr>
-        </table>
-        <script src="apps/music/music.js"></script>
+        <!-- Progress -->
+        <div class="center">
+          <div
+            class="center padded"
+            id="music-progress-container"
+            onclick="
+              document.getElementById('music-song-audio').currentTime
+               = event.offsetX / this.offsetWidth // Percent
+               * document.getElementById('music-song-audio').duration;
+            "
+          >
+            <div id="music-progress"></div>
+          </div>
+          <div class="flex center padded">
+            <div id="music-progress-time" class="left">00:00:00</div>
+            <div id="music-progress-total" class="right">00:00:00</div>
+          </div>
+        </div>
+        <!-- Controls -->
+        <div class="center padded">
+          <div class="center">
+            <!-- Replay Button -->
+            <button
+              class="icon-button control-button"
+              onclick="
+                if (document.getElementById('music-song-audio').loop) {
+                  document.getElementById('music-song-audio').loop = false;
+                } else {
+                  document.getElementById('music-song-audio').loop = true;
+                }
+                this.classList.toggle('toggled')
+              "
+            >
+              <i class="fas fa-redo"></i>
+            </button>
+            <!-- Previous Button -->
+            <button
+              class="icon-button control-button"
+              onclick="
+                songIndex -= 1;
+                if (songIndex < 0) {
+                  songIndex = queue.length -1;
+                }
+                document.getElementById('music-song-audio').src = queue[songIndex].audio;
+                document.getElementById('music-song-image').src = queue[songIndex].image;
+                document,getElementById('music-song-title').textContent = queue[songIndex].title;
+                if (!paused) {
+                  document.getElementById('music-song-audio').play();
+                }
+              "
+            >
+              <i class="fas fa-step-backward"></i>
+            </button>
+            <!-- Play Button -->
+            <button
+              class="icon-button control-button"
+              onclick="
+                if (paused) {
+                  this.querySelector('.fas').classList.remove('fa-play');
+                  this.querySelector('.fas').classList.add('fa-pause');
+                  document.getElementById('music-song-audio').play();
+                  paused = false;
+                } else {
+                  this.querySelector('.fas').classList.remove('fa-pause');
+                  this.querySelector('.fas').classList.add('fa-play');
+                  document.getElementById('music-song-audio').pause();
+                  paused = true;
+                }
+              "
+            >
+              <i class="fas fa-play"></i>
+            </button>
+            <!-- Next Button -->
+            <button
+              class="icon-button control-button"
+              onclick="
+                songIndex += 1;
+                if (!(songIndex < queue.length)) {
+                  songIndex = 0;
+                }
+                document.getElementById('music-song-audio').src = queue[songIndex].audio;
+                document.getElementById('music-song-image').src = queue[songIndex].image;
+                document,getElementById('music-song-title').textContent = queue[songIndex].title;
+                if (!paused) {
+                  document.getElementById('music-song-audio').play();
+                }
+              "
+            >
+              <i class="fas fa-step-forward"></i>
+            </button>
+            <!-- Shuffle Button -->
+            <button
+              class="icon-button control-button"
+              onclick="
+                let i = queue.length;
+                // While there remain elements to shuffle...
+                while (i != 0) {
+                  // Pick a remaining element...
+                  let ri = Math.floor(Math.random() * i);
+                  i--;
+                  // And swap it with the current element.
+                  [queue[i], queue[ri]] = [queue[ri], queue[i]];
+                }
+                songIndex = 0;
+                document.getElementById('music-song-audio').src = queue[songIndex].audio;
+                document.getElementById('music-song-image').src = queue[songIndex].image;
+                document,getElementById('music-song-title').textContent = queue[songIndex].title;
+                if (!paused) {
+                  document.getElementById('music-song-audio').play();
+                }
+              "
+            >
+              <i class="fas fa-random"></i>
+            </button>
+          </div>
+        </div>
+        <!-- Volume Slider -->
+        <div class="flex center padded">
+          <div class="left middle">
+            <i class="fas fa-volume-mute mute"></i>
+          </div>
+          <div class="center middle">
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value="100"
+              onchange="
+                document.getElementById('music-song-audio').volume
+                 = this.value / this.max
+              "
+            />
+          </div>
+          <div class="right middle">
+            <i class="fas fa-volume-up volume-up"></i>
+          </div>
+        </div>
       </div>
     </window>
   </body>

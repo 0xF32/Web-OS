@@ -20,9 +20,9 @@
   --scroll-bar-width: 4px;
   --panel-bg-blur: 24px;
   --font-size: 14px;
+  --label-font-size: 18px;
   --large-font-size: 24px;
-  --font-ui: "Segoe UI", "Helvetica Neue", Roboto, HelveticaNeue, system-ui,
-    -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-ui: "Quicksand Medium", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   --font-monospace: JetBrainsMono, monospace;
 
   /* Terminal Colours */
@@ -67,8 +67,9 @@
   src: url(assets/fonts/JetBrainsMono-VariableFont_wght.ttf);
 }
 @font-face {
-  font-family: HelveticaNeue;
-  src: url(assets/fonts/HelveticaNeueRoman.otf);
+  font-family: QuicksandMedium;
+  font-weight: 600;
+  src: url(assets/fonts/Quicksand-VariableFont_wght.ttf);
 }
 
 /* Links */
@@ -295,6 +296,35 @@ A good set of standard ui classes to make stuff not look so bad.
   margin-top: auto;
 }
 
+/* Formatting */
+/* Padding */
+.padded {
+  padding: var(--padding);
+}
+/* Flex */
+.flex {
+  display: flex;
+}
+
+/* Content */
+/* Label / Heading / Large text */
+.label {
+  font-size: var(--label-font-size);
+}
+
+/* Icons */
+/* Icon that is actually text (unicode/nerd font) */
+/* .text-icon {
+  font-family: var(--font-monospace);
+  font-size: var(--large-font-size);
+  color: var(--theme-main);
+  background-color: var(--theme-bg-alt2);
+  border-radius: var(--btn-rounding);
+  text-align: center;
+  width: calc(var(--large-font-size) + var(--padding));
+  height: calc(var(--large-font-size) + var(--padding));
+} */
+
 /* Buttons */
 button {
   font-family: var(--font-ui);
@@ -303,6 +333,10 @@ button {
   border: 0;
   border-radius: var(--btn-rounding);
   outline: none;
+}
+button:hover {
+  color: var(--theme-bg);
+  background-color: var(--theme-main);
 }
 /* Buttons containing only an icon */
 .icon-button {
