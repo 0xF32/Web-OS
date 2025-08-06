@@ -909,7 +909,7 @@ async function initFS(dbName) {
               "
               type="text"
               value="assets"
-              onchange="document.getElementById('customIFrame_frame').src = this.value"
+              onchange="this.nextElementSibling.firstElementChild.src = this.value"
             />
             <div style="width: 100%; height: calc(100% - 1em - 2 * var(--padding))">
               <iframe
@@ -918,7 +918,6 @@ async function initFS(dbName) {
                 height="100%"
                 frameborder="0"
                 allowtransparency="true"
-                id="customIFrame_frame"
               ></iframe>
             </div>
           </div>
